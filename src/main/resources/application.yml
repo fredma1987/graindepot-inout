@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: graindepot-inout
+
+server:
+    port: 8003 #
+    #context-path: /graindepot-inout

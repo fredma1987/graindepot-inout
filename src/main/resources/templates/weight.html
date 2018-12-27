@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>智能粮库云平台</title>
+    <!-- basic styles -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/font-awesome-ie7.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.custom.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/chosen.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap-timepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/colorpicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ace-ie.min.css}"/>
+    <script th:src="@{/assets/js/ace-extra.min.js}"></script>
+    <script th:src="@{/assets/js/html5shiv.js}"></script>
+    <script th:src="@{/assets/js/respond.min.js}"></script>
+    <script th:src="@{/assets/js/sidebar.js}"></script>
+    <script th:inline="javascript">
+        var ctx = [[${ctx}]];
+    </script>
+</head>
+
+<body>
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <div th:replace="header::header"></div>
+    <div th:replace="sidebar::sidebar"></div>
+    <div class="main-container-inner">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px">
+            <div class="page-content" style="padding:10px 20px 0px">
+                <div class="page-header">
+                    <h1>
+                        入库检斤
+                        <small>
+                            <i class="icon-double-angle-right"></i>
+
+                        </small>
+                    </h1>
+                </div>
+                <!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+
+                        <form class="form-horizontal" role="form">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
+                                    <div style="width: 40%;height:100%;float: left">
+                                        <div style="width: 100%;height:50%;text-align: center;">
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面1</label>
+                                            </div>
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面2</label>
+                                            </div>
+                                        </div>
+                                        <div style="width: 100%;height:50%;text-align: center;">
+
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面3</label>
+                                            </div>
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面4</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div style="width: 60%;height:100%;padding-left:20px;float: left">
+                                        <div class="form-group">
+                                            <div class="widget-body"
+                                                 style="float: left;width: 180px;height:60px;border-top: 1px solid #CCC">
+                                                <div class="widget-main padding-6" style="height: 55px">
+                                                    <div class="alert alert-info"
+                                                         style="font-size: 24px;height:48px;line-height:48px;padding:2px;background-color:#06f;color:#fff;"> 12000
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label style="padding-left:10px;float: left;display: block;font-size: 24px;line-height: 55px">Kg</label>
+                                            <!--<div style="float: right;padding-right:20px;line-height: 82px;height:82px;vertical-align:middle">
+                                                <div style="float: left;height:100%;line-height: 82px;margin-top: -3px;vertical-align:middle">
+                                                    <label class="control-label"
+                                                           style="height:100%;line-height: 82px;font-size: 24px;vertical-align:middle">检斤类型：</label>
+                                                </div>
+                                                <div class="radio"
+                                                     style="float: left;height:100%;padding:0">
+                                                    <label>
+                                                        <input name="form-field-radio" type="radio"
+                                                               value="1"
+                                                               class="ace" checked="checked"/>
+                                                        <span class="lbl"> 毛重</span>
+                                                    </label>
+                                                    <label>
+                                                        <input name="form-field-radio" type="radio"
+                                                               value="2"
+                                                               class="ace"/>
+                                                        <span class="lbl"> 皮重</span>
+                                                    </label>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:5px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 5px">
+                                                <label style="display:block;float:left;"> &#12288;登记流水号： </label>
+                                                <input type="text" style="width:125px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="display:block;float:left;"> &#12288;&#12288;&#12288;仓房号： </label>
+                                                <select class="chosen-select" style="width:110px;"
+                                                        data-placeholder="选择一个仓房...">
+                                                    <option value="1">0P1</option>
+                                                    <option value="2">0P2</option>
+                                                    <option value="3">0P3</option>
+                                                </select>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;毛重：</label>
+                                                <input type="text" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
+                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">&nbsp;毛重&nbsp;</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 5px">
+                                                <label style="display:block;float:left;"> &#12288;车&#12288;牌&#12288;号： </label>
+                                                <input type="text" style="width:125px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="display:block;float:left;"> &#12288;&#12288;粮食品种： </label>
+                                                <input type="text" style="width:110px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;皮重：</label>
+                                                <input type="text" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
+                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">&nbsp;皮重&nbsp;</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 5px">
+                                                <label style="display:block;float:left;"> &#12288;&#12288;&#12288;&#12288;货主： </label>
+                                                <input type="text" style="width:125px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="display:block;float:left;"> &#12288;&#12288;粮食性质： </label>
+                                                <input type="text" style="width:110px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;净重：</label>
+                                                <input type="text" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
+                                                <label style="display:block;float:left;color:red"> =(毛重-皮重)</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 5px">
+                                                <label style="display:block;float:left;">水分增加扣率： </label>
+                                                <input type="text" style="width:125px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="display:block;float:left;">杂质增加扣率： </label>
+                                                <input type="text" style="width:110px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 增加扣重：</label>
+                                                <input type="text" style="width:80px"/>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="col-xs-12">
+                                            <div class="table-responsive">
+                                                <div id="sample-table-2_wrapper" class="dataTables_wrapper" role="grid">
+                                                    <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th class="center sorting_disabled" role="columnheader"
+                                                                       rowspan="1" colspan="1" style="width: 66px;" aria-label="">
+                                                        <label>
+                                                            <input type="checkbox" class="ace">
+                                                            <span class="lbl"></span>
+                                                        </label>
+                                                    </th>
+                                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2"
+                                                            rowspan="1" colspan="1" style="width: 157px;"
+                                                            aria-label="Domain: activate to sort column ascending">
+                                                            登记流水号
+                                                        </th>
+                                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2"
+                                                            rowspan="1" colspan="1" style="width: 118px;" aria-label="Price: activate to sort column ascending">
+                                                            车牌号
+                                                        </th>
+                                                        <th class="hidden-480 sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2"
+                                                            rowspan="1" colspan="1" style="width: 132px;" aria-label="Clicks: activate to sort column ascending">
+                                                            货主
+                                                        </th>
+                                                        <th class="hidden-480 sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2"
+                                                            rowspan="1" colspan="1" style="width: 155px;" aria-label="Status: activate to sort column ascending">
+                                                            皮重状态
+                                                        </th>
+                                                        <th class="hidden-480 sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2"
+                                                            rowspan="1" colspan="1" style="width: 155px;" aria-label="Status: activate to sort column ascending">
+                                                            毛重状态
+                                                        </th>
+                                                        <th class="sorting_disabled" role="columnheader"
+                                                            rowspan="1" colspan="1" style="width: 184px;" aria-label="">
+                                                            操作
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                                    <tr class="odd">
+                                                        <td class="center  sorting_1">
+                                                            <label>
+                                                                <input type="checkbox" class="ace">
+                                                                <span class="lbl"></span>
+                                                            </label>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <a href="#">2018-12-05-0004</a>
+                                                        </td>
+                                                        <td class=" ">苏BA3898</td>
+                                                        <td class="hidden-480 ">张三</td>
+
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-warning">未称重</span>
+                                                        </td>
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-warning">未称重</span>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                                                                <a class="blue" href="#">
+                                                                    <i class="icon-zoom-in bigger-130"></i>
+                                                                </a>
+
+                                                                <a class="green" href="#">
+                                                                    <i class="icon-pencil bigger-130"></i>
+                                                                </a>
+
+                                                            </div>
+
+                                                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                                <div class="inline position-relative">
+                                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="icon-caret-down icon-only bigger-120"></i>
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="" data-original-title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="" data-original-title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="even">
+                                                        <td class="center  sorting_1">
+                                                            <label>
+                                                                <input type="checkbox" class="ace">
+                                                                <span class="lbl"></span>
+                                                            </label>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <a href="#">2018-12-05-0003</a>
+                                                        </td>
+                                                        <td class=" ">苏B78682</td>
+                                                        <td class="hidden-480 ">李四</td>
+
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-success">已称重</span>
+                                                        </td>
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-success">已称重</span>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                                                                <a class="blue" href="#">
+                                                                    <i class="icon-zoom-in bigger-130"></i>
+                                                                </a>
+
+                                                                <a class="green" href="#">
+                                                                    <i class="icon-pencil bigger-130"></i>
+                                                                </a>
+
+                                                            </div>
+
+                                                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                                <div class="inline position-relative">
+                                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="icon-caret-down icon-only bigger-120"></i>
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="" data-original-title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="" data-original-title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-error" data-rel="tooltip" title="" data-original-title="Delete">
+																				<span class="red">
+																					<i class="icon-trash bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="odd">
+                                                        <td class="center  sorting_1">
+                                                            <label>
+                                                                <input type="checkbox" class="ace">
+                                                                <span class="lbl"></span>
+                                                            </label>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <a href="#">2018-12-05-0002</a>
+                                                        </td>
+                                                        <td class=" ">苏BA2343</td>
+                                                        <td class="hidden-480 ">王五</td>
+
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-warning">未称重</span>
+                                                        </td>
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-warning">未称重</span>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                                                                <a class="blue" href="#">
+                                                                    <i class="icon-zoom-in bigger-130"></i>
+                                                                </a>
+
+                                                                <a class="green" href="#">
+                                                                    <i class="icon-pencil bigger-130"></i>
+                                                                </a>
+
+                                                            </div>
+
+                                                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                                <div class="inline position-relative">
+                                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="icon-caret-down icon-only bigger-120"></i>
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="" data-original-title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="" data-original-title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="even">
+                                                        <td class="center  sorting_1">
+                                                            <label>
+                                                                <input type="checkbox" class="ace">
+                                                                <span class="lbl"></span>
+                                                            </label>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <a href="#">2018-12-05-0001</a>
+                                                        </td>
+                                                        <td class=" ">苏A87847</td>
+                                                        <td class="hidden-480 ">赵六</td>
+
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-inverse arrowed-in">已结算</span>
+                                                        </td>
+                                                        <td class="hidden-480 ">
+                                                            <span class="label label-sm label-inverse arrowed-in">已结算</span>
+                                                        </td>
+
+                                                        <td class=" ">
+                                                            <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                                                                <a class="blue" href="#">
+                                                                    <i class="icon-zoom-in bigger-130"></i>
+                                                                </a>
+
+                                                                <a class="green" href="#">
+                                                                    <i class="icon-pencil bigger-130"></i>
+                                                                </a>
+
+                                                            </div>
+
+                                                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                                <div class="inline position-relative">
+                                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="icon-caret-down icon-only bigger-120"></i>
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="" data-original-title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="" data-original-title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="dataTables_info" id="sample-table-2_info">展示1-4条记录
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="dataTables_paginate paging_bootstrap">
+                                                                <ul class="pagination">
+                                                                    <li class="prev disabled">
+                                                                        <a href="#">
+                                                                            <i class="icon-double-angle-left">
+
+                                                                            </i>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="active">
+                                                                        <a href="#">1</a>
+                                                                    </li><li>
+                                                                    <a href="#">2</a>
+                                                                </li>
+                                                                    <li>
+                                                                        <a href="#">3</a>
+                                                                    </li>
+                                                                    <li class="next">
+                                                                        <a href="#">
+                                                                            <i class="icon-double-angle-right">
+
+                                                                            </i>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /span -->
+                            </div>
+                            <div class="row" style="float: right;padding-right: 12px">
+                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-credit-card"></i>
+                                    刷卡查单
+                                </button>
+                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-save"></i>
+                                    保存写卡
+                                </button>
+                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-save"></i>
+                                    保存
+                                </button>
+                                <button class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                    <i class="icon-undo"></i>
+                                    取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+        <!-- /.main-content -->
+    </div>
+    <!-- /.main-container-inner -->
+
+</div>
+<!-- /.main-container -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
+</script>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
+</script>
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+</script>
+<script type="text/javascript">
+    if (parent.$("script[src='/assets/js/bootstrap.min.js']").length == 0) {
+        document.write("<script src='/assets/js/bootstrap.min.js'>" + "<" + "/script>");
+    }
+</script>
+<script th:src="@{/assets/js/typeahead-bs2.min.js}"></script>
+<script th:src="@{/assets/js/excanvas.min.js}"></script>
+<script th:src="@{/assets/js/jquery-ui-1.10.3.custom.min.js}"></script>
+<script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+<script th:src="@{/assets/js/chosen.jquery.min.js}"></script>
+<script th:src="@{/assets/js/fuelux/fuelux.spinner.min.js}"></script>
+<script th:src="@{/assets/js/date-time/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/assets/js/date-time/bootstrap-timepicker.min.js}"></script>
+<script th:src="@{/assets/js/date-time/moment.min.js}"></script>
+<script th:src="@{/assets/js/date-time/daterangepicker.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap-colorpicker.min.js}"></script>
+<script th:src="@{/assets/js/jquery.knob.min.js}"></script>
+<script th:src="@{/assets/js/jquery.autosize.min.js}"></script>
+<script th:src="@{/assets/js/jquery.inputlimiter.1.3.1.min.js}"></script>
+<script th:src="@{/assets/js/jquery.maskedinput.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap-tag.min.js}"></script>
+<script th:src="@{/assets/js/ace-elements.min.js}"></script>
+<script th:src="@{/assets/js/ace.min.js}"></script>
+<script th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>
+<script th:src="@{/assets/js/jquery.easy-pie-chart.min.js}"></script>
+<script th:src="@{/assets/js/jquery.sparkline.min.js}"></script>
+<script th:src="@{/assets/js/flot/jquery.flot.min.js}"></script>
+<script th:src="@{/assets/js/flot/jquery.flot.pie.min.js}"></script>
+<script th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $(".form-group").css({"margin-bottom": "5px"});
+        $('#id-disable-check').on('click', function () {
+            var inp = $('#form-input-readonly').get(0);
+            if (inp.hasAttribute('disabled')) {
+                inp.setAttribute('readonly', 'true');
+                inp.removeAttribute('disabled');
+                inp.value = "This text field is readonly!";
+            }
+            else {
+                inp.setAttribute('disabled', 'disabled');
+                inp.removeAttribute('readonly');
+                inp.value = "This text field is disabled!";
+            }
+        });
+
+        $(".chosen-select").chosen();
+        $('#chosen-multiple-style').on('click', function (e) {
+            var target = $(e.target).find('input[type=radio]');
+            var which = parseInt(target.val());
+            if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
+            else $('#form-field-select-4').removeClass('tag-input-style');
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        defaultcollapsed();
+    });
+</script>
+</body>
+</html>
