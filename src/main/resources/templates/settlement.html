@@ -22,6 +22,7 @@
     <script th:src="@{/assets/js/ace-extra.min.js}"></script>
     <script th:src="@{/assets/js/html5shiv.js}"></script>
     <script th:src="@{/assets/js/respond.min.js}"></script>
+    <script th:src="@{/assets/js/sidebar.js}"></script>
     <script th:inline="javascript">
         var ctx = [[${ctx}]];
     </script>
@@ -29,17 +30,10 @@
 
 <body>
 <div class="main-container" id="main-container">
-    <script type="text/javascript">
-        try {
-            ace.settings.check('main-container', 'fixed')
-        } catch (e) {
-        }
-    </script>
     <div th:replace="header::header"></div>
+    <div th:replace="sidebar::sidebar"></div>
     <div class="main-container-inner">
-        <div id="sidebar" class="sidebar" style="float: left">
-        </div>
-        <div class="main-content" id="main-content" style="float: left;margin-left:0px">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:96%">
             <div class="page-content" style="padding:10px 20px 0px">
                 <div class="page-header">
                     <h1>
@@ -411,8 +405,8 @@
 <script th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
 <script type="text/javascript">
     jQuery(function ($) {
+        defaultcollapsed();
         $(".form-group").css({"margin-bottom": "5px"});
-        $(".sidebar").load("/sidebar");
         $('#id-disable-check').on('click', function () {
             var inp = $('#form-input-readonly').get(0);
             if (inp.hasAttribute('disabled')) {
@@ -434,14 +428,6 @@
             if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
             else $('#form-field-select-4').removeClass('tag-input-style');
         });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        var window_width_px = $('.main-container').css('width');
-        var window_width = window_width_px.substr(0, window_width_px.length - 2);
-        var sidebar_width = $('#sidebar').width();
-        $("#main-content").css({"width": window_width - 60, "float": "left"});
     });
 </script>
 </body>

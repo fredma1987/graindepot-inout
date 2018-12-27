@@ -30,16 +30,10 @@
 
 <body>
 <div class="main-container" id="main-container">
-    <script type="text/javascript">
-        try {
-            ace.settings.check('main-container', 'fixed')
-        } catch (e) {
-        }
-    </script>
     <div th:replace="header::header"></div>
     <div th:replace="sidebar::sidebar"></div>
     <div class="main-container-inner">
-        <div class="main-content" id="main-content" style="float: left;margin-left:0px">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:96%">
             <div class="page-content" style="padding:10px 20px 0px">
                 <div class="page-header">
                     <h1>
@@ -599,6 +593,7 @@
 <script th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
 <script type="text/javascript">
     jQuery(function ($) {
+        defaultcollapsed();
         $(".form-group").css({"margin-bottom": "5px"});
         $('#id-disable-check').on('click', function () {
             var inp = $('#form-input-readonly').get(0);
@@ -621,11 +616,6 @@
             if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
             else $('#form-field-select-4').removeClass('tag-input-style');
         });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        defaultcollapsed();
     });
 </script>
 </body>
