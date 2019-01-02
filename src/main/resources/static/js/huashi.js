@@ -44,6 +44,7 @@ function connect()
         document.getElementById("result").value = result;
     } catch (e)
     {
+        alert(e);
     }
 }
 function disconnect()
@@ -121,4 +122,8 @@ function convBase64ToJpg()
         alert(result);
     } catch (e) {
     }
+}
+function download_Huashi(){
+    //现在模块下增加文件，后面将放置到ftp服务器上
+    window.location="/graindepot-inout/file/huashi.exe"
 }
