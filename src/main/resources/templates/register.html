@@ -24,6 +24,7 @@
     <script th:src="@{/assets/js/respond.min.js}"></script>
     <script th:src="@{/assets/js/sidebar.js}"></script>
     <script th:src="@{../js/huashi.js}"></script>
+    <script th:src="@{../js/d8.js}"></script>
     <script th:inline="javascript">
         var ctx = [[${ctx}]];
     </script>
@@ -403,26 +404,29 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                        <button class="btn btn-success" style="border: 0;width: 120px;">
+                                        <a class="btn btn-success" style="border: 0;width: 120px;">
                                             <i class="icon-credit-card"></i>
                                             刷卡查单
-                                        </button>
-                                        <button class="btn btn-success" style="border: 0;width: 120px;">
+                                        </a>
+                                        <OBJECT id=rd codeBase="comRD800.cab" WIDTH="0" HEIGHT="0"
+                                                classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
+                                        </OBJECT>
+                                        <a class="btn btn-success" style="border: 0;width: 120px;" onclick="m1CardTest()">
                                             <i class="icon-save"></i>
                                             保存写卡
-                                        </button>
-                                        <button class="btn btn-success" style="border: 0;width: 120px;">
+                                        </a>
+                                        <a class="btn btn-success" style="border: 0;width: 120px;">
                                             <i class="icon-save"></i>
                                             保存
-                                        </button>
-                                        <button class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                        </a>
+                                        <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                             <i class="icon-plus-sign"></i>
                                             新增
-                                        </button>
-                                        <button class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                        </a>
+                                        <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                             <i class="icon-undo"></i>
                                             取消
-                                        </button>
+                                        </a>
                             </div>
                         </form>
                     </div>
@@ -438,7 +442,6 @@
 
 </div>
 <!-- /.main-container -->
-
 <script type="text/javascript">
     window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>"+"<"+"script>");
 </script>
