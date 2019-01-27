@@ -32,16 +32,22 @@ function toJson(str)
 }
 function clearForm()
 {
-    document.getElementById("partyName").value = "";
-    document.getElementById("certNumber").value = "";
-    document.getElementById("certAddress").value = "";
+    $("#sellmanname").val("");
+    $("#sellmanaddress").val("");
+    $("#sellmanidcard").val("");
+    $("#gender").html("—&nbsp;—");
+    $("#nation").html("—&nbsp;—");
+    $("#bornDay").html("—&nbsp;—");
+    $("#certOrg").html("—&nbsp;—");
+    $("#effDate").html("—&nbsp;—");
+    $("#expDate").html("—&nbsp;—");
+    $("#PhotoStr").attr("src","data:image/jpeg;base64,");
 }
 function connect()
 {
     var CertCtl = document.getElementById("CertCtl");
     try {
         var result = CertCtl.connect();
-        document.getElementById("result").value = result;
     } catch (e)
     {
         alert(e);
@@ -80,9 +86,9 @@ function readCert()
         var resultObj = toJson(result);
         if (resultObj.resultFlag == 0)
         {
-            $("#partyName").val(resultObj.resultContent.partyName);
-            $("#certAddress").val(resultObj.resultContent.certAddress);
-            $("#certNumber").val(resultObj.resultContent.certNumber);
+            $("#sellmanname").val(resultObj.resultContent.partyName);
+            $("#sellmanaddress").val(resultObj.resultContent.certAddress);
+            $("#sellmanidcard").val(resultObj.resultContent.certNumber);
             $("#gender").text(resultObj.resultContent.gender);
             $("#nation").text(resultObj.resultContent.nation);
             $("#bornDay").text(resultObj.resultContent.bornDay);
@@ -90,6 +96,8 @@ function readCert()
             $("#effDate").text(resultObj.resultContent.effDate);
             $("#expDate").text(resultObj.resultContent.expDate);
             $("#PhotoStr").attr("src","data:image/jpeg;base64,"+ resultObj.resultContent.identityPic);
+        }else{
+            alert("请正确放置身份证！");
         }
     } catch(e)
     {

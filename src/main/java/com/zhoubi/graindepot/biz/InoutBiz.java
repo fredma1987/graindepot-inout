@@ -1,0 +1,2 @@
+package com.zhoubi.graindepot.biz;import com.zhoubi.graindepot.bean.Inout;import com.zhoubi.graindepot.mapper.InoutMapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.base.BaseService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;@Servicepublic class InoutBiz extends BaseService<Inout>  {	@Autowired	private InoutMapper InoutMapper;	@Override
+	protected BaseMapper<Inout> getMapper() {		return InoutMapper;	}}
