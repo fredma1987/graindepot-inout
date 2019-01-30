@@ -1,1 +1,1 @@
-package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Inout;import com.zhoubi.graindepot.base.BaseMapper;public interface InoutMapper extends BaseMapper<Inout> {}
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Inout;import com.zhoubi.graindepot.base.BaseMapper;public interface InoutMapper extends BaseMapper<Inout> {    String getMaxBillcode(Integer graindepot);    //入库登记阶段更新b_inout表    int updateRegisterInout(Inout item);}
