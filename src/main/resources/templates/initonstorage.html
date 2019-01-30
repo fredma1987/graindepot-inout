@@ -11,15 +11,13 @@
 
 <body>
 <div>
-    <script th:src="@{../js/huashi.js}"></script>
-    <script th:src="@{../js/d8.js}"></script>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
             <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
-                        扦样检验
+                        初始库存单
                         <small>
                             <i class="icon-double-angle-right"></i>
 
@@ -36,53 +34,6 @@
                             <div class="row">
                                 <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
                                     <div style="width: 100%;height:100%;padding-left:20px;float: left">
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;">登记日期：</label>
-
-                                                <div style="float: left;width:150px">
-                                                    <div class="input-group" style="float: left">
-                                                        <input class="form-control date-picker" id="billdate" name="billdate"
-                                                               type="text" data-date-format="yyyy-mm-dd"/>
-                                                                            <span class="input-group-addon">
-                                                                                <i class="icon-calendar bigger-110"></i>
-                                                                            </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;"> 登记流水号： </label>
-                                                <input type="text" style="width:190px" id="billcode" name="billcode"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:90px;padding-left:0px"> 检验结果： </label>
-                                                <div class="col-sm-4" style="width:130px;padding-left:0px">
-                                                    <select id="inspresult" name="inspresult" class="form-control">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr style="margin-bottom:5px;margin-top:15px"/>
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 售粮单位：</label>
-                                                <div class="col-sm-4" style="width:300px;padding-left:0px">
-                                                    <select id="traderid" name="traderid" class="form-control">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 售粮人： </label>
-                                                <input type="text" id="sellmanname" name="sellmanname" placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 车船号： </label>
-                                                <input type="text" id="trucknum" name="trucknum" style="width:100px"
-                                                       placeholder=""/>
-                                            </div>
-                                        </div>
-                                        <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 仓房号： </label>
@@ -120,18 +71,14 @@
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 计划安排： </label>
-                                                <div class="col-sm-4" style="width:120px;padding-left:0px">
-                                                    <select id="inplanid" name="inplanid" class="form-control">
-                                                    </select>
-                                                </div>
+                                                <label> 单价： </label>
+                                                <input type="text" id="price" name="price" style="width:50px"
+                                                       placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 合同号：</label>
-                                                <div class="col-sm-4" style="width:130px;padding-left:0px">
-                                                    <select id="contractid" name="contractid" class="form-control">
-                                                    </select>
-                                                </div>
+                                                <label> 库存数量： </label>
+                                                <input type="text" id="grainqty" name="grainqty" style="width:50px"
+                                                       placeholder=""/>
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
@@ -140,6 +87,49 @@
                                         </div>
                                         <div id="gqitem2" style="display: none">
                                             <div th:replace="gqitem::gqitem2"></div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 包装方式：</label>
+                                                <div class="col-sm-4" style="width:100px;padding-left:0px">
+                                                    <select id="packtype" name="packtype" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 总包数： </label>
+                                                <input type="text" id="packcount" name="packcount" style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 调入省份：</label>
+                                                <div class="col-sm-4" style="width:100px;padding-left:0px">
+                                                    <select id="provinceid" name="provinceid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 市（州）：</label>
+                                                <div class="col-sm-4" style="width:100px;padding-left:0px">
+                                                    <select id="cityid" name="cityid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 原产地： </label>
+                                                <input type="text" id="soucearea" style="width:100px"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 备注： </label>
+                                                <input type="text" id="remark" name="remark" style="width:200px"
+                                                       placeholder=""/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -154,20 +144,13 @@
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
-                                <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
-                                        classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
-                                </OBJECT>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
-                                    <i class="icon-credit-card"></i>
-                                    刷卡查单
-                                </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
-                                    <i class="icon-save"></i>
-                                    保存写卡
-                                </a>
                                 <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-save"></i>
                                     保存
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-save"></i>
+                                    审核
                                 </a>
                                 <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                     <i class="icon-undo"></i>
@@ -191,14 +174,14 @@
 
 <script  th:inline="javascript">
     jQuery(function ($) {
-        initInspresult();
         initGrain();
         initGrainattr();
         initGrade();
+        initPacktype();
     });
-    function initInspresult(){
-        var data = [{value: 1, text: "待检"}, {value: 2, text: "接收"}, {value: 3, text: "不接收"}];
-        $("#inspresult").bootstrapSelect({
+    function initPacktype() {
+        var data = [{value: 1, text: "散装"}, {value: 2, text: "包装"}];
+        $("#packtype").bootstrapSelect({
             data: data,
             valueField: 'value',
             textField: 'text',
