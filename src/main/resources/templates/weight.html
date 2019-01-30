@@ -1,40 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:include="head::head(${title})">
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>智能粮库云平台</title>
-    <!-- basic styles -->
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome-ie7.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.custom.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/chosen.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap-timepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/colorpicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-ie.min.css}"/>
-    <script th:src="@{/assets/js/ace-extra.min.js}"></script>
-    <script th:src="@{/assets/js/html5shiv.js}"></script>
-    <script th:src="@{/assets/js/respond.min.js}"></script>
-    <script th:src="@{/assets/js/sidebar.js}"></script>
-    <script th:inline="javascript">
-        var ctx = [[${ctx}]];
+    <script  th:inline="javascript">
+
     </script>
 </head>
 
 <body>
-<div class="main-container" id="main-container">
-    <div th:replace="header::header"></div>
-    <div th:replace="sidebar::sidebar"></div>
+<div>
+    <script th:src="@{../js/huashi.js}"></script>
+    <script th:src="@{../js/d8.js}"></script>
+    <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
-        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:96%">
-            <div class="page-content" style="padding:10px 20px 0px">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
+            <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
                         入库检斤
@@ -50,7 +32,7 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
 
-                        <form class="form-horizontal" role="form">
+                        <form class="form-horizontal" id="validation-form" role="form">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
                                     <div style="width: 40%;height:100%;float: left">
@@ -79,91 +61,71 @@
                                                  style="float: left;width: 180px;height:60px;border-top: 1px solid #CCC">
                                                 <div class="widget-main padding-6" style="height: 55px">
                                                     <div class="alert alert-info"
-                                                         style="font-size: 24px;height:48px;line-height:48px;padding:2px;background-color:#06f;color:#fff;"> 12000
+                                                         style="font-size: 24px;height:48px;line-height:48px;padding:2px;background-color:#06f;color:#fff;">
+                                                        <span id="weight" name="weight">
+                                                            12000
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <label style="padding-left:10px;float: left;display: block;font-size: 24px;line-height: 55px">Kg</label>
-                                            <!--<div style="float: right;padding-right:20px;line-height: 82px;height:82px;vertical-align:middle">
-                                                <div style="float: left;height:100%;line-height: 82px;margin-top: -3px;vertical-align:middle">
-                                                    <label class="control-label"
-                                                           style="height:100%;line-height: 82px;font-size: 24px;vertical-align:middle">检斤类型：</label>
-                                                </div>
-                                                <div class="radio"
-                                                     style="float: left;height:100%;padding:0">
-                                                    <label>
-                                                        <input name="form-field-radio" type="radio"
-                                                               value="1"
-                                                               class="ace" checked="checked"/>
-                                                        <span class="lbl"> 毛重</span>
-                                                    </label>
-                                                    <label>
-                                                        <input name="form-field-radio" type="radio"
-                                                               value="2"
-                                                               class="ace"/>
-                                                        <span class="lbl"> 皮重</span>
-                                                    </label>
-                                                </div>
-                                            </div>-->
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 5px">
-                                                <label style="display:block;float:left;"> &#12288;登记流水号： </label>
-                                                <input type="text" style="width:125px"
+                                            <div style="float: left;padding-left: 19px">
+                                                <label style="display:block;float:left;"> 登记流水号： </label>
+                                                <input type="text" id="billcode" name="billcode" style="width:125px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;"> &#12288;&#12288;&#12288;仓房号： </label>
-                                                <select class="chosen-select" style="width:110px;"
-                                                        data-placeholder="选择一个仓房...">
-                                                    <option value="1">0P1</option>
-                                                    <option value="2">0P2</option>
-                                                    <option value="3">0P3</option>
-                                                </select>
+                                                <label style="float: left;padding-left:42px"> 仓房号： </label>
+                                                <div class="col-sm-4" style="width:125px;padding-left:0px">
+                                                    <select id="storageid" name="storageid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> &#12288;&#12288;毛重：</label>
-                                                <input type="text" style="width:80px"/>
+                                            <div style="float: left;padding-left: 24px">
+                                                <label> 毛重：</label>
+                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
-                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">&nbsp;毛重&nbsp;</span>
+                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">毛重</span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 5px">
-                                                <label style="display:block;float:left;"> &#12288;车&#12288;牌&#12288;号： </label>
-                                                <input type="text" style="width:125px"
+                                            <div style="float: left;padding-left: 47px">
+                                                <label style="display:block;float:left;"> 车牌号： </label>
+                                                <input type="text" id="trucknum" name="trucknum" style="width:125px"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;"> &#12288;&#12288;粮食品种： </label>
-                                                <input type="text" style="width:110px"
+                                            <div style="float: left;padding-left: 38px">
+                                                <label style="display:block;float:left;"> 粮食品种： </label>
+                                                <input type="text" id="grainid" name="grainid" style="width:110px"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> &#12288;&#12288;皮重：</label>
-                                                <input type="text" style="width:80px"/>
+                                            <div style="float: left;padding-left: 39px">
+                                                <label> 皮重：</label>
+                                                <input type="text" id="tareweight" name="tareweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
-                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">&nbsp;皮重&nbsp;</span>
+                                                <span class="label label-primary arrowed" style="cursor:pointer;vertical-align: middle">皮重</span>
                                             </div>
 
                                         </div>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 5px">
-                                                <label style="display:block;float:left;"> &#12288;&#12288;&#12288;&#12288;货主： </label>
-                                                <input type="text" style="width:125px"
+                                            <div style="float: left;padding-left: 61px">
+                                                <label style="display:block;float:left;"> 货主： </label>
+                                                <input type="text" id="sellmanname" name="sellmanname" style="width:125px"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;"> &#12288;&#12288;粮食性质： </label>
-                                                <input type="text" style="width:110px"
+                                            <div style="float: left;padding-left: 38px">
+                                                <label style="display:block;float:left;"> 粮食性质： </label>
+                                                <input type="text" id="grainattrid" name="grainattrid" style="width:110px"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> &#12288;&#12288;净重：</label>
-                                                <input type="text" style="width:80px"/>
+                                            <div style="float: left;padding-left: 39px">
+                                                <label> 净重：</label>
+                                                <input type="text" id="netweight" name="netweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
                                                 <label style="display:block;float:left;color:red"> =(毛重-皮重)</label>
@@ -172,20 +134,20 @@
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 5px">
                                                 <label style="display:block;float:left;">水分增加扣率： </label>
-                                                <input type="text" style="width:125px"
+                                                <input type="text" id="wdeduratex" name="wdeduratex" style="width:125px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label style="display:block;float:left;">杂质增加扣率： </label>
-                                                <input type="text" style="width:110px"
+                                                <input type="text" id="ideduratex" name="ideduratex" style="width:110px"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
+                                            <div style="float: left;padding-left: 11px">
                                                 <label> 增加扣重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="extradedu" name="extradedu" style="width:80px"/>
                                             </div>
                                         </div>
-                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="col-xs-12">
                                             <div class="table-responsive">
                                                 <div id="sample-table-2_wrapper" class="dataTables_wrapper" role="grid">
@@ -388,65 +350,12 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr class="even">
-                                                        <td class=" ">
-                                                            <a href="#">2018-12-05-0001</a>
-                                                        </td>
-                                                        <td class=" ">苏A87847</td>
-                                                        <td class="hidden-480 ">赵六</td>
 
-                                                        <td class="hidden-480 ">
-                                                            <span class="label label-sm label-inverse arrowed-in">已结算</span>
-                                                        </td>
-                                                        <td class="hidden-480 ">
-                                                            <span class="label label-sm label-inverse arrowed-in">已结算</span>
-                                                        </td>
-
-                                                        <td class=" ">
-                                                            <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                                                                <a class="blue" href="#">
-                                                                    <i class="icon-zoom-in bigger-130"></i>
-                                                                </a>
-
-                                                                <a class="green" href="#">
-                                                                    <i class="icon-pencil bigger-130"></i>
-                                                                </a>
-
-                                                            </div>
-
-                                                            <div class="visible-xs visible-sm hidden-md hidden-lg">
-                                                                <div class="inline position-relative">
-                                                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
-                                                                        <i class="icon-caret-down icon-only bigger-120"></i>
-                                                                    </button>
-
-                                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
-                                                                        <li>
-                                                                            <a href="#" class="tooltip-info" data-rel="tooltip" title="" data-original-title="View">
-																				<span class="blue">
-																					<i class="icon-zoom-in bigger-120"></i>
-																				</span>
-                                                                            </a>
-                                                                        </li>
-
-                                                                        <li>
-                                                                            <a href="#" class="tooltip-success" data-rel="tooltip" title="" data-original-title="Edit">
-																				<span class="green">
-																					<i class="icon-edit bigger-120"></i>
-																				</span>
-                                                                            </a>
-                                                                        </li>
-
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
                                                     </tbody>
                                                     </table>
-                                                    <div class="row">
+                                                    <div class="row" style="overflow: hidden">
                                                         <div class="col-sm-6">
-                                                            <div class="dataTables_info" id="sample-table-2_info">展示1-4条记录
+                                                            <div class="dataTables_info" id="sample-table-2_info">展示1-3条记录
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
@@ -486,22 +395,33 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-left icon-on-left"></i>
+                                    前一单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-right icon-on-right"></i>
+                                    后一单
+                                </a>
+                                <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
+                                        classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
+                                </OBJECT>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-credit-card"></i>
                                     刷卡查单
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-save"></i>
                                     保存写卡
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-save"></i>
                                     保存
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                     <i class="icon-undo"></i>
                                     取消
-                                </button>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -518,69 +438,10 @@
 </div>
 <!-- /.main-container -->
 
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    if (parent.$("script[src='/assets/js/bootstrap.min.js']").length == 0) {
-        document.write("<script src='/assets/js/bootstrap.min.js'>" + "<" + "/script>");
-    }
-</script>
-<script th:src="@{/assets/js/typeahead-bs2.min.js}"></script>
-<script th:src="@{/assets/js/excanvas.min.js}"></script>
-<script th:src="@{/assets/js/jquery-ui-1.10.3.custom.min.js}"></script>
-<script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
-<script th:src="@{/assets/js/chosen.jquery.min.js}"></script>
-<script th:src="@{/assets/js/fuelux/fuelux.spinner.min.js}"></script>
-<script th:src="@{/assets/js/date-time/bootstrap-datepicker.min.js}"></script>
-<script th:src="@{/assets/js/date-time/bootstrap-timepicker.min.js}"></script>
-<script th:src="@{/assets/js/date-time/moment.min.js}"></script>
-<script th:src="@{/assets/js/date-time/daterangepicker.min.js}"></script>
-<script th:src="@{/assets/js/bootstrap-colorpicker.min.js}"></script>
-<script th:src="@{/assets/js/jquery.knob.min.js}"></script>
-<script th:src="@{/assets/js/jquery.autosize.min.js}"></script>
-<script th:src="@{/assets/js/jquery.inputlimiter.1.3.1.min.js}"></script>
-<script th:src="@{/assets/js/jquery.maskedinput.min.js}"></script>
-<script th:src="@{/assets/js/bootstrap-tag.min.js}"></script>
-<script th:src="@{/assets/js/ace-elements.min.js}"></script>
-<script th:src="@{/assets/js/ace.min.js}"></script>
-<script th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>
-<script th:src="@{/assets/js/jquery.easy-pie-chart.min.js}"></script>
-<script th:src="@{/assets/js/jquery.sparkline.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.pie.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
+
 <script type="text/javascript">
     jQuery(function ($) {
-        defaultcollapsed();
-        $(".form-group").css({"margin-bottom": "5px"});
-        $('#id-disable-check').on('click', function () {
-            var inp = $('#form-input-readonly').get(0);
-            if (inp.hasAttribute('disabled')) {
-                inp.setAttribute('readonly', 'true');
-                inp.removeAttribute('disabled');
-                inp.value = "This text field is readonly!";
-            }
-            else {
-                inp.setAttribute('disabled', 'disabled');
-                inp.removeAttribute('readonly');
-                inp.value = "This text field is disabled!";
-            }
-        });
 
-        $(".chosen-select").chosen();
-        $('#chosen-multiple-style').on('click', function (e) {
-            var target = $(e.target).find('input[type=radio]');
-            var which = parseInt(target.val());
-            if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
-            else $('#form-field-select-4').removeClass('tag-input-style');
-        });
     });
 </script>
 </body>

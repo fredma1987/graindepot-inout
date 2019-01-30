@@ -1,40 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:include="head::head(${title})">
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>智能粮库云平台</title>
-    <!-- basic styles -->
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/font-awesome-ie7.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.custom.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/chosen.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap-timepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/colorpicker.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/ace-ie.min.css}"/>
-    <script th:src="@{/assets/js/ace-extra.min.js}"></script>
-    <script th:src="@{/assets/js/html5shiv.js}"></script>
-    <script th:src="@{/assets/js/respond.min.js}"></script>
-    <script th:src="@{/assets/js/sidebar.js}"></script>
-    <script th:inline="javascript">
-        var ctx = [[${ctx}]];
+    <script  th:inline="javascript">
+
     </script>
 </head>
 
 <body>
-<div class="main-container" id="main-container">
-    <div th:replace="header::header"></div>
-    <div th:replace="sidebar::sidebar"></div>
+<div>
+    <script th:src="@{../js/huashi.js}"></script>
+    <script th:src="@{../js/d8.js}"></script>
+    <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
-        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:96%">
-            <div class="page-content" style="padding:10px 20px 0px">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
+            <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
                         收购结算
@@ -53,8 +35,8 @@
                         <form class="form-horizontal" role="form">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
-                                    <div style="width: 40%;height:100%;float: left">
-                                        <div style="width: 100%;height:50%;text-align: center;">
+                                    <div style="width: 35%;height:100%;float: left">
+                                        <div style="width: 100%;height:45%;text-align: center;">
                                             <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
                                                 <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片1</label>
                                             </div>
@@ -62,7 +44,7 @@
                                                 <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片2</label>
                                             </div>
                                         </div>
-                                        <div style="width: 100%;height:50%;text-align: center;">
+                                        <div style="width: 100%;height:45%;text-align: center;">
 
                                             <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
                                                 <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片3</label>
@@ -73,30 +55,21 @@
                                         </div>
 
                                     </div>
-                                    <div style="width: 60%;height:100%;padding-left:20px;float: left">
+                                    <div style="width: 65%;height:100%;padding-left:20px;float: left">
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">结算单模板：</label>
-
-                                                <select class="chosen-select" style="width:150px;"
-                                                        id="form-field-select-3"
-                                                        data-placeholder="选择一个模板...">
-                                                    <option value="">&nbsp;</option>
-                                                    <option value="1">早籼稻收购</option>
-                                                    <option value="2">晚籼稻收购</option>
-                                                </select>
+                                                <label style="float: left;"> 结算单模板： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="printtempid" name="printtempid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">结算类型：</label>
-
-                                                <select class="chosen-select" style="width:150px;"
-                                                        id="form-field-select-5"
-                                                        data-placeholder="选择一个检斤方式...">
-                                                    <option value="1">现金</option>
-                                                    <option value="2">银行卡</option>
-                                                    <option value="3">微信</option>
-                                                    <option value="4">支付宝</option>
-                                                </select>
+                                                <label style="float: left;padding-left:10px"> 结算类型： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="settlemothod" name="settlemothod" class="form-control">
+                                                    </select>
+                                                </div>
                                                 <button class="btn btn-primary"
                                                         style="margin-left:5px;border:0">
                                                     <i class="icon-globe"></i>
@@ -107,111 +80,80 @@
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">售粮单位：</label>
-
-                                                <select class="chosen-select" style="width:300px;"
-                                                        id="form-field-select-6"
-                                                        data-placeholder="选择一个售粮单位...">
-                                                    <option value="">&nbsp;</option>
-                                                    <option value="2">张三</option>
-                                                    <option value="3">李四</option>
-                                                    <option value="4">王五</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 售粮单位：</label>
+                                                <div class="col-sm-4" style="width:300px;padding-left:0px">
+                                                    <select id="traderid" name="traderid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> *售粮人： </label>
-                                                <input type="text" id="username" placeholder=""/>
+                                                <input type="text" id="sellmanname" name="sellmanname" placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 联系电话： </label>
-                                                <input type="text" style="width:120px" id="telphone"
+                                                <input type="text" style="width:120px" id="sellmanphone" name="sellmanphone"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 身份证号： </label>
-                                                <input type="text" style="width:190px" id="id"
+                                                <input type="text" style="width:190px" id="sellmanidcard"  name="sellmanidcard"
                                                        placeholder=""/>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">车船类型：</label>
-
-                                                <select class="chosen-select" style="width:150px;"
-                                                        data-placeholder="选择一个模板...">
-                                                    <option value="1">货车</option>
-                                                    <option value="2">火车</option>
-                                                    <option value="3">船</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 车船类型：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="trucktype" name="trucktype" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 车船号： </label>
-                                                <input type="text" id="" style="width:100px"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px;display: none">
-                                                <label> 承运单位： </label>
-                                                <input type="text" id="" style="width:220px"
+                                                <input type="text" id="trucknum" name="trucknum" style="width:100px"
                                                        placeholder=""/>
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label>仓房号：</label>
-
-                                                <select class="chosen-select" style="width:120px;"
-                                                        data-placeholder="选择一个仓房...">
-                                                    <option value="1">0P1</option>
-                                                    <option value="2">0P2</option>
-                                                    <option value="3">0P3</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 仓房号： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="storageid" name="storageid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label>粮食品种：</label>
-
-                                                <select class="chosen-select" style="width:100px;"
-                                                        data-placeholder="选择一个品种...">
-                                                    <option value="1">小麦</option>
-                                                    <option value="2">粳稻</option>
-                                                    <option value="3">籼稻</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食品种：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainid" name="grainid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label>粮食性质：</label>
-
-                                                <select class="chosen-select" style="width:120px;"
-                                                        data-placeholder="选择一个性质...">
-                                                    <option value="1">中央储备粮</option>
-                                                    <option value="2">省级储备粮</option>
-                                                    <option value="3">县级储备粮</option>
-                                                    <option value="4">商品粮</option>
-                                                    <option value="5">最低收购价粮</option>
-                                                    <option value="99">其他粮</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食性质：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainattrid" name="grainattrid" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 收获年度： </label>
-                                                <input type="text" style="width:50px"
+                                                <input type="text" id="producingyear" name="producingyear" style="width:50px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label>粮食等级：</label>
-
-                                                <select class="chosen-select" style="width:100px;"
-                                                        data-placeholder="选择一个等级...">
-                                                    <option value="1">一等</option>
-                                                    <option value="2">二等</option>
-                                                    <option value="3">三等</option>
-                                                    <option value="4">四等</option>
-                                                    <option value="5">五等</option>
-                                                    <option value="6">等外</option>
-                                                </select>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:90px;padding-left:0px"> 粮食等级：</label>
+                                                <div class="col-sm-4" style="width:120px;padding-left:0px">
+                                                    <select id="grade" name="grade" class="form-control">
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 检验确认单价： </label>
@@ -225,130 +167,83 @@
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> &#12288;水分率： </label>
-                                                <input type="text" style="width:80px"/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> &#12288;杂质率： </label>
-                                                <input type="text" style="width:80px"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 出糙率： </label>
-                                                <input type="text" style="width:80px" id="id"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 出米率： </label>
-                                                <input type="text" style="width:80px" id="id"
-                                                       placeholder=""/>
-                                            </div>
-
+                                        <div id="gqitem3" style="display: none">
+                                            <div th:replace="gqitem::gqitem3"></div>
                                         </div>
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 出糙率： </label>
-                                                <input type="text" style="width:80px" id="id"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 整精米率： </label>
-                                                <input type="text" style="width:80px" id="id"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label> 谷外糙米： </label>
-                                                <input type="text" style="width:80px" id="id"
-                                                       placeholder=""/>
-                                            </div>
+                                        <div id="gqitem4">
+                                            <div th:replace="gqitem::gqitem4"></div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> &#12288;&#12288;毛重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> &#12288;&#12288;皮重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="tareweight" name="tareweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> &#12288;&#12288;净重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="netweight" name="netweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 合计扣重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="totalincdedu" name="totalincdedu" style="width:80px"/>
                                             </div>
 
                                         </div>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 增加扣重：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="extradedu" name="extradedu" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 结算重量：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="paidweight" name="paidweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 结算单价：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="price" name="price" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 结算金额：</label>
-                                                <input type="text" style="width:80px"/>
+                                                <input type="text" id="amount" name="amount" style="width:80px"/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">填制部门：</label>
 
-                                                <select class="chosen-select" style="width:150px;"
-                                                        data-placeholder="选择一个部门...">
-                                                    <option value="">&nbsp;</option>
-                                                    <option value="1">部门1</option>
-                                                    <option value="2">部门2</option>
-                                                </select>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label for="form-field-select-3">业务员：</label>
-
-                                                <select class="chosen-select" style="width:100px;"
-                                                        data-placeholder="选择一个业务员...">
-                                                    <option value="">&nbsp;</option>
-                                                    <option value="1">业务员1</option>
-                                                    <option value="2">业务员2</option>
-                                                </select>
-                                            </div>
-                                            <div style="float: left;height:30px;padding-left: 10px;vertical-align: bottom">
-                                                <label style="line-height: 30px"> 登记员： </label>
-                                                <label style="line-height: 30px"> 张三 </label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-left icon-on-left"></i>
+                                    前一单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-right icon-on-right"></i>
+                                    后一单
+                                </a>
+                                <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
+                                        classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
+                                </OBJECT>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-credit-card"></i>
                                     刷卡查单
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-search"></i>
                                     单据查询
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-legal"></i>
                                     确认结算
-                                </button>
-                                <button class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                     <i class="icon-undo"></i>
                                     取消
-                                </button>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -366,69 +261,66 @@
 <!-- /.main-container -->
 
 <script type="text/javascript">
-    window.jQuery || document.write("<script src='/assets/js/jquery-2.0.3.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
-</script>
-<script type="text/javascript">
-    if (parent.$("script[src='/assets/js/bootstrap.min.js']").length == 0) {
-        document.write("<script src='/assets/js/bootstrap.min.js'>" + "<" + "/script>");
-    }
-</script>
-<script th:src="@{/assets/js/typeahead-bs2.min.js}"></script>
-<script th:src="@{/assets/js/excanvas.min.js}"></script>
-<script th:src="@{/assets/js/jquery-ui-1.10.3.custom.min.js}"></script>
-<script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
-<script th:src="@{/assets/js/chosen.jquery.min.js}"></script>
-<script th:src="@{/assets/js/fuelux/fuelux.spinner.min.js}"></script>
-<script th:src="@{/assets/js/date-time/bootstrap-datepicker.min.js}"></script>
-<script th:src="@{/assets/js/date-time/bootstrap-timepicker.min.js}"></script>
-<script th:src="@{/assets/js/date-time/moment.min.js}"></script>
-<script th:src="@{/assets/js/date-time/daterangepicker.min.js}"></script>
-<script th:src="@{/assets/js/bootstrap-colorpicker.min.js}"></script>
-<script th:src="@{/assets/js/jquery.knob.min.js}"></script>
-<script th:src="@{/assets/js/jquery.autosize.min.js}"></script>
-<script th:src="@{/assets/js/jquery.inputlimiter.1.3.1.min.js}"></script>
-<script th:src="@{/assets/js/jquery.maskedinput.min.js}"></script>
-<script th:src="@{/assets/js/bootstrap-tag.min.js}"></script>
-<script th:src="@{/assets/js/ace-elements.min.js}"></script>
-<script th:src="@{/assets/js/ace.min.js}"></script>
-<script th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>
-<script th:src="@{/assets/js/jquery.easy-pie-chart.min.js}"></script>
-<script th:src="@{/assets/js/jquery.sparkline.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.pie.min.js}"></script>
-<script th:src="@{/assets/js/flot/jquery.flot.resize.min.js}"></script>
-<script type="text/javascript">
     jQuery(function ($) {
-        defaultcollapsed();
-        $(".form-group").css({"margin-bottom": "5px"});
-        $('#id-disable-check').on('click', function () {
-            var inp = $('#form-input-readonly').get(0);
-            if (inp.hasAttribute('disabled')) {
-                inp.setAttribute('readonly', 'true');
-                inp.removeAttribute('disabled');
-                inp.value = "This text field is readonly!";
-            }
-            else {
-                inp.setAttribute('disabled', 'disabled');
-                inp.removeAttribute('readonly');
-                inp.value = "This text field is disabled!";
-            }
-        });
-
-        $(".chosen-select").chosen();
-        $('#chosen-multiple-style').on('click', function (e) {
-            var target = $(e.target).find('input[type=radio]');
-            var which = parseInt(target.val());
-            if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
-            else $('#form-field-select-4').removeClass('tag-input-style');
-        });
+        initGrain();
+        initGrainattr();
+        initGrade();
+        initSettlemothod();
+        initTrucktype();
     });
+    function initGrain() {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            onSelect:function(value){
+                if(value>=3&& value<=6){
+                    $("#gqitem3").css("display","block");
+                    $("#gqitem4").css("display","none");
+                }else{
+                    $("#gqitem3").css("display","none");
+                    $("#gqitem4").css("display","block");
+                }
+            }
+        });
+    }
+    function initGrainattr() {
+        $("#grainattrid").bootstrapSelect({
+            url:  '/graindepot-base/selector/grainattrList',
+            type: 'GET',
+            valueField: 'grainattrid',
+            textField: 'grainattrname'
+        });
+    }
+    function initGrade(){
+        var data = [{value: 1, text: "一等"}, {value: 2, text: "二等"}, {value: 3, text: "三等"}
+            , {value: 4, text: "四等"}, {value: 5, text: "五等"}, {value: 6, text: "等外"}];
+        $("#grade").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 3
+        });
+    }
+    function initSettlemothod() {
+        var data = [{value: 1, text: "现金结算"}, {value: 2, text: "银行卡结算"}, {value: 3, text: "微信结算"}, {value: 4, text: "支付宝结算"}];
+        $("#settlemothod").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
+    function initTrucktype() {
+        var data = [{value: 1, text: "车辆"}, {value: 2, text: "船舶"}, {value: 3, text: "火车"}, {value: 99, text: "其他"}];
+        $("#trucktype").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
 </script>
 </body>
 </html>
