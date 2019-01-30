@@ -53,6 +53,11 @@ public class RegisterController extends BaseController {
     }
 
     //单保存入库单据
+    @GetMapping("toInSupple")
+    public String toInSupple(Model model){
+        model.addAttribute("title","入库补单");
+        return "insupple";
+    }
     @PostMapping("/edit")
     @ResponseBody
     public JsonResult edit(Inout inout) {
