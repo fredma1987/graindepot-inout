@@ -172,7 +172,35 @@ public class RegisterController extends BaseController {
         }
 
     }
+    /**
+     * @param billcode
+     * @param flag     1:前一单 3:后一单
+     * @return
+     */
+    @GetMapping("inout/findOne")
+    @ResponseBody
+    public JsonResult findOne(Integer billid, Integer flag) {
+        UserAddress ua = getUserAddress();
+        Inout inout=null;
+        if (billid!=null) {
+            Map param=new HashMap();
+            param.put("graindepotid",ua.getGraindepotid());
+            param.put("billid",billid);
+            if(flag==1){
+                inout = inoutBiz.selectBeforeOne(param);
+            }else if(flag==3){
+                inout = inoutBiz.selectAfterOne(param);
+            }
+        }else {
+            inout = inoutBiz.findMaxBill(ua.getGraindepotid());
+        }
+        if (inout!=null) {
+            return new JsonResult(inout, "查询成功", true);
+        }else {
+            return new JsonResult(null, "未查询到相关记录", false);
+        }
 
+    }
     //根据姓名和库点来模糊查询姓名
     @PostMapping("/individual/byName")
     @ResponseBody

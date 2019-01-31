@@ -277,9 +277,9 @@
                     render: function (data,type,row){
                         var obj=encodeURI(JSON.stringify(row));
                         return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">'+
-                                    '<a class="blue" href="javascript:doView('+'\''+obj+'\')">'+
+                                    /*'<a class="blue" href="javascript:doView('+'\''+obj+'\')">'+
                                         '<i class="icon-zoom-in bigger-130"></i>'+
-                                    '</a>'+
+                                    '</a>'+*/
                                     '<a class="green" href="javascript:doEdit('+'\''+obj+'\')">'+
                                         '<i class="icon-pencil bigger-130"></i>'+
                                     '</a>'+
@@ -307,8 +307,13 @@
         var param={"billid":obj.billid};
         var url="/graindepot-inout/inspect/selectById";
         var data=getDataJson(url,param);
-        $("#wdeduratex").val(data.wdeduratex);
-        $("#ideduratex").val(data.ideduratex);
+        if(data!=undefined){
+            $("#wdeduratex").val(data.wdeduratex);
+            $("#ideduratex").val(data.ideduratex);
+        }else{
+            $("#wdeduratex").val("");
+            $("#ideduratex").val("");
+        }
     }
     function doView(obj){
 

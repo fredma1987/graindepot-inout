@@ -352,11 +352,11 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toInoutDetail(1)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(1)">
                                     <i class="icon-arrow-left icon-on-left"></i>
                                     前一单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toInoutDetail(3)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(3)">
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
@@ -444,11 +444,11 @@
         $("#customtype1").attr("checked", "checked");
 
         //var test="苏FT902E"
-        var test = "苏FT902E"
+        var test = "苏FT902E";
         var hex = toUTF8Hex(test);
         console.log(hex);
         var str = utf8HexToStr(hex);
-        console.log(str)
+        console.log(str);
 
         sellmannameAutoComplete();
     });
@@ -549,7 +549,7 @@
             },
             afterSelect: function (item) {
                 //选择项之后的事件 ，item是当前选中的。
-                console.log(item)
+                console.log(item);
                 $("#sellmanidcard").val(item.idcard);
                 $("#sellmanphone").val(item.phone);
                 $("#sellmanaddress").val(item.address);
@@ -773,20 +773,17 @@
         $("select").trigger("change");
     }
 
-    //type 1:前一单  2:刷卡查单 3:后一单
+    //type 2:刷卡查单
     function toInoutDetail(type) {
         var _billcode = $("#billcode").html();
         if (_billcode == "暂无") {
             _billcode = undefined;
         }
-        if (type == 1) {
-            initInout(_billcode, 1);
-        }
         if (type == 2) {
             //var billcode = d8ReadCard(1);
             //var billcode2 = d8ReadCard(2);
             var billcode = d8ReadCard(1);
-            console.log(billcode)
+            console.log(billcode);
             //  var billcode4 = d8ReadCard(5);
             //  var billcode5 = d8ReadCard(6);
             //console.log(billcode);
@@ -798,12 +795,65 @@
                 initInout(billcode, 2);
             }
         }
-        if (type == 3) {
-            initInout(_billcode, 3)
-        }
 
     }
-
+    //type 1:前一单  3:后一单
+    function toFindInoutDetail(type){
+        var billid=g_billid;
+        var flag=type;
+        findInout(billid,type);
+    }
+    function findInout(billid,flag){
+        $.get("/graindepot-inout/register/inout/findOne", {billid: billid, flag: flag})
+                .then(function (result) {
+                    if (result.success) {
+                        var inout = result.data;
+                        g_billid = result.data.billid;
+                        $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
+                        $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
+                        $("#settlemothod").bootstrapSelect("setValue", inout.settlemothod);
+                        if (inout.customtype == 1) {
+                            $("#customtype1").attr("checked", "checked");
+                            $("#customtype2").removeAttr("checked");
+                        } else {
+                            $("#customtype1").removeAttr("checked");
+                            $("#customtype2").attr("checked", "checked");
+                        }
+                        $("#traderid").bootstrapSelect("setValue", inout.traderid);
+                        $("#sellmanidcard").val(inout.sellmanidcard);
+                        $("#sellmanphone").val(inout.sellmanphone);
+                        $("#sellmanname").val(inout.sellmanname);
+                        $("#sellmanaddress").val(inout.sellmanaddress);
+                        $("#trucktype").bootstrapSelect("setValue", inout.trucktype);
+                        $("#trucknum").val(inout.trucknum);
+                        $("#carriername").val(inout.carriername);
+                        $("#carrieridcard").val(inout.carrieridcard);
+                        $("#storageid").bootstrapSelect("setValue", inout.storageid);
+                        $("#grainid").bootstrapSelect("setValue", inout.grainid);
+                        $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
+                        $("#producingyear").val(inout.producingyear);
+                        $("#contractid").bootstrapSelect("setValue", inout.contractid);
+                        $("#packtype").bootstrapSelect("setValue", inout.packtype);
+                        $("#packcount").val(inout.packcount);
+                        $("#selfreport").val(inout.selfreport);
+                        $("#fprovinceid").bootstrapSelect("setValue", inout.fprovinceid);
+                        $("#fcityid").bootstrapSelect("setValue", inout.fcityid);
+                        $("#soucearea").val(inout.soucearea);
+                        $("#remark").val(inout.remark);
+                        $("#billcode").html(inout.billcode);
+                        if (inout.regstate == 1) {
+                            $("#billstate").html("已保存已写卡");
+                        } else if (inout.regstate == 0) {
+                            $("#billstate").html("已保存未写卡");
+                        } else if (inout.regstate == -1) {
+                            $("#billstate").html("已保存已退港");
+                        }
+                    }
+                    $.bootstrapBox.alert.init({message: result.message})
+                }, function () {
+                    $.bootstrapBox.alert.init({message: "查询失败"})
+                })
+    }
     //加载入库登记信息 flag 1:前一单，2:当前单 3:后一单
     function initInout(billcode, flag) {
         $.get("/graindepot-inout/register/inout/one", {billcode: billcode, flag: flag})
