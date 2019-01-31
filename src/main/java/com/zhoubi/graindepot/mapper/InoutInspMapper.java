@@ -1,1 +1,1 @@
-package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.InoutInsp;import com.zhoubi.graindepot.base.BaseMapper;public interface InoutInspMapper extends BaseMapper<InoutInsp> {}
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.bean.InoutInsp;public interface InoutInspMapper extends BaseMapper<InoutInsp> {}

@@ -1,11 +1,12 @@
 package com.zhoubi.graindepot.controller;
 
 
+import com.zhoubi.graindepot.bean.InoutInsp;
+import com.zhoubi.graindepot.biz.InspectBiz;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("inspect")
 public class InspectController extends BaseController{
+    @Autowired
+    InspectBiz inspectBiz;
     @ModelAttribute("ctx")
     public void getAccount(Model model,HttpServletRequest request) {
         String ctx = request.getContextPath();
@@ -26,5 +29,10 @@ public class InspectController extends BaseController{
     @RequestMapping(value="/toInspect",method = RequestMethod.GET)
     public String toRegister(Model model, HttpServletRequest request, HttpServletResponse response){
         return "inspect";
+    }
+    @PostMapping("selectById")
+    @ResponseBody
+    public InoutInsp selectById(Integer billid){
+        return inspectBiz.selectById(billid);
     }
 }
