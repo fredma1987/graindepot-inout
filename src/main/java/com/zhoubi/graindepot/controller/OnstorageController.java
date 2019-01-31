@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("onstorage")
-public class Onstorage extends BaseController{
+public class OnstorageController extends BaseController{
     @GetMapping("toInitOnstorage")
     public String toInitOnstorage(){
         return "initonstorage";
