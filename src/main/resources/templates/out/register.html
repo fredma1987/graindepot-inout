@@ -17,7 +17,7 @@
             <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
-                        入库登记
+                        出库登记
                         <small>
                             <i class="icon-double-angle-right"></i>
 
@@ -120,38 +120,14 @@
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 10px;height:30px;vertical-align: top">
-                                                <div style="float: left;height:100%;vertical-align: top;margin-top: -3px;">
-                                                    <label class="control-label"
-                                                           style="height:100%;line-height: 100%;vertical-align: top;">客户性质：</label>
-                                                </div>
-                                                <div class="radio"
-                                                     style="float: left;height:100%;vertical-align: top;margin-top: -8px">
-                                                    <label>
-                                                        <input name="customtype" type="radio"
-                                                               value="1" id="customtype1"
-                                                               class="ace" onclick="chooseCustomtype(1)"/>
-                                                        <span class="lbl"> 个人</span>
-                                                    </label>
-                                                    <label>
-                                                        <input name="customtype" type="radio"
-                                                               value="2" id="customtype2"
-                                                               class="ace" onclick="chooseCustomtype(2)"/>
-                                                        <span class="lbl"> 单位</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div style="float: left;padding-left: 54px">
+                                            <div style="float: left;padding-left: 10px">
                                                 <label class="col-sm-4 control-label no-padding-right"
-                                                       style="width:70px;padding-left:0px" id="trader"> 售粮单位：</label>
-                                                <div class="col-sm-4" style="width:300px;padding-left:0px">
+                                                       style="width:78px;padding-left:0px" id="trader"> *购粮单位：</label>
+                                                <div class="col-sm-4" style="width:200px;padding-left:0px">
                                                     <select id="traderid" name="traderid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <hr style="margin-bottom:5px;margin-top:15px"/>
-                                        <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <object id="CertCtl" type="application/cert-reader" width="0"
                                                         height="0">
@@ -160,9 +136,9 @@
                                                             style="text-decoration: underline;color:blue;cursor:pointer;">下载</a>
                                                     </p>
                                                 </object>
-                                                <label id="manname"> *售粮人： </label>
+                                                <label id="manname"> 购粮人： </label>
                                                 <input type="text" data-bv-notempty id="sellmanname" name="sellmanname"
-                                                       placeholder="" data-provide="typeahead"/>
+                                                       placeholder="" style="width:160px" data-provide="typeahead"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label id="idcard"> *身份证号： </label>
@@ -170,24 +146,27 @@
                                                        name="sellmanidcard" data-bv-notempty
                                                        placeholder=""/>
                                             </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+
+
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 联系电话： </label>
                                                 <input type="text" style="width:110px" id="sellmanphone"
                                                        name="sellmanphone"
                                                        placeholder=""/>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 联系地址： </label>
                                                 <input type="text" id="sellmanaddress" name="sellmanaddress"
-                                                       style="width:300px"
+                                                       style="width:200px"
                                                        placeholder=""/>
                                             </div>
                                             <a class="btn btn-primary"
                                                style="margin-left:15px;border:0" onclick="readCert()">
                                                 <i class="icon-credit-card"></i>
-                                                售粮人身份证
+                                                购粮人身份证
                                             </a>
                                             <a class="btn btn-primary"
                                                style="margin-left:5px;border:0">
@@ -259,24 +238,34 @@
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 0px">
+                                                <label> 收获年度： </label>
+                                                <input type="text" id="producingyear" name="producingyear"
+                                                       style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 0px">
                                                 <label class="col-sm-4 control-label no-padding-right"
-                                                       style="width:70px;padding-left:0px"> 计划安排： </label>
+                                                       style="width:100px;padding-left:0px"> 出库计划安排： </label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="inplanid" name="inplanid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 0px">
-                                                <label> 收获年度： </label>
-                                                <input type="text" id="producingyear" name="producingyear"
-                                                       style="width:50px"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 0px">
                                                 <label class="col-sm-4 control-label no-padding-right"
                                                        style="width:60px;padding-left:0px"> 合同号：</label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="contractid" name="contractid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 0px">
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:100px;padding-left:0px"> 出库质量检验：</label>
+                                                <div class="col-sm-4" style="width:100px;padding-left:0px">
+                                                    <select id="inspectid" name="inspectid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
@@ -305,7 +294,7 @@
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label class="col-sm-4 control-label no-padding-right"
-                                                       style="width:70px;padding-left:0px"> 调入省份：</label>
+                                                       style="width:70px;padding-left:0px"> 调往省份：</label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="fprovinceid" name="fprovinceid" class="form-control">
                                                     </select>
@@ -804,7 +793,7 @@
         findInout(billid,type);
     }
     function findInout(billid,flag){
-        $.get("/graindepot-inout/register/inout/findOne", {billid: billid, flag: flag})
+        $.get("/graindepot-inout/register/inout/findOneOut", {billid: billid, flag: flag})
                 .then(function (result) {
                     if (result.success) {
                         var inout = result.data;

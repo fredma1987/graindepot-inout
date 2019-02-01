@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head(${title})">
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script  th:inline="javascript">
+
+    </script>
+</head>
+
+<body>
+<div>
+    <script th:src="@{../js/huashi.js}"></script>
+    <script th:src="@{../js/d8.js}"></script>
+    <div th:replace="navbar::navbar"></div>
+    <div class="main-container-inner">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
+            <div class="page-content" style="padding:10px 30px 0px">
+                <div class="page-header">
+                    <h1>
+                        收购结算
+                        <small>
+                            <i class="icon-double-angle-right"></i>
+
+                        </small>
+                    </h1>
+                </div>
+                <!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+
+                        <form class="form-horizontal" role="form">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
+                                    <div style="width: 35%;height:100%;float: left">
+                                        <div style="width: 100%;height:45%;text-align: center;">
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片1</label>
+                                            </div>
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片2</label>
+                                            </div>
+                                        </div>
+                                        <div style="width: 100%;height:45%;text-align: center;">
+
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片3</label>
+                                            </div>
+                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
+                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控图片4</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div style="width: 65%;height:100%;padding-left:20px;float: left">
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="float: left;"> 结算单模板： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="printtempid" name="printtempid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label style="float: left;padding-left:10px"> 结算类型： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="settlemothod" name="settlemothod" class="form-control">
+                                                    </select>
+                                                </div>
+                                                <button class="btn btn-primary"
+                                                        style="margin-left:5px;border:0">
+                                                    <i class="icon-globe"></i>
+                                                    微信付款
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 售粮单位：</label>
+                                                <div class="col-sm-4" style="width:300px;padding-left:0px">
+                                                    <select id="traderid" name="traderid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> *售粮人： </label>
+                                                <input type="text" id="sellmanname" name="sellmanname" placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 联系电话： </label>
+                                                <input type="text" style="width:120px" id="sellmanphone" name="sellmanphone"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 身份证号： </label>
+                                                <input type="text" style="width:190px" id="sellmanidcard"  name="sellmanidcard"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 车船类型：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="trucktype" name="trucktype" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 车船号： </label>
+                                                <input type="text" id="trucknum" name="trucknum" style="width:100px"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 仓房号： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="storageid" name="storageid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食品种：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainid" name="grainid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食性质：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainattrid" name="grainattrid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 收获年度： </label>
+                                                <input type="text" id="producingyear" name="producingyear" style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:90px;padding-left:0px"> 粮食等级：</label>
+                                                <div class="col-sm-4" style="width:120px;padding-left:0px">
+                                                    <select id="grade" name="grade" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 检验确认单价： </label>
+                                                <input type="text" style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 保管员确认单价： </label>
+                                                <input type="text" style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div id="gqitem3" style="display: none">
+                                            <div th:replace="in/gqitem::gqitem3"></div>
+                                        </div>
+                                        <div id="gqitem4">
+                                            <div th:replace="in/gqitem::gqitem4"></div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;毛重：</label>
+                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;皮重：</label>
+                                                <input type="text" id="tareweight" name="tareweight" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> &#12288;&#12288;净重：</label>
+                                                <input type="text" id="netweight" name="netweight" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 合计扣重：</label>
+                                                <input type="text" id="totalincdedu" name="totalincdedu" style="width:80px"/>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 增加扣重：</label>
+                                                <input type="text" id="extradedu" name="extradedu" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 结算重量：</label>
+                                                <input type="text" id="paidweight" name="paidweight" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 结算单价：</label>
+                                                <input type="text" id="price" name="price" style="width:80px"/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 结算金额：</label>
+                                                <input type="text" id="amount" name="amount" style="width:80px"/>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- /span -->
+                            </div>
+                            <div class="row" style="float: right;padding-right: 12px">
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-left icon-on-left"></i>
+                                    前一单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-right icon-on-right"></i>
+                                    后一单
+                                </a>
+                                <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
+                                        classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
+                                </OBJECT>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-credit-card"></i>
+                                    刷卡查单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-search"></i>
+                                    单据查询
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-legal"></i>
+                                    确认结算
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                    <i class="icon-undo"></i>
+                                    取消
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+        <!-- /.main-content -->
+    </div>
+    <!-- /.main-container-inner -->
+
+</div>
+<!-- /.main-container -->
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        initGrain();
+        initGrainattr();
+        initGrade();
+        initSettlemothod();
+        initTrucktype();
+    });
+    function initGrain() {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            onSelect:function(value){
+                if(value>=3&& value<=6){
+                    $("#gqitem3").css("display","block");
+                    $("#gqitem4").css("display","none");
+                }else{
+                    $("#gqitem3").css("display","none");
+                    $("#gqitem4").css("display","block");
+                }
+            }
+        });
+    }
+    function initGrainattr() {
+        $("#grainattrid").bootstrapSelect({
+            url:  '/graindepot-base/selector/grainattrList',
+            type: 'GET',
+            valueField: 'grainattrid',
+            textField: 'grainattrname'
+        });
+    }
+    function initGrade(){
+        var data = [{value: 1, text: "一等"}, {value: 2, text: "二等"}, {value: 3, text: "三等"}
+            , {value: 4, text: "四等"}, {value: 5, text: "五等"}, {value: 6, text: "等外"}];
+        $("#grade").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 3
+        });
+    }
+    function initSettlemothod() {
+        var data = [{value: 1, text: "现金结算"}, {value: 2, text: "银行卡结算"}, {value: 3, text: "微信结算"}, {value: 4, text: "支付宝结算"}];
+        $("#settlemothod").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
+    function initTrucktype() {
+        var data = [{value: 1, text: "车辆"}, {value: 2, text: "船舶"}, {value: 3, text: "火车"}, {value: 99, text: "其他"}];
+        $("#trucktype").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
+</script>
+</body>
+</html>

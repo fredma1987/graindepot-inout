@@ -23,8 +23,8 @@ public class SettlementController extends BaseController{
             ctx.substring(0,ctx.length()-1);
         model.addAttribute("ctx",ctx);
     }
-    @RequestMapping(value="/toSettlement",method = RequestMethod.GET)
+    @RequestMapping(value="/toInSettlement",method = RequestMethod.GET)
     public String toSettlement(Model model, HttpServletRequest request, HttpServletResponse response){
-        return "settlement";
+        return "in/settlement";
     }
 }

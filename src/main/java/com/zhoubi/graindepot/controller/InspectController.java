@@ -26,9 +26,9 @@ public class InspectController extends BaseController{
             ctx.substring(0,ctx.length()-1);
         model.addAttribute("ctx",ctx);
     }
-    @RequestMapping(value="/toInspect",method = RequestMethod.GET)
+    @RequestMapping(value="/toInInspect",method = RequestMethod.GET)
     public String toRegister(Model model, HttpServletRequest request, HttpServletResponse response){
-        return "inspect";
+        return "in/inspect";
     }
     @PostMapping("selectById")
     @ResponseBody

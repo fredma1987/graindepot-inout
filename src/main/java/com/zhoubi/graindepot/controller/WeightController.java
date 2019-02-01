@@ -30,13 +30,13 @@ public class WeightController extends BaseController{
             ctx.substring(0,ctx.length()-1);
         model.addAttribute("ctx",ctx);
     }
-    @RequestMapping(value="/toWeight",method = RequestMethod.GET)
+    @RequestMapping(value="/toInWeight",method = RequestMethod.GET)
     public String toRegister(Model model, HttpServletRequest request, HttpServletResponse response){
-        return "weight";
+        return "in/weight";
     }
-    @GetMapping("newPageList")
+    @GetMapping("newInPageList")
     @ResponseBody
-    public PagerModel newPageList(int start, int length) {
+    public PagerModel newInPageList(int start, int length) {
         BaseUser currentUser = getCurrentUser();
         PagerModel<Inout> e=new PagerModel();
         e.addOrder("billcode desc");
