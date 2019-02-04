@@ -24,6 +24,7 @@ public class InspectController extends BaseController{
         String ctx = request.getContextPath();
         if(ctx.endsWith("/"))
             ctx.substring(0,ctx.length()-1);
+
         model.addAttribute("ctx",ctx);
     }
     @RequestMapping(value="/toInInspect",method = RequestMethod.GET)
