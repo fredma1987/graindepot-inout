@@ -6,8 +6,10 @@ import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Video;
 import com.zhoubi.graindepot.biz.VideoBiz;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,6 +29,9 @@ public class VideoController extends BaseController{
         PagerModel<Video> e =new PagerModel<Video>();
         e.setStart(start);
         e.setLength(length);
+        if (StringUtils.isNotEmpty(videoname)) {
+            e.putWhere("videoname", "%" + videoname + "%");
+        }
         e.putWhere("graindepotid",currentUser.getGraindepotid());
         e.addOrder("channel");
         PagerModel<Video> result=videoBiz.selectListByPage(e);
@@ -50,7 +55,7 @@ public class VideoController extends BaseController{
     }
     @PostMapping("video/edit")
     public JsonResult videoEdit(Video video){
-        if(video.getVideoid()==0){
+        if(video.getVideoid()==0||video.getVideoid()==null){
             videoBiz.insert(video);
         }else{
             videoBiz.update(video);
