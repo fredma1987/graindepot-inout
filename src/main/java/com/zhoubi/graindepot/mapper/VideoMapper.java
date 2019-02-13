@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Video;import com.zhoubi.graindepot.base.BaseMapper;public interface VideoMapper extends BaseMapper<Video> {}
