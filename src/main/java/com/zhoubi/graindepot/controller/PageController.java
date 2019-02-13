@@ -24,15 +24,16 @@ public class PageController extends BaseController {
         String path="/video/list";
         return path;
     }
-    @GetMapping("/video/edit/{id}")
-    public String toEdit(Model model,@PathVariable int id){
+    @GetMapping("/video/edit")
+    public String toEdit(Model model,Integer id){
         String title="编辑监控";
-        Video item=videoBiz.selectById(id);
+        Video item=new Video();
+        if(id!=null) {
+            item = videoBiz.selectById(id);
+        }
         model.addAttribute("title",title);
         model.addAttribute("item",item);
-        if(id!=0){
-            model.addAttribute("id",id);
-        }
+        model.addAttribute("id",id);
         String path="/video/edit";
         return path;
     }

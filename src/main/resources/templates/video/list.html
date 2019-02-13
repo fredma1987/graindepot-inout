@@ -233,7 +233,6 @@
             callback: function (result) {
                 if (result) {
                     //删除监控
-                    debugger;
                     var ids = checkedList.map(function (curr) {
                         return curr.videoid
                     });
@@ -255,15 +254,15 @@
         $.bootstrapBox.dialog.init({
             title: "新增监控",
             url: "/graindepot-inout/page/video/edit",
-            width: '800px',
-            height: '600px'
+            width: '1200px',
+            height: '550px'
         })
     }
 
     function toEdit(videoid) {
         $.bootstrapBox.dialog.init({
             title: "修改监控",
-            url: "/graindepot-inout/page/video/edit/" + videoid,
+            url: "/graindepot-inout/page/video/edit?id=" + videoid,
             width: '1200px',
             height: '550px'
         })

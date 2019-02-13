@@ -55,8 +55,9 @@ public class VideoController extends BaseController{
     }
     @PostMapping("video/edit")
     public JsonResult videoEdit(Video video){
-        if(video.getVideoid()==0||video.getVideoid()==null){
+        if(video.getVideoid()==null||video.getVideoid()==0){
             videoBiz.insert(video);
+            return new JsonResult("新增成功", true);
         }else{
             videoBiz.update(video);
         }
@@ -64,7 +65,7 @@ public class VideoController extends BaseController{
     }
     @PostMapping("video/del")
     public JsonResult videoDel(String ids){
-        if(StringUtil.isEmpty(ids)){
+        if(StringUtil.isNotEmpty(ids)){
             Map map =new HashMap();
             map.put("Where_IdsStr", ids);
             videoBiz.deleteMap(map);
