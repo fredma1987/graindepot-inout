@@ -31,14 +31,38 @@ public class WeightController extends BaseController{
         model.addAttribute("ctx",ctx);
     }
     @RequestMapping(value="/toInWeight",method = RequestMethod.GET)
-    public String toRegister(Model model, HttpServletRequest request, HttpServletResponse response){
+    public String toInWeight(Model model, HttpServletRequest request, HttpServletResponse response){
         return "in/weight";
+    }
+    @RequestMapping(value="/toOutWeight",method = RequestMethod.GET)
+    public String toOutWeight(Model model, HttpServletRequest request, HttpServletResponse response){
+        return "out/weight";
     }
     @GetMapping("newInPageList")
     @ResponseBody
     public PagerModel newInPageList(int start, int length) {
         BaseUser currentUser = getCurrentUser();
         PagerModel<Inout> e=new PagerModel();
+        e.putWhere("inoutflag",1);
+        e.putWhere("billtype",1);
+        e.putWhere("billstages","1,2,3,4,5,6");
+        e.addOrder("billcode desc");
+        e.setStart(start);
+        e.setLength(length);
+        if(currentUser.getGraindepotid()!=0) {
+            e.putWhere("graindepotid", currentUser.getGraindepotid());
+        }
+        PagerModel<Inout> result=inoutBiz.selectListByPage(e);
+        return result;
+    }
+    @GetMapping("newOutPageList")
+    @ResponseBody
+    public PagerModel newOutPageList(int start, int length) {
+        BaseUser currentUser = getCurrentUser();
+        PagerModel<Inout> e=new PagerModel();
+        e.putWhere("inoutflag", -1);
+        e.putWhere("billtype", 1);
+        e.putWhere("billstages","1,2,3,4,5,6");
         e.addOrder("billcode desc");
         e.setStart(start);
         e.setLength(length);

@@ -76,9 +76,9 @@ public class RegisterController extends BaseController {
 
     //补单出库单据
     @GetMapping("toOutSupple")
-    public String toOutSupple(Model model) {
-        model.addAttribute("title", "入库补单");
-        return "in/outsupple";
+    public String toOutSupple(Model model){
+        model.addAttribute("title","出库补单");
+        return "out/outsupple";
     }
 
     //保存更新入库单

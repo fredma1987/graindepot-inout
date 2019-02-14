@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="renderer" content="ie-comp" />
     <script  th:inline="javascript">
 
     </script>
@@ -13,6 +12,24 @@
 <div>
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
+    <script th:src="@{../js/mscomm32.js}"></script>
+    <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
+        function   MSComm1_OnComm()
+        {
+            switch(MSComm1.CommEvent)
+            {
+                case 1:{ window.alert("Send OK！"); break;}  //发送事件
+                case 2: { Receive();break;} //接收事件
+                default:
+                    alert("Event Raised!" + MSComm1.CommEvent);
+            }
+        }
+    </SCRIPT>
+
+    <SCRIPT   LANGUAGE="javascript"   FOR="MSComm1"   EVENT="OnComm">
+        // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
+        MSComm1_OnComm();
+    </SCRIPT>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
@@ -60,15 +77,36 @@
                                             <div class="widget-body"
                                                  style="float: left;width: 180px;height:60px;border-top: 1px solid #CCC">
                                                 <div class="widget-main padding-6" style="height: 55px">
-                                                    <div class="alert alert-info"
-                                                         style="font-size: 24px;height:48px;line-height:48px;padding:2px;background-color:#06f;color:#fff;">
-                                                        <span id="weight" name="weight" id="weight">
-                                                            12000
-                                                        </span>
-                                                    </div>
+                                                    <input type="text" name="weight" id="weight"
+                                                               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                                               style="font-size:25px;background-color:#06f;color:#fff;
+                                                               width:165px;height:45px"/>
+
                                                 </div>
                                             </div>
                                             <label style="padding-left:10px;float: left;display: block;font-size: 24px;line-height: 55px">Kg</label>
+                                            <OBJECT id="MSComm1" CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014"
+                                                    codebase="MSCOMM32.OCX" type="application/x-oleobject"  style="width:0px;height:0px" >
+                                                <PARAM   NAME="CommPort"   VALUE="2"/>
+                                                <PARAM   NAME="DataBits"   VALUE="8"/>
+                                                <PARAM   NAME="StopBits"   VALUE="1"/>
+                                                <PARAM   NAME="BaudRate"   VALUE="9600"/>
+                                                <PARAM   NAME="Settings"   VALUE="9600,N,8,1"/>
+                                                <PARAM   NAME="RTSEnable"   VALUE="1"/>
+                                                <PARAM   NAME="DTREnable"   VALUE="1"/>
+                                                <PARAM   NAME="Handshaking"   VALUE="0"/>
+                                                <PARAM   NAME="NullDiscard"   VALUE="0"/>
+                                                <PARAM   NAME="ParityReplace"   VALUE="?"/>
+                                                <PARAM   NAME="EOFEnable"   VALUE="0"/>
+                                                <PARAM   NAME="InputMode"   VALUE="0"/>
+                                                <PARAM   NAME="InBufferSize"   VALUE="1024"/>
+                                                <PARAM   NAME="InputLen"   VALUE="0"/>
+                                                <PARAM   NAME="OutBufferSize"   VALUE="512"/>
+                                                <PARAM   NAME="SThreshold"   VALUE="0"/>
+                                                <PARAM   NAME="RThreshold"   VALUE="1"/>
+                                            </OBJECT>
+                                            <input   type="button" id="OperateButton" style="width:80px;height:30px;font-size:13px"   name="OperateButton"   value="打开串口"   onClick="OperatePort()">
+
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
@@ -86,7 +124,7 @@
                                             </div>
                                             <div style="float: left;padding-left: 24px">
                                                 <label> 毛重：</label>
-                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"/>
+                                                <input type="text"  id="grossweight" name="grossweight" style="width:80px"/>
                                             </div>
                                             <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
                                                 <span class="label label-primary arrowed" onclick="setGrossWeight()" style="cursor:pointer;vertical-align: middle">毛重</span>
@@ -275,7 +313,7 @@
                     title: "操作",
                     data: "billid",
                     render: function (data,type,row){
-                        var obj=encodeURI(JSON.stringify(row));
+                        var obj=encodeURI(encodeURI(JSON.stringify(row)));
                         return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">'+
                                     /*'<a class="blue" href="javascript:doView('+'\''+obj+'\')">'+
                                         '<i class="icon-zoom-in bigger-130"></i>'+
@@ -319,13 +357,20 @@
 
     }
     function  setGrossWeight(){
-        $("#grossweight").val($("#weight").text().trim());
-    }
-    function  setTareWeight(){
-        $("#tareweight").val($("#weight").text().trim());
+        $("#grossweight").val($("#weight").val().trim());
         var grossweight=$("#grossweight").val();
         var tareweight=$("#tareweight").val();
-        $("#netweight").val(grossweight-tareweight);
+        if(grossweight!=""&&tareweight!=""){
+            $("#netweight").val(grossweight-tareweight);
+        }
+    }
+    function  setTareWeight(){
+        $("#tareweight").val($("#weight").val().trim());
+        var grossweight=$("#grossweight").val();
+        var tareweight=$("#tareweight").val();
+        if(grossweight!=""&&tareweight!=""){
+            $("#netweight").val(grossweight-tareweight);
+        }
     }
 </script>
 </body>
