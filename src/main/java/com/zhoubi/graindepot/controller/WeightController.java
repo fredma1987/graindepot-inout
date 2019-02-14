@@ -5,7 +5,9 @@ import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Inout;
 import com.zhoubi.graindepot.bean.InoutBean;
+import com.zhoubi.graindepot.bean.Video;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.biz.VideoBiz;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018-12-19.
@@ -23,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 public class WeightController extends BaseController{
     @Autowired
     private InoutBiz inoutBiz;
+    @Autowired
+    private VideoBiz videoBiz;
     @ModelAttribute("ctx")
     public void getAccount(Model model,HttpServletRequest request) {
         String ctx = request.getContextPath();
@@ -32,6 +37,9 @@ public class WeightController extends BaseController{
     }
     @RequestMapping(value="/toInWeight",method = RequestMethod.GET)
     public String toInWeight(Model model, HttpServletRequest request, HttpServletResponse response){
+        BaseUser user = getCurrentUser();
+        List<Video> videolist=videoBiz.selectWeightVideoList(user.getGraindepotid());
+        model.addAttribute("videolist", videolist);
         return "in/weight";
     }
     @RequestMapping(value="/toOutWeight",method = RequestMethod.GET)

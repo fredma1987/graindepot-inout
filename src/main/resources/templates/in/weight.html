@@ -13,6 +13,63 @@
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
     <script th:src="@{../js/mscomm32.js}"></script>
+    <script th:src="@{../js/webVideoCtrl.js}"></script>
+    <script th:src="@{../js/hik3.js}"></script>
+    <script th:inline="javascript">
+        var videolist=[[${videolist}]];
+        var bZeroChannel=false;//默认不用模拟信号
+        var iStreamType = 1; //码流类型，1 主码流， 2 子码流
+        // 初始化插件
+        // 全局保存当前选中窗口
+        var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
+        $(function() {
+            // 检查插件是否已经安装过
+            if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
+                alert("您还未安装过插件，点击下载视频播放控件!");
+                return;
+            }
+            var height=$("#divPlugin").height();
+            var width=$("#divPlugin").width();
+            // 初始化插件参数及插入插件
+            WebVideoCtrl.I_InitPlugin(width, height,{
+                iWndowType : 1,
+                cbSelWnd : function(xmlDoc) {
+                    g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
+                    //var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
+                    //showCBInfo(szInfo);
+                }
+            });
+            WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+            changeWndNum(2);
+            for(var i=0;i<videolist.length;i++){
+                var ip = videolist[i].ip,
+                        httpport = videolist[i].httpport,
+                        username = videolist[i].username,
+                        password = videolist[i].password,
+                        channel = videolist[i].channel,
+                        maliu=videolist[i].maliu,
+                        datasignal = videolist[i].datasignal;
+                if(""!=maliu){
+                    iStreamType=maliu;
+                }
+                videolist[i].iStreamType=iStreamType;
+                if(datasignal==2){//模拟
+                    bZeroChannel=true;
+                }
+                videolist[i].bZeroChannel=bZeroChannel;
+                clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
+                //clickStartRealPlay(ip,channel,bZeroChannel,iStreamType);
+            }
+        });
+        function rePlay(){
+            /*for(var i=0;i<videolist.length;i++){
+                clickStartRealPlay(videolist[i].ip,videolist[i].channel,
+                        videolist[i].bZeroChannel,videolist[i].iStreamType);
+            }*/
+            clickStartRealPlay(videolist[g_iWndIndex].ip,videolist[g_iWndIndex].channel,
+                    videolist[g_iWndIndex].bZeroChannel,videolist[g_iWndIndex].iStreamType);
+        }
+    </script>
     <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
         function   MSComm1_OnComm()
         {
@@ -53,22 +110,12 @@
                             <div class="row">
                                 <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
                                     <div style="width: 40%;height:100%;float: left">
-                                        <div style="width: 100%;height:50%;text-align: center;">
-                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
-                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面1</label>
-                                            </div>
-                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
-                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面2</label>
-                                            </div>
-                                        </div>
-                                        <div style="width: 100%;height:50%;text-align: center;">
-
-                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
-                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面3</label>
-                                            </div>
-                                            <div style="border:solid 1px #CCC ;float:left;width: 50%;height:100%;background-color: black;text-align: center;">
-                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面4</label>
-                                            </div>
+                                        <div id="divPlugin" style="width:100%;height:492px"></div>
+                                        <div style="width:100%;height:20px;text-align: right;padding-right:10px">
+                                            <span id="msg" style="color:red"></span>
+                                            <a class="red" href="javascript:rePlay()" style="padding-left:5px;" title="播放刷新">
+                                                <i class="icon-facetime-video bigger-130"></i>
+                                            </a>
                                         </div>
 
                                     </div>

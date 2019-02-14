@@ -3,12 +3,10 @@ package com.zhoubi.graindepot.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.zhoubi.graindepot.base.JsonResult;
-import com.zhoubi.graindepot.bean.BaseUser;
-import com.zhoubi.graindepot.bean.Individual;
-import com.zhoubi.graindepot.bean.Inout;
-import com.zhoubi.graindepot.bean.UserAddress;
+import com.zhoubi.graindepot.bean.*;
 import com.zhoubi.graindepot.biz.IndividualBiz;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.biz.VideoBiz;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +31,8 @@ public class RegisterController extends BaseController {
     @Autowired
     private InoutBiz inoutBiz;
     @Autowired
+    private VideoBiz videoBiz;
+    @Autowired
     private IndividualBiz individualBiz;
 
     @ModelAttribute("ctx")
@@ -47,6 +47,8 @@ public class RegisterController extends BaseController {
     public String toInRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
+        Video video=videoBiz.selectRegiterVideo(user.getGraindepotid());
+        model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
         return "in/register";

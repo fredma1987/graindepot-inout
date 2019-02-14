@@ -168,7 +168,7 @@ function clickLogin(szIP,szPort,iChannelID,bZeroChannel,szUsername,szPassword,iS
         $("#msg").html("已登录过！");
     }else{
         //getChannelInfo(szIP);
-        clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType);
+        //clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType);
     }
 }
 
