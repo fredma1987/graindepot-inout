@@ -1,3 +1,7 @@
+/**
+ * 海康威视ocx 2.3 版本
+ * @type {number}
+ */
 //全局变量定义
 var m_iNowChanNo = -1;                           //当前通道号
 var m_iLoginUserId = -1;                         //注册设备用户ID
