@@ -52,6 +52,7 @@ public class RegisterController extends BaseController {
         model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "入库登记");
         return "in/register";
     }
 
@@ -60,8 +61,11 @@ public class RegisterController extends BaseController {
     public String toOutRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
+        Video video=videoBiz.selectRegiterVideo(user.getGraindepotid());
+        model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "出库登记");
         return "out/register";
     }
 

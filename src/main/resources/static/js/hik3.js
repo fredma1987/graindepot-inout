@@ -168,7 +168,6 @@ function clickLogin(szIP,szPort,iChannelID,bZeroChannel,szUsername,szPassword,iS
         $("#msg").html("已登录过！");
     }else{
         //getChannelInfo(szIP);
-        //clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType);
     }
 }
 
@@ -466,13 +465,13 @@ function clickGetDigitalChannelInfo() {
  * @param bZeroChannel 是否使用零通道
  * @param iStreamType 码流
  */
-function clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType) {
+function clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType,wndIndex) {
     try{
         $("#msg").html("");
     }catch (e){
         //
     }
-    var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
+    var oWndInfo = WebVideoCtrl.I_GetWindowStatus(wndIndex);
     /*var szIP = document.getElementById("DeviceIP").value;
     var iChannelID = document.getElementById("ChannelList").value;
     var bZeroChannel = $("#channels option").eq($("#channels").get(0).selectedIndex).attr("bZero") == "true" ? true : false;*/
@@ -487,7 +486,8 @@ function clickStartRealPlay(szIP,iChannelID,bZeroChannel,iStreamType) {
         var iRet = WebVideoCtrl.I_StartRealPlay(szIP, {
             iStreamType : iStreamType,
             iChannelID : iChannelID,
-            bZeroChannel : bZeroChannel
+            bZeroChannel : bZeroChannel,
+            iWndIndex:wndIndex
         });
         if (0 == iRet) {
             szInfo = "开始预览成功！";

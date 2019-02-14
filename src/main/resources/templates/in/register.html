@@ -51,10 +51,10 @@
             bZeroChannel=true;
         }
         clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
-        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType);
+        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,0);
     });
     function rePlay(){
-        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType);
+        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,0);
     }
 </script>
 <div th:replace="navbar::navbar"></div>

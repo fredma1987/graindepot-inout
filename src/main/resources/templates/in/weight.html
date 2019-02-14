@@ -36,12 +36,12 @@
                 cbSelWnd : function(xmlDoc) {
                     g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
                     //var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
-                    //showCBInfo(szInfo);
                 }
             });
             WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
             changeWndNum(2);
             for(var i=0;i<videolist.length;i++){
+                var wndIndex=i;
                 var ip = videolist[i].ip,
                         httpport = videolist[i].httpport,
                         username = videolist[i].username,
@@ -58,16 +58,15 @@
                 }
                 videolist[i].bZeroChannel=bZeroChannel;
                 clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
-                //clickStartRealPlay(ip,channel,bZeroChannel,iStreamType);
+                clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
             }
         });
         function rePlay(){
-            /*for(var i=0;i<videolist.length;i++){
+            for(var i=0;i<videolist.length;i++){
+                var wndIndex=i;
                 clickStartRealPlay(videolist[i].ip,videolist[i].channel,
-                        videolist[i].bZeroChannel,videolist[i].iStreamType);
-            }*/
-            clickStartRealPlay(videolist[g_iWndIndex].ip,videolist[g_iWndIndex].channel,
-                    videolist[g_iWndIndex].bZeroChannel,videolist[g_iWndIndex].iStreamType);
+                        videolist[i].bZeroChannel,videolist[i].iStreamType,wndIndex);
+            }
         }
     </script>
     <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
@@ -117,7 +116,6 @@
                                                 <i class="icon-facetime-video bigger-130"></i>
                                             </a>
                                         </div>
-
                                     </div>
                                     <div style="width: 60%;height:100%;padding-left:20px;float: left">
                                         <div class="form-group">
