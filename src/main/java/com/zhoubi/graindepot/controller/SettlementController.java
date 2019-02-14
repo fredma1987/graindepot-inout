@@ -1,6 +1,8 @@
 package com.zhoubi.graindepot.controller;
 
 
+import com.zhoubi.graindepot.bean.BaseUser;
+import com.zhoubi.graindepot.bean.UserAddress;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +27,10 @@ public class SettlementController extends BaseController{
     }
     @RequestMapping(value="/toInSettlement",method = RequestMethod.GET)
     public String toSettlement(Model model, HttpServletRequest request, HttpServletResponse response){
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
         return "in/settlement";
     }
 }

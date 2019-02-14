@@ -126,7 +126,8 @@
                                                     <label>自动抓拍车牌列表</label>
 
                                                     <select class="form-control" id="active_trucknum"
-                                                            multiple="multiple" style="height: 160px" onchange="chooseTruckNum()">
+                                                            multiple="multiple" style="height: 160px"
+                                                            onchange="chooseTruckNum()">
                                                         <option value="AL">苏BA3G19</option>
                                                         <option value="AK">苏BH3433</option>
                                                         <option value="AZ">苏A23232</option>
@@ -269,7 +270,7 @@
                                                        placeholder=""/>
                                             </div>
                                         </div>
-                                        <div class="form-group" >
+                                        <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 承运人： </label>
                                                 <input type="text" id="carriername" name="carriername"
@@ -283,12 +284,12 @@
                                                        placeholder=""/>
                                             </div>
                                             <a class="btn btn-primary"
-                                                    style="margin-left:5px;border:0">
+                                               style="margin-left:5px;border:0">
                                                 <i class="icon-credit-card"></i>
                                                 承运人身份证
                                             </a>
                                             <a class="btn btn-primary"
-                                                    style="margin-left:5px;border:0">
+                                               style="margin-left:5px;border:0">
                                                 <i class="icon-globe"></i>
                                                 微信扫码
                                             </a>
@@ -405,11 +406,13 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(1)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindInoutDetail(1)">
                                     <i class="icon-arrow-left icon-on-left"></i>
                                     前一单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(3)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindInoutDetail(3)">
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
@@ -442,7 +445,8 @@
                                         Action
                                         <span class="icon-caret-up icon-on-right"></span>
                                     </button>-->
-                                    <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" style="border: 0;width: 120px;" onclick="toInoutDetail(2)">
+                                    <a class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                                       style="border: 0;width: 120px;" onclick="toInoutDetail(2)">
                                         <i class="icon-search"></i>
                                         查单
                                         <span class="icon-caret-up icon-on-right"></span>
@@ -506,7 +510,7 @@
         sellmannameAutoComplete();
     });
 
-    function  chooseTruckNum() {
+    function chooseTruckNum() {
         var trucknumText = $("#active_trucknum option:selected").text();
         var trucknumVal = $("#active_trucknum option:selected").val();
         $("#trucknum").val(trucknumText);
@@ -515,7 +519,6 @@
 
     //flag=2 表示保存并写卡
     function toSave(flag) {
-        debugger;
         $("#validation-form").bootstrapValidator('validate');//提交验证
         if ($("#validation-form").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
             var param = turnArrayToJson($('form').serializeArray());
@@ -562,7 +565,12 @@
                 sex: param.sellmansex,
                 phone: param.sellmanphone,
                 trucktype: param.trucktype,
-                trucknum: param.trucknum
+                trucknum: param.trucknum,
+                nation: $("#nation").html(),
+                bornday: $("#bornDay").html(),
+                certorg: $("#certOrg").html(),
+                effdate: $("#effDate").html(),
+                expdate: $("#expDate").html()
             };
             $.post("/graindepot-inout/register/addIndividual", individual)
 
@@ -596,7 +604,7 @@
                 })
             },//数据源
             items: 8,//最多显示个数
-            fitToElement:true,
+            fitToElement: true,
             updater: function (item) {
                 return item;//选中后获得的数据
             },
@@ -606,6 +614,12 @@
                 $("#sellmanidcard").val(item.idcard);
                 $("#sellmanphone").val(item.phone);
                 $("#sellmanaddress").val(item.address);
+                $("#nation").html(item.nation);
+                $("#bornDay").html(item.bornday);
+                $("#certOrg").html(item.certorg);
+                $("#effDate").html(item.effdate);
+                $("#expDate").html(item.expdate);
+
             },
             delay: 500//延迟时间
         });
@@ -667,7 +681,7 @@
             defaultValue: defaultGrainid,
             onSelect: function (grainid, row) {
                 if (!grainid) {
-                   $("#inplanid").bootstrapSelect("empty");
+                    $("#inplanid").bootstrapSelect("empty");
                     $("#contractid").bootstrapSelect("empty");
                 } else {
                     initPlanfileInput(grainid);
@@ -850,63 +864,69 @@
         }
 
     }
+
+    //根据查出的入库信息初始化页面显示
+    function initInout(inout) {
+        $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
+        $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
+        $("#settlemothod").bootstrapSelect("setValue", inout.settlemothod);
+        if (inout.customtype == 1) {
+            $("#customtype1").attr("checked", "checked");
+            $("#customtype2").removeAttr("checked");
+        } else {
+            $("#customtype1").removeAttr("checked");
+            $("#customtype2").attr("checked", "checked");
+        }
+        $("#traderid").bootstrapSelect("setValue", inout.traderid);
+        $("#sellmanidcard").val(inout.sellmanidcard);
+        $("#sellmanphone").val(inout.sellmanphone);
+        $("#sellmanname").val(inout.sellmanname);
+        $("#sellmanaddress").val(inout.sellmanaddress);
+        $("#trucktype").bootstrapSelect("setValue", inout.trucktype);
+        $("#trucknum").val(inout.trucknum);
+        $("#carriername").val(inout.carriername);
+        $("#carrieridcard").val(inout.carrieridcard);
+        $("#storageid").bootstrapSelect("setValue", inout.storageid);
+        $("#grainid").bootstrapSelect("setValue", inout.grainid);
+        $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
+        $("#producingyear").val(inout.producingyear);
+        $("#contractid").bootstrapSelect("setValue", inout.contractid);
+        $("#packtype").bootstrapSelect("setValue", inout.packtype);
+        $("#packcount").val(inout.packcount);
+        $("#selfreport").val(inout.selfreport);
+        $("#fprovinceid").bootstrapSelect("setValue", inout.fprovinceid);
+        $("#fcityid").bootstrapSelect("setValue", inout.fcityid);
+        $("#soucearea").val(inout.soucearea);
+        $("#remark").val(inout.remark);
+        $("#billcode").html(inout.billcode);
+        if (inout.regstate == 1) {
+            $("#billstate").html("已保存已写卡");
+        } else if (inout.regstate == 0) {
+            $("#billstate").html("已保存未写卡");
+        } else if (inout.regstate == -1) {
+            $("#billstate").html("已保存已退港");
+        }
+    }
     //type 1:前一单  3:后一单
-    function toFindInoutDetail(type){
-        var billid=g_billid;
-        var flag=type;
-        findInout(billid,type);
+    function toFindInoutDetail(type) {
+        var billid = g_billid;
+        var flag = type;
+        findInout(billid, type);
     }
-    function findInout(billid,flag){
+    function findInout(billid, flag) {
         $.get("/graindepot-inout/register/inout/findOneIn", {billid: billid, flag: flag})
-                .then(function (result) {
-                    if (result.success) {
-                        var inout = result.data;
-                        g_billid = result.data.billid;
-                        $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
-                        $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
-                        $("#settlemothod").bootstrapSelect("setValue", inout.settlemothod);
-                        if (inout.customtype == 1) {
-                            $("#customtype1").attr("checked", "checked");
-                            $("#customtype2").removeAttr("checked");
-                        } else {
-                            $("#customtype1").removeAttr("checked");
-                            $("#customtype2").attr("checked", "checked");
-                        }
-                        $("#traderid").bootstrapSelect("setValue", inout.traderid);
-                        $("#sellmanidcard").val(inout.sellmanidcard);
-                        $("#sellmanphone").val(inout.sellmanphone);
-                        $("#sellmanname").val(inout.sellmanname);
-                        $("#sellmanaddress").val(inout.sellmanaddress);
-                        $("#trucktype").bootstrapSelect("setValue", inout.trucktype);
-                        $("#trucknum").val(inout.trucknum);
-                        $("#carriername").val(inout.carriername);
-                        $("#carrieridcard").val(inout.carrieridcard);
-                        $("#storageid").bootstrapSelect("setValue", inout.storageid);
-                        $("#grainid").bootstrapSelect("setValue", inout.grainid);
-                        $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
-                        $("#producingyear").val(inout.producingyear);
-                        $("#contractid").bootstrapSelect("setValue", inout.contractid);
-                        $("#packtype").bootstrapSelect("setValue", inout.packtype);
-                        $("#packcount").val(inout.packcount);
-                        $("#selfreport").val(inout.selfreport);
-                        $("#fprovinceid").bootstrapSelect("setValue", inout.fprovinceid);
-                        $("#fcityid").bootstrapSelect("setValue", inout.fcityid);
-                        $("#soucearea").val(inout.soucearea);
-                        $("#remark").val(inout.remark);
-                        $("#billcode").html(inout.billcode);
-                        if (inout.regstate == 1) {
-                            $("#billstate").html("已保存已写卡");
-                        } else if (inout.regstate == 0) {
-                            $("#billstate").html("已保存未写卡");
-                        } else if (inout.regstate == -1) {
-                            $("#billstate").html("已保存已退港");
-                        }
-                    }
-                    $.bootstrapBox.alert.init({message: result.message})
-                }, function () {
-                    $.bootstrapBox.alert.init({message: "查询失败"})
-                })
+            .then(function (result) {
+                if (result.success) {
+                    var inout = result.data;
+                    g_billid = result.data.billid;
+                    initInout(inout);
+                }
+                $.bootstrapBox.alert.init({message: result.message})
+            }, function () {
+                $.bootstrapBox.alert.init({message: "查询失败"})
+            })
     }
+
     //加载入库登记信息 flag 1:前一单，2:当前单 3:后一单
     function initInout(billcode, flag) {
         $.get("/graindepot-inout/register/inout/oneIn", {billcode: billcode, flag: flag})
@@ -914,47 +934,7 @@
                 if (result.success) {
                     var inout = result.data;
                     g_billid = result.data.billid;
-                    $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
-                    $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
-                    $("#settlemothod").bootstrapSelect("setValue", inout.settlemothod);
-                    if (inout.customtype == 1) {
-                        $("#customtype1").attr("checked", "checked");
-                        $("#customtype2").removeAttr("checked");
-                    } else {
-                        $("#customtype1").removeAttr("checked");
-                        $("#customtype2").attr("checked", "checked");
-                    }
-                    $("#traderid").bootstrapSelect("setValue", inout.traderid);
-                    $("#sellmanidcard").val(inout.sellmanidcard);
-                    $("#sellmanphone").val(inout.sellmanphone);
-                    $("#sellmanname").val(inout.sellmanname);
-                    $("#sellmanaddress").val(inout.sellmanaddress);
-                    $("#trucktype").bootstrapSelect("setValue", inout.trucktype);
-                    $("#trucknum").val(inout.trucknum);
-                    $("#carriername").val(inout.carriername);
-                    $("#carrieridcard").val(inout.carrieridcard);
-                    $("#storageid").bootstrapSelect("setValue", inout.storageid);
-                    $("#grainid").bootstrapSelect("setValue", inout.grainid);
-                    $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
-                    $("#producingyear").val(inout.producingyear);
-                    $("#contractid").bootstrapSelect("setValue", inout.contractid);
-                    $("#packtype").bootstrapSelect("setValue", inout.packtype);
-                    $("#packcount").val(inout.packcount);
-                    $("#selfreport").val(inout.selfreport);
-                    debugger;
-                    $("#fprovinceid").bootstrapSelect("setValue", inout.fprovinceid);
-                    debugger;
-                    $("#fcityid").bootstrapSelect("setValue", inout.fcityid);
-                    $("#soucearea").val(inout.soucearea);
-                    $("#remark").val(inout.remark);
-                    $("#billcode").html(inout.billcode);
-                    if (inout.regstate == 1) {
-                        $("#billstate").html("已保存已写卡");
-                    } else if (inout.regstate == 0) {
-                        $("#billstate").html("已保存未写卡");
-                    } else if (inout.regstate == -1) {
-                        $("#billstate").html("已保存已退港");
-                    }
+                    initInout(inout);
                 }
                 $.bootstrapBox.alert.init({message: result.message})
             }, function () {
@@ -981,35 +961,6 @@
         return d8WriteCard(data, rd);
     }
 
-
-    function strToHexCharCode(str) {
-        if (str === "") {
-            return "";
-        }
-        var arr = [];
-        arr.push("0x");
-        for (var i = 0; i < str.length; i++) {
-            arr.push(str.charCodeAt(i).toString(16));
-        }
-        return arr.join('');
-    }
-
-    function hexCharCodeToStr(hex) {
-        var trimedStr = hex.trim();
-        var rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
-        var len = rawStr.length;
-        if (len % 2 !== 0) {
-            alert("Illegal Format ASCII Code!");
-            return "";
-        }
-        var curCharCode;
-        var resultStr = [];
-        for (var i = 0; i < len; i = i + 2) {
-            curCharCode = parseInt(rawStr.substr(i, 2), 16);
-            resultStr.push(String.fromCharCode(curCharCode));
-        }
-        return resultStr.join("");
-    }
 
 </script>
 </body>

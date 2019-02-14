@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script  th:inline="javascript">
+    <script th:inline="javascript">
 
     </script>
 </head>
@@ -57,7 +57,8 @@
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 54px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 售粮单位：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 售粮单位：</label>
                                                 <div class="col-sm-4" style="width:300px;padding-left:0px">
                                                     <select id="traderid" name="traderid" class="form-control">
                                                     </select>
@@ -67,20 +68,26 @@
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <object id="CertCtl" type="application/cert-reader" width="0" height="0">
-                                                    <p style="color:#FF0000;">控件不可用，可能未正确安装控件及驱动，或者控件未启用。<a onclick="download_Huashi()" style="text-decoration: underline;color:blue;cursor:pointer;">下载</a></p>
+                                                <object id="CertCtl" type="application/cert-reader" width="0"
+                                                        height="0">
+                                                    <p style="color:#FF0000;">控件不可用，可能未正确安装控件及驱动，或者控件未启用。<a
+                                                            onclick="download_Huashi()"
+                                                            style="text-decoration: underline;color:blue;cursor:pointer;">下载</a>
+                                                    </p>
                                                 </object>
                                                 <label> *售粮人： </label>
                                                 <input type="text" id="sellmanname" name="sellmanname" placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 身份证号： </label>
-                                                <input type="text" style="width:160px" id="sellmanidcard" name="sellmanidcard"
+                                                <input type="text" style="width:160px" id="sellmanidcard"
+                                                       name="sellmanidcard"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 联系电话： </label>
-                                                <input type="text" style="width:110px" id="sellmanphone" name="sellmanphone"
+                                                <input type="text" style="width:110px" id="sellmanphone"
+                                                       name="sellmanphone"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
@@ -91,7 +98,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 车船类型：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 车船类型：</label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="trucktype" name="trucktype" class="form-control">
                                                     </select>
@@ -104,38 +112,44 @@
                                             </div>
                                             <div style="float: left;padding-left: 10px;">
                                                 <label> 承运单位： </label>
-                                                <input type="text" id="carriercorp" name="carriercorp" style="width:220px"
+                                                <input type="text" id="carriercorp" name="carriercorp"
+                                                       style="width:220px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 承运人： </label>
-                                                <input type="text" id="carriername" name="carriername" style="width:100px"
+                                                <input type="text" id="carriername" name="carriername"
+                                                       style="width:100px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 承运人身份证： </label>
-                                                <input type="text" style="width:180px" id="carrieridcard" name="carrieridcard"
+                                                <input type="text" style="width:180px" id="carrieridcard"
+                                                       name="carrieridcard"
                                                        placeholder=""/>
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 仓房号： </label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 仓房号： </label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="storageid" name="storageid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食品种：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:80px;padding-left:0px"> 粮食品种：</label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="grainid" name="grainid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食性质：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:80px;padding-left:0px"> 粮食性质：</label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="grainattrid" name="grainattrid" class="form-control">
                                                     </select>
@@ -145,11 +159,13 @@
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 收获年度： </label>
-                                                <input type="text" id="producingyear" name="producingyear" style="width:50px"
+                                                <input type="text" id="producingyear" name="producingyear"
+                                                       style="width:50px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:90px;padding-left:0px"> 粮食等级：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:90px;padding-left:0px"> 粮食等级：</label>
                                                 <div class="col-sm-4" style="width:120px;padding-left:0px">
                                                     <select id="grade" name="grade" class="form-control">
                                                     </select>
@@ -161,14 +177,16 @@
                                                        placeholder=""/>元/千克
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 计划安排： </label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 计划安排： </label>
                                                 <div class="col-sm-4" style="width:120px;padding-left:0px">
                                                     <select id="inplanid" name="inplanid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 合同号：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 合同号：</label>
                                                 <div class="col-sm-4" style="width:130px;padding-left:0px">
                                                     <select id="contractid" name="contractid" class="form-control">
                                                     </select>
@@ -178,7 +196,8 @@
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 毛重： </label>
-                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"
+                                                <input type="text" id="grossweight" name="grossweight"
+                                                       style="width:80px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
@@ -193,7 +212,8 @@
                                             </div>
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 合计扣量： </label>
-                                                <input type="text" id="totalincdedu" name="totalincdedu" style="width:80px"
+                                                <input type="text" id="totalincdedu" name="totalincdedu"
+                                                       style="width:80px"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
@@ -222,7 +242,8 @@
                                         <hr style="margin-bottom:5px;margin-top:15px"/>
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 包装方式：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 包装方式：</label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="packtype" name="packtype" class="form-control">
                                                     </select>
@@ -234,14 +255,16 @@
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 调入省份：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 调入省份：</label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="fprovinceid" name="fprovinceid" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 市（州）：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px"> 市（州）：</label>
                                                 <div class="col-sm-4" style="width:100px;padding-left:0px">
                                                     <select id="fcityid" name="fcityid" class="form-control">
                                                     </select>
@@ -299,14 +322,95 @@
 </div>
 <!-- /.main-container -->
 
-<script  th:inline="javascript">
+<script th:inline="javascript">
+    var g_billid = [[${id}]];
+    var g_item = [[${item}]];
+    var g_userAddress = [[${userAddress}]];
     jQuery(function ($) {
+        initStorage();
         initGrain();
         initGrainattr();
         initGrade();
         initPacktype();
         initTrucktype();
+        initTrader();
     });
+
+    function initStorage() {
+        $("#storageid").bootstrapSelect({
+            url: '/graindepot-inout/selectorInout/storageByMap',
+            type: 'GET',
+            valueField: 'storageid',
+            textField: 'storagename',
+            onSelect: function (storageid, row) {
+                if (storageid) {
+                    $("#grainid").bootstrapSelect("setValue", row.defGrainID)
+                }
+            }
+        });
+    }
+
+    function initGrain(defaultGrainid) {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            defaultValue: defaultGrainid,
+            onSelect: function (grainid, row) {
+                if (!grainid) {
+                    $("#inplanid").bootstrapSelect("empty");
+                    $("#contractid").bootstrapSelect("empty");
+                } else {
+                    initPlanfileInput(grainid);
+                    initContract(grainid);
+                }
+                if (grainid >= 3 && grainid <= 6) {
+                    $("#gqitem1").css("display", "block");
+                    $("#gqitem2").css("display", "none");
+                } else {
+                    $("#gqitem1").css("display", "none");
+                    $("#gqitem2").css("display", "block");
+                }
+            }
+        });
+    }
+
+    function initPlanfileInput(grainid) {
+        $("#inplanid").bootstrapSelect({
+            url: '/graindepot-inout/selectorInout/planfileInplan/byGrainid',
+            type: 'GET',
+            valueField: 'plandetailid',
+            textField: 'planname',
+            param: {grainid: grainid}
+        });
+    }
+
+    function initContract(grainid) {
+        $("#contractid").bootstrapSelect({
+            url: '/graindepot-inout/selectorInout/contractByMap',
+            type: 'GET',
+            valueField: 'contractid',
+            textField: 'contractNo',
+            param: {grainid: grainid}
+        });
+    }
+
+    function initTrader() {
+        $("#traderid").bootstrapSelect({
+            url: '/graindepot-base/selector/traderList',
+            type: 'GET',
+            valueField: 'traderID',
+            textField: 'traderName',
+            onSelect: function (traderID, row) {
+                if (row) {
+                    $("#sellmanphone").val(row.telNumber);
+                    $("#sellmanaddress").val(row.traderAddress);
+                }
+            }
+        })
+    }
+
     function initPacktype() {
         var data = [{value: 1, text: "散装"}, {value: 2, text: "包装"}];
         $("#packtype").bootstrapSelect({
@@ -316,32 +420,35 @@
             defaultValue: 1
         });
     }
+
     function initGrain() {
         $("#grainid").bootstrapSelect({
             url: '/graindepot-base/selector/grainList',
             type: 'GET',
             valueField: 'grainid',
             textField: 'grainname',
-            onSelect:function(value){
-               if(value>=3&& value<=6){
-                   $("#gqitem1").css("display","block");
-                   $("#gqitem2").css("display","none");
-               }else{
-                   $("#gqitem1").css("display","none");
-                   $("#gqitem2").css("display","block");
-               }
+            onSelect: function (value) {
+                if (value >= 3 && value <= 6) {
+                    $("#gqitem1").css("display", "block");
+                    $("#gqitem2").css("display", "none");
+                } else {
+                    $("#gqitem1").css("display", "none");
+                    $("#gqitem2").css("display", "block");
+                }
             }
         });
     }
+
     function initGrainattr() {
         $("#grainattrid").bootstrapSelect({
-            url:  '/graindepot-base/selector/grainattrList',
+            url: '/graindepot-base/selector/grainattrList',
             type: 'GET',
             valueField: 'grainattrid',
             textField: 'grainattrname'
         });
     }
-    function initGrade(){
+
+    function initGrade() {
         var data = [{value: 1, text: "一等"}, {value: 2, text: "二等"}, {value: 3, text: "三等"}
             , {value: 4, text: "四等"}, {value: 5, text: "五等"}, {value: 6, text: "等外"}];
         $("#grade").bootstrapSelect({
@@ -351,6 +458,7 @@
             defaultValue: 3
         });
     }
+
     function initTrucktype() {
         var data = [{value: 1, text: "车辆"}, {value: 2, text: "船舶"}, {value: 3, text: "火车"}, {value: 99, text: "其他"}];
         $("#trucktype").bootstrapSelect({
@@ -360,6 +468,7 @@
             defaultValue: 1
         });
     }
+
 </script>
 </body>
 </html>

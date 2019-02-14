@@ -1,7 +1,9 @@
 package com.zhoubi.graindepot.controller;
 
 
+import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.InoutInsp;
+import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.InspectBiz;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +26,15 @@ public class InspectController extends BaseController{
         String ctx = request.getContextPath();
         if(ctx.endsWith("/"))
             ctx.substring(0,ctx.length()-1);
+
         model.addAttribute("ctx",ctx);
     }
     @RequestMapping(value="/toInInspect",method = RequestMethod.GET)
     public String toRegister(Model model, HttpServletRequest request, HttpServletResponse response){
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
         return "in/inspect";
     }
     @PostMapping("selectById")
