@@ -42,6 +42,7 @@ public class RegisterController extends BaseController {
             ctx.substring(0, ctx.length() - 1);
         model.addAttribute("ctx", ctx);
     }
+
     //入库登记
     @RequestMapping(value = "/toInRegister", method = RequestMethod.GET)
     public String toInRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -51,6 +52,7 @@ public class RegisterController extends BaseController {
         model.addAttribute("userAddress", ua);
         return "in/register";
     }
+
     //出库登记
     @RequestMapping(value = "/toOutRegister", method = RequestMethod.GET)
     public String toOutRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -63,16 +65,22 @@ public class RegisterController extends BaseController {
 
     //补单入库单据
     @GetMapping("toInSupple")
-    public String toInSupple(Model model){
-        model.addAttribute("title","入库补单");
+    public String toInSupple(Model model) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "入库补单");
         return "in/insupple";
     }
+
     //补单出库单据
     @GetMapping("toOutSupple")
-    public String toOutSupple(Model model){
-        model.addAttribute("title","入库补单");
+    public String toOutSupple(Model model) {
+        model.addAttribute("title", "入库补单");
         return "in/outsupple";
     }
+
     //保存更新入库单
     @PostMapping("/editIn")
     @ResponseBody
@@ -94,17 +102,18 @@ public class RegisterController extends BaseController {
                     String format = sdf.format(new Date());
                     inout.setBillcode(format + "-0001");
                 }
+
+                inout.setBilltype(1);
+                inout.setBillstate((short) 1);
+                inout.setInoutflag((short) 1);
+                inout.setBillstage((short) 1);
+                inout.setRegopid(user.getUserid());
+                inout.setRegtime(new Date());
+                inout.setRegstate((short) 0);
+                inout.setCreateuserid(user.getUserid());
+                inout.setCreatetime(new Date());
+                inoutBiz.insert(inout);
             }
-            inout.setBilltype(1);
-            inout.setBillstate((short) 1);
-            inout.setInoutflag((short) 1);
-            inout.setBillstage((short) 1);
-            inout.setRegopid(user.getUserid());
-            inout.setRegtime(new Date());
-            inout.setRegstate((short) 0);
-            inout.setCreateuserid(user.getUserid());
-            inout.setCreatetime(new Date());
-            inoutBiz.insert(inout);
             return new JsonResult(inout, "添加成功", true);
         } else {
             inout.setUpdatetime(new Date());
@@ -115,6 +124,7 @@ public class RegisterController extends BaseController {
             return new JsonResult(io, "修改成功", true);
         }
     }
+
     //保存更新出库单
     @PostMapping("/editOut")
     @ResponseBody
@@ -136,17 +146,18 @@ public class RegisterController extends BaseController {
                     String format = sdf.format(new Date());
                     inout.setBillcode(format + "-0001");
                 }
+
+                inout.setBilltype(1);
+                inout.setBillstate((short) 1);
+                inout.setInoutflag((short) -1);
+                inout.setBillstage((short) 1);
+                inout.setRegopid(user.getUserid());
+                inout.setRegtime(new Date());
+                inout.setRegstate((short) 0);
+                inout.setCreateuserid(user.getUserid());
+                inout.setCreatetime(new Date());
+                inoutBiz.insert(inout);
             }
-            inout.setBilltype(1);
-            inout.setBillstate((short) 1);
-            inout.setInoutflag((short) -1);
-            inout.setBillstage((short) 1);
-            inout.setRegopid(user.getUserid());
-            inout.setRegtime(new Date());
-            inout.setRegstate((short) 0);
-            inout.setCreateuserid(user.getUserid());
-            inout.setCreatetime(new Date());
-            inoutBiz.insert(inout);
             return new JsonResult(inout, "添加成功", true);
         } else {
             inout.setUpdatetime(new Date());
@@ -157,6 +168,7 @@ public class RegisterController extends BaseController {
             return new JsonResult(io, "修改成功", true);
         }
     }
+
     @PostMapping("/inout/updateByMap")
     @ResponseBody
     public JsonResult updateByMap(HttpServletRequest request) {
@@ -190,7 +202,9 @@ public class RegisterController extends BaseController {
         }
     }
 
-    /**入库单查询
+    /**
+     * 入库单查询
+     *
      * @param billcode
      * @return
      */
@@ -205,81 +219,90 @@ public class RegisterController extends BaseController {
                     + "-" + billcodes[2] + "-";
             Integer num = Integer.parseInt(billcodes[3].trim());
             trueBillcode = billcodePrefix + String.format("%04d", num);
-        }else {
+        } else {
             String maxBillcode = inoutBiz.getMaxBillcode(ua.getGraindepotid());
-            trueBillcode=maxBillcode;
+            trueBillcode = maxBillcode;
         }
         Map param = new HashMap();
         param.put("graindepotid", ua.getGraindepotid());
         param.put("billcode", trueBillcode);
         Inout inout = inoutBiz.selectOne(param);
-        if (inout!=null) {
+        if (inout != null) {
             return new JsonResult(inout, "查询成功", true);
-        }else {
+        } else {
             return new JsonResult(null, "未查询到相关记录", false);
         }
 
     }
-    /**入库单查询
+
+    /**
+     * 入库单查询
+     *
      * @param billid
-     * @param flag     1:前一单 3:后一单
+     * @param flag   1:前一单 3:后一单
      * @return
      */
     @GetMapping("inout/findOneIn")
     @ResponseBody
     public JsonResult findOneIn(Integer billid, Integer flag) {
         UserAddress ua = getUserAddress();
-        Inout inout=null;
-        Map param=new HashMap();
-        param.put("inoutflag",1);
-        param.put("graindepotid",ua.getGraindepotid());
-        if (billid!=null) {
-            param.put("billid",billid);
-            if(flag==1){
+        Inout inout = null;
+        Map param = new HashMap();
+        param.put("inoutflag", 1);
+        param.put("graindepotid", ua.getGraindepotid());
+        param.put("billtype", 1);
+        if (billid != null) {
+            param.put("billid", billid);
+            if (flag == 1) {
                 inout = inoutBiz.selectBeforeOne(param);
-            }else if(flag==3){
+            } else if (flag == 3) {
                 inout = inoutBiz.selectAfterOne(param);
             }
-        }else {
+        } else {
             inout = inoutBiz.findMaxBill(param);
         }
-        if (inout!=null) {
+        if (inout != null) {
             return new JsonResult(inout, "查询成功", true);
-        }else {
+        } else {
             return new JsonResult(null, "未查询到相关记录", false);
         }
 
     }
-    /**出库单查询
+
+    /**
+     * 出库单查询
+     *
      * @param billid
-     * @param flag     1:前一单 3:后一单
+     * @param flag   1:前一单 3:后一单
      * @return
      */
     @GetMapping("inout/findOneOut")
     @ResponseBody
     public JsonResult findOneOut(Integer billid, Integer flag) {
         UserAddress ua = getUserAddress();
-        Inout inout=null;
-        Map param=new HashMap();
-        param.put("inoutflag",-1);
-        param.put("graindepotid",ua.getGraindepotid());
-        if (billid!=null) {
-            param.put("billid",billid);
-            if(flag==1){
+        Inout inout = null;
+        Map param = new HashMap();
+        param.put("inoutflag", -1);
+        param.put("graindepotid", ua.getGraindepotid());
+        param.put("billtype", 1);
+        if (billid != null) {
+            param.put("billid", billid);
+            if (flag == 1) {
                 inout = inoutBiz.selectBeforeOne(param);
-            }else if(flag==3){
+            } else if (flag == 3) {
                 inout = inoutBiz.selectAfterOne(param);
             }
-        }else {
+        } else {
             inout = inoutBiz.findMaxBill(param);
         }
-        if (inout!=null) {
+        if (inout != null) {
             return new JsonResult(inout, "查询成功", true);
-        }else {
+        } else {
             return new JsonResult(null, "未查询到相关记录", false);
         }
 
     }
+
     //根据姓名和库点来模糊查询姓名
     @PostMapping("/individual/byName")
     @ResponseBody
@@ -289,7 +312,7 @@ public class RegisterController extends BaseController {
         //判断是否已存在，通过身份证号和库点id
         Map param = new HashMap();
         param.put("graindepotid", ua.getGraindepotid());
-        param.put("name", "%"+name+"%");
+        param.put("name", "%" + name + "%");
         List<Individual> result = individualBiz.listByNameAndGraindepotid(param);
         return result;
     }
@@ -297,7 +320,7 @@ public class RegisterController extends BaseController {
     public static void main(String[] args) {
         String test = "0007";
         Integer a = Integer.parseInt(test);
-       // String format = String.format("%04d", a);
+        // String format = String.format("%04d", a);
         System.out.println(a);
     }
 }
