@@ -21,7 +21,7 @@
         </ul>
     </div>
     <div  style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             <button class="btn btn-sm btn-primary" onclick="toAdd()">
                 <i class="icon-plus align-top bigger-125"></i>
                 添加监控
@@ -222,7 +222,10 @@
 
 
     function doDel() {
-        console.log($('#myTable').bootstrapTable("getChecked"));
+        if(theTable==undefined){
+            $.bootstrapBox.alert.init({message: "请选择需要删除的行"});
+            return
+        }
         var checkedList = $('#myTable').bootstrapTable("getChecked");
         if (checkedList.length==0) {
             $.bootstrapBox.alert.init({message: "请选择需要删除的行"});
