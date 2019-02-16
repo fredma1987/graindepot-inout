@@ -4,11 +4,9 @@ package com.zhoubi.graindepot.controller;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Inout;
-import com.zhoubi.graindepot.bean.InoutBean;
 import com.zhoubi.graindepot.bean.Video;
 import com.zhoubi.graindepot.biz.InoutBiz;
-import com.zhoubi.graindepot.biz.VideoBiz;
-import org.springframework.beans.BeanUtils;
+import com.zhoubi.graindepot.rpc.IVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,7 @@ public class WeightController extends BaseController{
     @Autowired
     private InoutBiz inoutBiz;
     @Autowired
-    private VideoBiz videoBiz;
+    private IVideoService videoService;
     @ModelAttribute("ctx")
     public void getAccount(Model model,HttpServletRequest request) {
         String ctx = request.getContextPath();
@@ -38,7 +36,7 @@ public class WeightController extends BaseController{
     @RequestMapping(value="/toInWeight",method = RequestMethod.GET)
     public String toInWeight(Model model, HttpServletRequest request, HttpServletResponse response){
         BaseUser user = getCurrentUser();
-        List<Video> videolist=videoBiz.selectWeightVideoList(user.getGraindepotid());
+        List<Video> videolist=videoService.selectWeightVideoList(user.getGraindepotid());
         model.addAttribute("videolist", videolist);
         model.addAttribute("title", "入库检斤");
         return "in/weight";
@@ -46,7 +44,7 @@ public class WeightController extends BaseController{
     @RequestMapping(value="/toOutWeight",method = RequestMethod.GET)
     public String toOutWeight(Model model, HttpServletRequest request, HttpServletResponse response){
         BaseUser user = getCurrentUser();
-        List<Video> videolist=videoBiz.selectWeightVideoList(user.getGraindepotid());
+        List<Video> videolist=videoService.selectWeightVideoList(user.getGraindepotid());
         model.addAttribute("videolist", videolist);
         model.addAttribute("title", "出库检斤");
         return "out/weight";
