@@ -146,7 +146,7 @@
                                     <i class="icon-arrow-left icon-on-left"></i>
                                     前一单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(1)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(3)">
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
@@ -158,7 +158,7 @@
                                     <i class="icon-save"></i>
                                     审核
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px" onclick="reset()">
                                     <i class="icon-undo"></i>
                                     取消
                                 </a>
@@ -324,7 +324,7 @@
     }
 
     //根据查出的初始库存单初始化页面显示
-    function initInout(inout) {
+    function initInout(inout,inoutInsp) {
         $("#storageid").bootstrapSelect("setValue", inout.storageid);
         $("#grainid").bootstrapSelect("setValue", inout.grainid);
         $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
@@ -339,6 +339,13 @@
         $("#soucearea").val(inout.soucearea);
         $("#remark").val(inout.remark);
         $("#billcode").html(inout.billcode);
+
+        //初始化粮质信息
+       $(".inoutInsp").find("input").each(function (index,curr) {
+           $(this).val(inoutInsp[$(this).attr("name")])
+       })
+
+
     }
     //type 1:前一单  3:后一单
     function toFindInoutDetail(flag) {
@@ -351,12 +358,25 @@
                 if (result.success) {
                     var inout = result.data;
                     g_billid = result.data.billid;
-                    initInout(inout);
+                    $.post("/graindepot-inout/inspect/selectById",{billid:g_billid})
+                        .then(function (inoutInsp) {
+                            initInout(inout,inoutInsp);
+                        })
                 }
                 $.bootstrapBox.alert.init({message: result.message})
             }, function () {
                 $.bootstrapBox.alert.init({message: "查询失败"})
             })
+    }
+
+    //取消按钮
+    function reset() {
+        $(".form-group").find("input").each(function () {
+            $(this).val(undefined)
+        });
+        $(".form-group").find("select").each(function () {
+            $(this).bootstrapSelect("reload")
+        })
     }
 </script>
 </body>

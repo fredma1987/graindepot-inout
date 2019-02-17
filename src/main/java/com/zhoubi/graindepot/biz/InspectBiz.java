@@ -7,6 +7,8 @@ import com.zhoubi.graindepot.mapper.InoutInspMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Created by Administrator on 2019/1/31/031.
  */
@@ -20,4 +22,11 @@ public class InspectBiz extends BaseService<InoutInsp> {
     }
 
 
+    public InoutInsp oneByBillcode(Map param) {
+        return InoutInspMapper.oneByBillcode(param);
+    }
+
+    public int updateInspect(InoutInsp inoutInsp) {
+        return InoutInspMapper.updateInspect(inoutInsp);
+    }
 }
