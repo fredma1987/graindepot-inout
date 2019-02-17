@@ -431,12 +431,11 @@
                                     <i class="icon-save"></i>
                                     保存
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px"
-                                   onclick="toAdd()">
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px" onclick="toAdd()">
                                     <i class="icon-plus-sign"></i>
                                     新增
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px" onclick="reset()">
                                     <i class="icon-undo"></i>
                                     取消
                                 </a>
@@ -866,7 +865,7 @@
     }
 
     //根据查出的入库信息初始化页面显示
-    function initInout(inout) {
+    function setInout(inout) {
         $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
         $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
         $("#settlemothod").bootstrapSelect("setValue", inout.settlemothod);
@@ -909,17 +908,19 @@
     }
     //type 1:前一单  3:后一单
     function toFindInoutDetail(type) {
+        debugger;
         var billid = g_billid;
         var flag = type;
         findInout(billid, type);
     }
     function findInout(billid, flag) {
+        debugger;
         $.get("/graindepot-inout/register/inout/findOneIn", {billid: billid, flag: flag})
             .then(function (result) {
                 if (result.success) {
                     var inout = result.data;
                     g_billid = result.data.billid;
-                    initInout(inout);
+                    setInout(inout);
                 }
                 $.bootstrapBox.alert.init({message: result.message})
             }, function () {
@@ -934,7 +935,7 @@
                 if (result.success) {
                     var inout = result.data;
                     g_billid = result.data.billid;
-                    initInout(inout);
+                    setInout(inout);
                 }
                 $.bootstrapBox.alert.init({message: result.message})
             }, function () {
@@ -960,7 +961,15 @@
         var rd = document.getElementById("rd");
         return d8WriteCard(data, rd);
     }
-
+    //取消按钮
+    function reset() {
+        $(".form-group").find("input").each(function () {
+            $(this).val(undefined)
+        });
+        $(".form-group").find("select").each(function () {
+            $(this).bootstrapSelect("reload")
+        })
+    }
 
 </script>
 </body>

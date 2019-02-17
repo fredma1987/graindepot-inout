@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.InspectItem;import com.zhoubi.graindepot.base.BaseMapper;public interface InspectItemMapper extends BaseMapper<InspectItem> {}

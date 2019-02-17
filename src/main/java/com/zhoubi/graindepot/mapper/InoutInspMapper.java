@@ -1,1 +1,1 @@
-package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.bean.InoutInsp;public interface InoutInspMapper extends BaseMapper<InoutInsp> {}
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.bean.InoutInsp;import java.util.Map;public interface InoutInspMapper extends BaseMapper<InoutInsp> {    InoutInsp oneByBillcode(Map param);    //扦样阶段更新    int updateInspect(InoutInsp inoutInsp);}

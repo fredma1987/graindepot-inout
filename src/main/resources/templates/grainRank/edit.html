@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head::head(${title})">
+</head>
+<link th:href="@{/assets/css/select/bootstrap-select.min.css}" rel="stylesheet" media="screen">
+<script th:src="@{/assets/js/select/bootstrap-select.js}"></script>
+<script th:src="@{/assets/js/select/defaults-zh_CN.js}"></script>
+<link th:href="@{/assets/js/uploadify/uploadify.css}" rel="stylesheet" type="text/css">
+<script th:src="@{/assets/js/uploadify/jquery.uploadify.js}"></script>
+
+
+<body style="overflow-x: hidden">
+<form class="form-horizontal" role="form" id="validation-form" method="get">
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grainid"> 粮食品种: </label>
+
+        <div class="col-sm-4">
+            <select id="grainid" name="grainid" class="form-control" th:value="${item.grainid}">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="inspectitemid"> 检验项目: </label>
+
+        <div class="col-sm-4">
+            <select id="inspectitemid" name="inspectitemid" class="form-control" th:value="${item.inspectitemid}">
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grade1lower"> 一等: </label>
+
+        <div class="col-sm-4">
+            从
+            <input size="16" type="text" name="grade1lower" id="grade1lower"
+                   th:value="${item.grade1lower}" class="form-control">
+            到
+            <input size="16" type="text" name="grade1upper" id="grade1upper"
+                   th:value="${item.grade1upper}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grade2lower"> 二等: </label>
+
+        <div class="col-sm-4">
+            从
+            <input size="16" type="text" name="grade2lower" id="grade2lower"
+                   th:value="${item.grade2lower}" class="form-control">
+            到
+            <input size="16" type="text" name="grade2upper" id="grade2upper"
+                   th:value="${item.grade2upper}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grade3lower"> 三等: </label>
+
+        <div class="col-sm-4">
+            从
+            <input size="16" type="text" name="grade3lower" id="grade3lower"
+                   th:value="${item.grade3lower}" class="form-control">
+            到
+            <input size="16" type="text" name="grade3upper" id="grade3upper"
+                   th:value="${item.grade3upper}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grade4lower"> 四等: </label>
+
+        <div class="col-sm-4">
+            从
+            <input size="16" type="text" name="grade4lower" id="grade4lower"
+                   th:value="${item.grade4lower}" class="form-control">
+            到
+            <input size="16" type="text" name="grade4upper" id="grade4upper"
+                   th:value="${item.grade4upper}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="grade5lower"> 五等: </label>
+
+        <div class="col-sm-4">
+            从
+            <input size="16" type="text" name="grade5lower" id="grade5lower"
+                   th:value="${item.grade5lower}" class="form-control">
+            到
+            <input size="16" type="text" name="grade5upper" id="grade5upper"
+                   th:value="${item.grade5upper}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="orderno"> 排序号: </label>
+
+        <div class="col-sm-4">
+            <input size="16" type="text" name="orderno" id="orderno"
+                   th:value="${item.orderno}" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 center">
+            <button class="btn btn-info" type="submit">
+                <i class="icon-ok bigger-110"></i>
+                保存
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="button" onclick="toBack()">
+                <i class="icon-arrow-left bigger-110"></i>
+                返回
+            </button>
+        </div>
+    </div>
+
+</form>
+
+</body>
+</html>
+<script th:inline="javascript">
+    var urlPrefix = "/graindepot-inout";
+    var g_id = [[${id}]];
+    var g_item = [[${item}]];
+    $(function () {
+        //初始化form验证
+        initForm();
+        //初始化下拉框
+        initGrain();
+        initInspectItem();
+        if (g_item && g_item.gradesame == 1) {
+            $("#gradeValue").val(g_item.grade1)
+        }
+
+    });
+
+    function initGrain() {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            defaultValue: g_item.grainid
+        });
+    }
+
+    function initInspectItem() {
+        $("#inspectitemid").bootstrapSelect({
+            url: urlPrefix + '/grainInspectItem/inspectItem/list',
+            type: 'GET',
+            valueField: 'inspectitemid',
+            textField: 'itemname',
+            defaultValue: g_item.inspectitemid,
+            onSelect: function (value) {
+
+            }
+        });
+    }
+
+    function toBack() {
+        parent.$.bootstrapBox.dialog.close();
+    }
+
+    function initForm() {
+        $('#validation-form').bootstrapValidator()
+            .on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+                var param = turnArrayToJson($('form').serializeArray());
+                console.log(param);
+                if (g_id) {
+                    param.keyid = g_id
+                }
+                param.grade1 = param.grade1lower + "," + param.grade1upper;
+                param.grade2 = param.grade2lower + "," + param.grade2upper;
+                param.grade3 = param.grade3lower + "," + param.grade3upper;
+                param.grade4 = param.grade4lower + "," + param.grade4upper;
+                param.grade5 = param.grade5lower + "," + param.grade5upper;
+                $.post(urlPrefix + "/grainRank/edit", param, function (result) {
+                    parent.toSave(result)
+                })
+            });
+    }
+
+</script>

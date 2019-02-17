@@ -24,7 +24,7 @@ import java.util.Map;
  * Created by Administrator on 2018-12-19.
  */
 @Controller
-@RequestMapping("register")
+    @RequestMapping("register")
 public class RegisterController extends BaseController {
     @Autowired
     private InoutBiz inoutBiz;
@@ -216,7 +216,7 @@ public class RegisterController extends BaseController {
     @ResponseBody
     public JsonResult inoutByBillcode(String billcode) {
         UserAddress ua = getUserAddress();
-        String trueBillcode = null;
+        /*String trueBillcode = null;
         if (StringUtils.isNotEmpty(billcode)) {
             String[] billcodes = billcode.split("-");
             String billcodePrefix = billcodes[0] + "-" + billcodes[1]
@@ -226,15 +226,18 @@ public class RegisterController extends BaseController {
         } else {
             String maxBillcode = inoutBiz.getMaxBillcode(ua.getGraindepotid());
             trueBillcode = maxBillcode;
+        }*/
+        if (StringUtils.isEmpty(billcode)) {
+            return new JsonResult(new Inout(),"未查询到相关记录", false);
         }
         Map param = new HashMap();
         param.put("graindepotid", ua.getGraindepotid());
-        param.put("billcode", trueBillcode);
+        param.put("billcode", billcode);
         Inout inout = inoutBiz.selectOne(param);
         if (inout != null) {
             return new JsonResult(inout, "查询成功", true);
         } else {
-            return new JsonResult(null, "未查询到相关记录", false);
+            return new JsonResult(new Inout(), "未查询到相关记录", false);
         }
 
     }
