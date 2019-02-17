@@ -10,11 +10,28 @@
 
 <body>
 <div>
-    <script th:src="@{../js/huashi.js}"></script>
-    <script th:src="@{../js/d8.js}"></script>
-    <script th:src="@{../js/mscomm32.js}"></script>
+    <script th:src="@{/graindepot-inout/js/huashi.js}"></script>
+    <script th:src="@{/graindepot-inout/js/d8.js}"></script>
+    <script th:src="@{/graindepot-inout/js/mscomm32.js}"></script>
     <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
     <script th:src="@{/graindepot-video/js/hik3.js}"></script>
+    <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
+        function   MSComm1_OnComm()
+        {
+            switch(MSComm1.CommEvent)
+            {
+                case 1:{ window.alert("Send OK！"); break;}  //发送事件
+                case 2: { Receive();break;} //接收事件
+                default:
+                    alert("Event Raised!" + MSComm1.CommEvent);
+            }
+        }
+    </SCRIPT>
+
+    <SCRIPT   LANGUAGE="javascript"   FOR="MSComm1"   EVENT="OnComm">
+        // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
+        MSComm1_OnComm();
+    </SCRIPT>
     <script th:inline="javascript">
         var videolist=[[${videolist}]];
         var bZeroChannel=false;//默认不用模拟信号
@@ -57,8 +74,8 @@
                     bZeroChannel=true;
                 }
                 videolist[i].bZeroChannel=bZeroChannel;
-                clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
-                clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
+                //clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
+                //clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
             }
         });
         function rePlay(){
@@ -69,23 +86,7 @@
             }
         }
     </script>
-    <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
-        function   MSComm1_OnComm()
-        {
-            switch(MSComm1.CommEvent)
-            {
-                case 1:{ window.alert("Send OK！"); break;}  //发送事件
-                case 2: { Receive();break;} //接收事件
-                default:
-                    alert("Event Raised!" + MSComm1.CommEvent);
-            }
-        }
-    </SCRIPT>
 
-    <SCRIPT   LANGUAGE="javascript"   FOR="MSComm1"   EVENT="OnComm">
-        // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
-        MSComm1_OnComm();
-    </SCRIPT>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
@@ -131,7 +132,7 @@
                                             </div>
                                             <label style="padding-left:10px;float: left;display: block;font-size: 24px;line-height: 55px">Kg</label>
                                             <OBJECT id="MSComm1" CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014"
-                                                    codebase="MSCOMM32.OCX" type="application/x-oleobject"  style="width:0px;height:0px" >
+                                                    codebase="mscomm32.ocx" type="application/x-oleobject"  style="width:2px;height:2px" >
                                                 <PARAM   NAME="CommPort"   VALUE="2"/>
                                                 <PARAM   NAME="DataBits"   VALUE="8"/>
                                                 <PARAM   NAME="StopBits"   VALUE="1"/>
