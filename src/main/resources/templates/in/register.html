@@ -7,8 +7,56 @@
     <title>智能粮库云平台</title>
 </head>
 <body>
+<script th:src="@{/assets/js/bootstrap3-typeahead.js}"></script>
 <script th:src="@{../js/huashi.js}"></script>
 <script th:src="@{../js/d8.js}"></script>
+<script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
+<script th:src="@{/graindepot-video/js/hik3.js}"></script>
+<script th:inline="javascript">
+    var ip = [[${video.ip}]],
+            httpport = [[${video.httpport}]],
+            username = [[${video.username}]],
+            password = [[${video.password}]],
+            channel = [[${video.channel}]],
+            maliu=[[${video.maliu}]],
+            datasignal = [[${video.datasignal}]];
+    var bZeroChannel=false;//默认不用模拟信号
+    var iStreamType = 1; //码流类型，1 主码流， 2 子码流
+    // 初始化插件
+    // 全局保存当前选中窗口
+    var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
+    $(function() {
+        // 检查插件是否已经安装过
+        if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
+            alert("您还未安装过插件，点击下载视频播放控件!");
+            return;
+        }
+        var height=$("#divPlugin").height();
+        var width=$("#divPlugin").width();
+        // 初始化插件参数及插入插件
+        WebVideoCtrl.I_InitPlugin(width, height,{
+            iWndowType : 1,
+            cbSelWnd : function(xmlDoc) {
+                g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
+                //var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
+                //showCBInfo(szInfo);
+            }
+        });
+        WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+        changeWndNum(1);
+        if(""!=maliu){
+            iStreamType=maliu
+        }
+        if(datasignal==2){//模拟
+            bZeroChannel=true;
+        }
+        clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
+        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,0);
+    });
+    function rePlay(){
+        clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,0);
+    }
+</script>
 <div th:replace="navbar::navbar"></div>
 <div class="main-container" id="main-container">
     <div class="main-container-inner">
@@ -36,7 +84,7 @@
                                         <div style="width: 100%;height:50%;text-align: center;">
                                             <div style="float:left;background-color: #E0FFFF;width: 70%;height:100%;text-align: center;">
                                                 <label style="height:100%;line-height: 250px;font-size: 40px;">
-                                                    <img id="PhotoStr" src="" alt="证件照"
+                                                    <img id="PhotoStr" src="" alt=""
                                                          style="width:150px;height:100%"/></label>
                                             </div>
                                             <div style="float:left;width: 30%;height:100%;text-align: center;padding-left:2px">
@@ -65,7 +113,13 @@
                                         <div style="width: 100%;height:50%;text-align: center;">
 
                                             <div style="float:left;width: 70%;height:100%;background-color: black;text-align: center;">
-                                                <label style="height:100%;line-height: 250px;font-size: 40px;color:#fff">监控画面</label>
+                                                <div id="divPlugin" style="width:100%;height:230px"></div>
+                                                <div style="width:100%;height:20px;text-align: right;padding-right:10px">
+                                                    <span id="msg" style="color:red"></span>
+                                                    <a class="red" href="javascript:rePlay()" style="padding-left:5px;" title="播放刷新">
+                                                        <i class="icon-facetime-video bigger-130"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <div style="float:left;width: 30%;height:100%;text-align: center;padding-left:2px">
                                                 <div style="width: 100%;">

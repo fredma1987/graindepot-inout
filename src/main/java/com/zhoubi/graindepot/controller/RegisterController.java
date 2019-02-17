@@ -1,14 +1,11 @@
 package com.zhoubi.graindepot.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.zhoubi.graindepot.base.JsonResult;
-import com.zhoubi.graindepot.bean.BaseUser;
-import com.zhoubi.graindepot.bean.Individual;
-import com.zhoubi.graindepot.bean.Inout;
-import com.zhoubi.graindepot.bean.UserAddress;
+import com.zhoubi.graindepot.bean.*;
 import com.zhoubi.graindepot.biz.IndividualBiz;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.rpc.IVideoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +28,8 @@ import java.util.Map;
 public class RegisterController extends BaseController {
     @Autowired
     private InoutBiz inoutBiz;
+    @Autowired
+    private IVideoService videoService;
     @Autowired
     private IndividualBiz individualBiz;
 
@@ -48,8 +46,11 @@ public class RegisterController extends BaseController {
     public String toInRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
+        Video video=videoService.selectRegiterVideo(user.getGraindepotid());
+        model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "入库登记");
         return "in/register";
     }
 
@@ -58,8 +59,11 @@ public class RegisterController extends BaseController {
     public String toOutRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
+        Video video=videoService.selectRegiterVideo(user.getGraindepotid());
+        model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "出库登记");
         return "out/register";
     }
 
