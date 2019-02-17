@@ -18,13 +18,17 @@ function OperatePort() {
             MSComm1.PortOpen=false;
             document.getElementById("OperateButton").value="打开串口";
         }catch(ex)
-        {alert(ex.message);}
-    }
-    else{
-        try{ MSComm1.PortOpen=true;
+        {
+            alert(ex.message);
+        }
+    }else{
+        try{
+            MSComm1.PortOpen=true;
             document.getElementById("OperateButton").value="关闭串口";
         }catch(ex)
-        {alert(ex.message);}
+        {
+            alert(ex.message);
+        }
     }
 }
 
@@ -33,11 +37,6 @@ function ConfigPort()
     if(MSComm1.PortOpen==false||MSComm1.PortOpen==undefined)
     {
         try{
-            /*MSComm1.CommPort=document.getElementById("ComName").value;
-            MSComm1.Settings=document.getElementById("BaudRate").value.toString()+
-                ","+document.getElementById("CheckBit").value.toString()+
-                ","+document.getElementById("DataBits").value.toString()+
-                ","+document.getElementById("StopBits").value.toString();*/
             //默认串口2
             MSComm1.CommPort="2";
             //默认波特率
