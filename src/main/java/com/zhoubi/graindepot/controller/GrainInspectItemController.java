@@ -90,6 +90,7 @@ public class GrainInspectItemController  extends BaseController{
     }
 
     @PostMapping("/del")
+    @ResponseBody
     public JsonResult grainInspectItemDel(String ids) {
         if (StringUtils.isNotEmpty(ids)) {
             Map map = new HashMap();

@@ -3,10 +3,7 @@ package com.zhoubi.graindepot.controller;
 
 import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.bean.*;
-import com.zhoubi.graindepot.biz.GrainInspectItemBiz;
-import com.zhoubi.graindepot.biz.GrainRankBiz;
-import com.zhoubi.graindepot.biz.InoutBiz;
-import com.zhoubi.graindepot.biz.InspectBiz;
+import com.zhoubi.graindepot.biz.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,13 +22,17 @@ import java.util.*;
 @RequestMapping("inspect")
 public class InspectController extends BaseController {
     @Autowired
-    InspectBiz inspectBiz;
+    private InspectBiz inspectBiz;
     @Autowired
     private InoutBiz inoutBiz;
     @Autowired
     private GrainInspectItemBiz grainInspectItemBiz;
     @Autowired
     private GrainRankBiz grainRankBiz;
+    @Autowired
+    private GrainPriceBiz grainPriceBiz;
+    @Autowired
+    private GbGrainPriceBiz gbGrainPriceBiz;
 
 
     @ModelAttribute("ctx")
@@ -137,6 +138,8 @@ public class InspectController extends BaseController {
         param.put("grainattrid", inoutInsp.getGrainattrid());
         param.put("producingyear", inoutInsp.getProducingyear());
         param.put("grade", inoutInsp.getGrade());
+        param.put("price", inoutInsp.getPrice());
+        param.put("price1", inoutInsp.getPrice());
         param.put("inplanid", inoutInsp.getInplanid());
         param.put("contractid", inoutInsp.getContractid());
         param.put("billstage", 3);
@@ -167,6 +170,28 @@ public class InspectController extends BaseController {
         // param.put("billcode", "2019-02-17-0001");
         Inout result = inoutBiz.oneByBillcodeAndGraindepotid(param);
         return new JsonResult(result, true);
+    }
+
+
+    //根据登记流水号来查询入库登记信息
+    @GetMapping("/grainPrice/listByGrainid")
+    @ResponseBody
+    public JsonResult listByGrainid(Integer grainid) {
+        UserAddress ua = getUserAddress();
+        Map param = new HashMap();
+        param.put("grainid", grainid);
+        param.put("graindepotid", ua.getGraindepotid());
+        GrainPrice grainPrice = grainPriceBiz.selectOne(param);
+        if (grainPrice == null) {
+            //从国标里面取出数据
+            param.clear();
+            param.put("grainid", grainid);
+            GbGrainPrice gbGrainPrice = gbGrainPriceBiz.getLatestOne(param);
+            return new JsonResult(gbGrainPrice, true);
+        } else {
+            return new JsonResult(grainPrice, true);
+        }
+
     }
 
 }

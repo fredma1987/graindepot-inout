@@ -2,8 +2,11 @@ package com.zhoubi.graindepot.controller;
 
 import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
-import com.zhoubi.graindepot.bean.*;
-import com.zhoubi.graindepot.biz.GrainRankBiz;
+import com.zhoubi.graindepot.bean.BaseUser;
+import com.zhoubi.graindepot.bean.GrainPrice;
+import com.zhoubi.graindepot.bean.InspectItem;
+import com.zhoubi.graindepot.bean.UserAddress;
+import com.zhoubi.graindepot.biz.GrainPriceBiz;
 import com.zhoubi.graindepot.biz.InspectItemBiz;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,71 +17,64 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("grainRank")
-public class GrainRankController extends BaseController{
+@RequestMapping("grainPrice")
+public class GrainPriceController extends BaseController{
     @Autowired
-    private GrainRankBiz grainRankBiz;
+    private GrainPriceBiz grainPriceBiz;
     @Autowired
     private InspectItemBiz inspectItemBiz;
 
-    @GetMapping("toGrainRank")
-    public String toGrainRank(Model model){
+    @GetMapping("toGrainPrice")
+    public String toGrainPrice(Model model){
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
-        return "grainRank/list";
+        return "grainPrice/list";
     }
     @GetMapping("toEdit")
     public String toEdit(Model model,Integer id){
-        String title = "粮食品种等级划分";
+        String title = "粮食品种收购价格";
         model.addAttribute("title", title);
         model.addAttribute("id", id);
-        GrainRank item = new GrainRank();
+        GrainPrice item = new GrainPrice();
         if (id != null) {
-            item = grainRankBiz.selectById(id);
+            item = grainPriceBiz.selectById(id);
         }
         model.addAttribute("item", item);
-        return "grainRank/edit";
+        return "grainPrice/edit";
     }
 
     @GetMapping("/list/page")
     @ResponseBody
-    public PagerModel ggrainRankPageList(int start, int length, Integer grainid) {
-        PagerModel<GrainRank> e = new PagerModel();
-        e.addOrder("grainid asc,orderno desc");
+    public PagerModel ggrainPricePageList(int start, int length, Integer grainid) {
+        UserAddress ua=getUserAddress();
+        PagerModel<GrainPrice> e = new PagerModel();
+        e.addOrder("grainid asc");
         e.setStart(start);
         e.setLength(length);
         e.putWhere("grainid", grainid);
-        PagerModel<GrainRank> result = grainRankBiz.selectListByPage(e);
+        e.putWhere("graindepotid", ua.getGraindepotid());
+        PagerModel<GrainPrice> result = grainPriceBiz.selectListByPage(e);
         return result;
     }
-    //获取所有的检验标准
-    @GetMapping("/inspectItem/list")
-    @ResponseBody
-    public List<InspectItem> inspectItemList(){
-        Map param=new HashMap();
-        List list = inspectItemBiz.selectList(param);
-        return list;
-    }
-
     @PostMapping("/edit")
     @ResponseBody
-    public JsonResult grainRankEdit(GrainRank item){
-
+    public JsonResult grainPriceEdit(GrainPrice item){
+        UserAddress ua=getUserAddress();
         if (item.getKeyid()==null) {
             //新增
-            grainRankBiz.insert(item);
+            item.setGraindepotid(ua.getGraindepotid());
+            grainPriceBiz.insert(item);
             return new JsonResult("添加成功", true);
         } else {
             //修改
-            grainRankBiz.update(item);
+            grainPriceBiz.update(item);
             return new JsonResult("修改成功", true);
         }
 
@@ -86,12 +82,27 @@ public class GrainRankController extends BaseController{
 
     @PostMapping("/del")
     @ResponseBody
-    public JsonResult grainRankDel(String ids) {
+    public JsonResult grainPriceDel(String ids) {
         if (StringUtils.isNotEmpty(ids)) {
             Map map = new HashMap();
             map.put("Where_IdsStr", ids);
-            grainRankBiz.deleteMap(map);
+            grainPriceBiz.deleteMap(map);
         }
         return new JsonResult("删除成功", true);
+    }
+
+    @PostMapping("/checkRepeat")
+    @ResponseBody
+    public String checkRepeat(Integer grainid, Integer keyid) {
+        Map map = new HashMap();
+        map.put("grainid", grainid);
+        map.put("keyid", keyid);
+        int result = grainPriceBiz.checkRepeat(map);
+        if (result == 0) {
+            return "{\"valid\":true}";
+        } else {
+            return "{\"valid\":false}";
+        }
+
     }
 }

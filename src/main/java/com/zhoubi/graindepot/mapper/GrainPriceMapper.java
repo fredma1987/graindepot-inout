@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.GrainPrice;import com.zhoubi.graindepot.base.BaseMapper;import java.util.Map;public interface GrainPriceMapper extends BaseMapper<GrainPrice> {    int checkRepeat(Map parm);}

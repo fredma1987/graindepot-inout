@@ -130,6 +130,12 @@
                                                 </div>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
+                                                <label> 收购价格： </label>
+                                                <input type="text" id="price" name="price"
+                                                       style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
                                                 <label class="col-sm-4 control-label no-padding-right"
                                                        style="width:70px;padding-left:0px"> 计划安排： </label>
                                                 <div class="col-sm-4" style="width:120px;padding-left:0px">
@@ -393,6 +399,8 @@
                 if (grainid) {
                     //根据粮食品种动态生成质检标准
                     autoInspect(grainid);
+                    //修改收购价格
+                    setPrice();
                     //获取该品种的等级划分标准
                     $.get("/graindepot-inout/inspect/grainRank/byGrainid", {grainid: grainid})
                         .then(function (result) {
@@ -432,6 +440,8 @@
             textField: 'text',
             defaultValue: 3,
             onSelect: function (value, item) {
+                //收购价格
+                setPrice();
                 setInspectDeduByGrade();
             }
         });
@@ -618,15 +628,19 @@
         })
     }
 
-    //判断是否为数字
-    function isNumber(val) {
-        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-        if (regPos.test(val) || regNeg.test(val)) {
-            return true;
-        } else {
-            return false;
+    //修改等级之后导致修改收购价格
+    function setPrice() {
+        var grainid = $("#grainid").bootstrapSelect("getValue");
+        var grade = $("#grade").bootstrapSelect("getValue");
+        if (grainid) {
+            //根据品种id获取价格
+            $.get("/graindepot-inout/inspect/grainPrice/listByGrainid", {grainid: grainid})
+                .then(function (result) {
+                    $("#price").val(result.data["price" + grade])
+                })
         }
+
+
     }
 
     function toSave() {
@@ -652,13 +666,13 @@
         $("#trucknum").val(inout.trucknum);
         $("#storageid").bootstrapSelect("setValue", inout.storageid);
         $("#grainid").bootstrapSelect("setValue", inout.grainid);
+        $("#grade").bootstrapSelect("setValue", inout.grade);
         $("#producingyear").val(inout.producingyear);
         $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
         $("#contractid").bootstrapSelect("setValue", inout.contractid);
         //根据billid查询当前质检信息
         $.post("/graindepot-inout/inspect/selectById", {billid: inout.billid})
             .then(function (result) {
-                debugger;
                 if (result) {
                     $("#inspresult").bootstrapSelect("setValue", result.inspresult);
                     $("#inspect").find("input").each(function (index, curr) {
@@ -672,7 +686,7 @@
                     reset();
                     $("#billstate").html("未保存")
                 }
-
+                $("#price").val(inout.price);
             })
 
 
@@ -685,8 +699,6 @@
             if (!_billcode) {
                 $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
             } else {
-                console.log(_billcode.length);
-                console.log(_billcode);
                 findInoutInsp(flag, _billcode);
             }
 
@@ -704,18 +716,19 @@
             var billid = result.data.billid;
             //根据billid查询前一单 当前单 后一单
             var url = "/graindepot-inout/register/inout/findOneIn";
-            var param={billid: billid, flag: flag};
+            var param = {billid: billid, flag: flag};
             if (flag == 2) {
                 url = "/graindepot-inout/register/inout/oneIn";
-                param={billcode:result.data.billcode}
+                param = {billcode: result.data.billcode}
             }
             $.get(url, param)
                 .then(function (result) {
                     if (result.success) {
                         var inout = result.data;
                         initInoutInsp(inout);
+                    } else {
+                        $.bootstrapBox.alert.init({message: result.message})
                     }
-                    $.bootstrapBox.alert.init({message: result.message})
                 }, function () {
                     $.bootstrapBox.alert.init({message: "查询失败"})
                 })
