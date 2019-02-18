@@ -84,7 +84,7 @@
                                         <div style="width: 100%;height:50%;text-align: center;">
                                             <div style="float:left;background-color: #E0FFFF;width: 70%;height:100%;text-align: center;">
                                                 <label style="height:100%;line-height: 250px;font-size: 40px;">
-                                                    <img id="PhotoStr" src="" alt=""
+                                                    <img id="photostr" src="" alt=""
                                                          style="width:150px;height:100%"/></label>
                                             </div>
                                             <div style="float:left;width: 30%;height:100%;text-align: center;padding-left:2px">
@@ -95,16 +95,16 @@
                                                         </div>
                                                         <div style="height:20px">民族：<label id="nation">—&nbsp;—</label>
                                                         </div>
-                                                        <div style="height:20px">出生：<label id="bornDay">—&nbsp;—</label>
+                                                        <div style="height:20px">出生：<label id="bornday">—&nbsp;—</label>
                                                         </div>
                                                         <div style="height:20px">签发机关:</div>
-                                                        <div style="height:20px"><label id="certOrg">—&nbsp;—</label>
+                                                        <div style="height:20px"><label id="certorg">—&nbsp;—</label>
                                                         </div>
                                                         <div style="height:20px">开始期限:</div>
-                                                        <div style="height:20px"><label id="effDate">—&nbsp;—</label>
+                                                        <div style="height:20px"><label id="effdate">—&nbsp;—</label>
                                                         </div>
                                                         <div style="height:20px">结束期限:</div>
-                                                        <div style="height:20px"><label id="expDate">—&nbsp;—</label>
+                                                        <div style="height:20px"><label id="expdate">—&nbsp;—</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -566,10 +566,10 @@
                 trucktype: param.trucktype,
                 trucknum: param.trucknum,
                 nation: $("#nation").html(),
-                bornday: $("#bornDay").html(),
-                certorg: $("#certOrg").html(),
-                effdate: $("#effDate").html(),
-                expdate: $("#expDate").html()
+                bornday: $("#bornday").html(),
+                certorg: $("#certorg").html(),
+                effdate: $("#effdate").html(),
+                expdate: $("#expdate").html()
             };
             $.post("/graindepot-inout/register/addIndividual", individual)
 
@@ -614,10 +614,10 @@
                 $("#sellmanphone").val(item.phone);
                 $("#sellmanaddress").val(item.address);
                 $("#nation").html(item.nation);
-                $("#bornDay").html(item.bornday);
-                $("#certOrg").html(item.certorg);
-                $("#effDate").html(item.effdate);
-                $("#expDate").html(item.expdate);
+                $("#bornday").html(item.bornday);
+                $("#certorg").html(item.certorg);
+                $("#effdate").html(item.effdate);
+                $("#expdate").html(item.expdate);
 
             },
             delay: 500//延迟时间
@@ -714,12 +714,12 @@
         $("#traderid").bootstrapSelect({
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
-            valueField: 'traderID',
-            textField: 'traderName',
-            onSelect: function (traderID, row) {
+            valueField: 'traderid',
+            textField: 'tradername',
+            onSelect: function (traderid, row) {
                 if (row) {
-                    $("#sellmanphone").val(row.telNumber);
-                    $("#sellmanaddress").val(row.traderAddress);
+                    $("#sellmanphone").val(row.telnumber);
+                    $("#sellmanaddress").val(row.traderaddress);
                 }
             }
         })

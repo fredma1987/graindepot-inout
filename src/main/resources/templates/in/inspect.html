@@ -352,9 +352,9 @@
         $("#traderid").bootstrapSelect({
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
-            valueField: 'traderID',
-            textField: 'traderName',
-            onSelect: function (traderID, row) {
+            valueField: 'traderid',
+            textField: 'tradername',
+            onSelect: function (traderid, row) {
             }
         })
     }
@@ -452,7 +452,7 @@
         $.get("/graindepot-inout/inspect/grainInspectItem/byGrainid", {grainid: grainid})
             .then(function (result) {
                 g_grainInspectItem = result.data;
-                var formGroup = "<div class=\"form-group\">"
+                var formGroup = "<div class=\"form-group\">";
                 var divStyle = "<div style=\"float: left;padding-left: 10px\">";
                 var label = "<label>";
                 var _label = "</label>";
@@ -472,7 +472,7 @@
                         inspectHtml += inspectitem.itemname + r + _label;
                         inspectHtml += '<input type="text" id="' + inspectitem.itemfield + '" name="'
                             + inspectitem.itemfield + '" style="width:50px;margin-left: 10px"';
-                        inspectHtml += 'onChange="setInspectDeduByInspectItem(' + curr.keyid + ')"'
+                        inspectHtml += 'onChange="setInspectDeduByInspectItem(' + curr.keyid + ')"';
                         inspectHtml += '/>' + _div;
                         if (index % 5 == 0 && index > 0) {
                             inspectHtml += _div;
@@ -552,7 +552,7 @@
 
     //修改检验标准的值导致设置增扣率和等级
     function setInspectDeduByInspectItem(keyid) {
-        console.log(keyid)
+        console.log(keyid);
         var grainInspectItem = g_grainInspectItem.filter(function (value, index) {
             return value.keyid == keyid
         })[0];

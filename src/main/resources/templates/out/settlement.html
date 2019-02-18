@@ -246,11 +246,11 @@
         $("#traderid").bootstrapSelect({
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
-            valueField: 'traderID',
-            textField: 'traderName',
-            onSelect: function (traderID, row) {
+            valueField: 'traderid',
+            textfield: 'tradername',
+            onSelect: function (traderid, row) {
                 if (row) {
-                    param.traderid=row.traderID;
+                    param.traderid=row.traderid;
                     //query(param);
                 }
             }

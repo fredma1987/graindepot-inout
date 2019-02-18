@@ -262,12 +262,23 @@
 
 <script type="text/javascript">
     jQuery(function ($) {
+        initTrader();
         initGrain();
         initGrainattr();
         initGrade();
         initSettlemothod();
         initTrucktype();
     });
+    function initTrader() {
+        $("#traderid").bootstrapSelect({
+            url: '/graindepot-base/selector/traderList',
+            type: 'GET',
+            valueField: 'traderid',
+            textField: 'tradername',
+            onSelect: function (traderid, row) {
+            }
+        })
+    }
     function initGrain() {
         $("#grainid").bootstrapSelect({
             url: '/graindepot-base/selector/grainList',

@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Prerece;import com.zhoubi.graindepot.base.BaseMapper;public interface PrereceMapper extends BaseMapper<Prerece> {}

@@ -1,0 +1,206 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head(${title})">
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script  th:inline="javascript">
+
+    </script>
+</head>
+
+<body>
+<div>
+    <div th:replace="navbar::navbar"></div>
+    <div class="main-container-inner">
+        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
+            <div class="page-content" style="padding:10px 30px 0px">
+                <div class="page-header">
+                    <h1>
+                        预收款
+                        <small>
+                            <i class="icon-double-angle-right"></i>
+
+                        </small>
+                    </h1>
+                </div>
+                <!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+
+                        <form class="form-horizontal" id="validation-form" role="form">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
+                                    <div style="width: 100%;height:100%;padding-left:20px;float: left">
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 收款原由： </label>
+                                                <input type="text" style="width:360px" id="origin" name="origin"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 54px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 购粮单位：</label>
+                                                <div class="col-sm-4" style="width:360px;padding-left:0px">
+                                                    <select id="traderid" name="traderid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 仓房号： </label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="storageid" name="storageid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食品种：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainid" name="grainid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:80px;padding-left:0px"> 粮食性质：</label>
+                                                <div class="col-sm-4" style="width:150px;padding-left:0px">
+                                                    <select id="grainattrid" name="grainattrid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 收获年度： </label>
+                                                <input type="text" id="producingyear" name="producingyear" style="width:50px"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:90px;padding-left:0px"> 粮食等级：</label>
+                                                <div class="col-sm-4" style="width:120px;padding-left:0px">
+                                                    <select id="grade" name="grade" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label> 单价： </label>
+                                                <input type="text" id="price" name="price" style="width:50px"
+                                                       placeholder=""/>元/千克
+                                            </div>
+                                            <div style="float: left;padding-left: 10px">
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 合同号：</label>
+                                                <div class="col-sm-4" style="width:130px;padding-left:0px">
+                                                    <select id="contractid" name="contractid" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /span -->
+                            </div>
+                            <div class="row" style="float: right;padding-right: 12px">
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-left icon-on-left"></i>
+                                    前一单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-arrow-right icon-on-right"></i>
+                                    后一单
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-save"></i>
+                                    保存
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                    <i class="icon-save"></i>
+                                    审核
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                    <i class="icon-undo"></i>
+                                    取消
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+        <!-- /.main-content -->
+    </div>
+    <!-- /.main-container-inner -->
+
+</div>
+<!-- /.main-container -->
+
+<script  th:inline="javascript">
+    jQuery(function ($) {
+        initGrain();
+        initGrainattr();
+        initGrade();
+        initPacktype();
+        initTrucktype();
+    });
+    function initPacktype() {
+        var data = [{value: 1, text: "散装"}, {value: 2, text: "包装"}];
+        $("#packtype").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
+    function initGrain() {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            onSelect:function(value){
+               if(value>=3&& value<=6){
+                   $("#gqitem1").css("display","block");
+                   $("#gqitem2").css("display","none");
+               }else{
+                   $("#gqitem1").css("display","none");
+                   $("#gqitem2").css("display","block");
+               }
+            }
+        });
+    }
+    function initGrainattr() {
+        $("#grainattrid").bootstrapSelect({
+            url:  '/graindepot-base/selector/grainattrList',
+            type: 'GET',
+            valueField: 'grainattrid',
+            textField: 'grainattrname'
+        });
+    }
+    function initGrade(){
+        var data = [{value: 1, text: "一等"}, {value: 2, text: "二等"}, {value: 3, text: "三等"}
+            , {value: 4, text: "四等"}, {value: 5, text: "五等"}, {value: 6, text: "等外"}];
+        $("#grade").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 3
+        });
+    }
+    function initTrucktype() {
+        var data = [{value: 1, text: "车辆"}, {value: 2, text: "船舶"}, {value: 3, text: "火车"}, {value: 99, text: "其他"}];
+        $("#trucktype").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 1
+        });
+    }
+</script>
+</body>
+</html>

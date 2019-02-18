@@ -37,11 +37,11 @@ function clearForm()
     $("#sellmanidcard").val("");
     $("#gender").html("—&nbsp;—");
     $("#nation").html("—&nbsp;—");
-    $("#bornDay").html("—&nbsp;—");
-    $("#certOrg").html("—&nbsp;—");
-    $("#effDate").html("—&nbsp;—");
-    $("#expDate").html("—&nbsp;—");
-    $("#PhotoStr").attr("src","data:image/jpeg;base64,");
+    $("#bornday").html("—&nbsp;—");
+    $("#certorg").html("—&nbsp;—");
+    $("#effdate").html("—&nbsp;—");
+    $("#expdate").html("—&nbsp;—");
+    $("#photostr").attr("src","data:image/jpeg;base64,");
 }
 function connect()
 {
@@ -91,11 +91,11 @@ function readCert()
             $("#sellmanidcard").val(resultObj.resultContent.certNumber);
             $("#gender").text(resultObj.resultContent.gender);
             $("#nation").text(resultObj.resultContent.nation);
-            $("#bornDay").text(resultObj.resultContent.bornDay);
-            $("#certOrg").text(resultObj.resultContent.certOrg);
-            $("#effDate").text(resultObj.resultContent.effDate);
-            $("#expDate").text(resultObj.resultContent.expDate);
-            $("#PhotoStr").attr("src","data:image/jpeg;base64,"+ resultObj.resultContent.identityPic);
+            $("#bornday").text(resultObj.resultContent.bornDay);
+            $("#certorg").text(resultObj.resultContent.certOrg);
+            $("#effdate").text(resultObj.resultContent.effDate);
+            $("#expdate").text(resultObj.resultContent.expDate);
+            $("#photostr").attr("src","data:image/jpeg;base64,"+ resultObj.resultContent.identityPic);
         }else{
             alert("请正确放置身份证！");
         }

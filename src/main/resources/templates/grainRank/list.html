@@ -38,11 +38,11 @@
                 </div>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-success" onclick="javascript:searchTable()">
+                <button class="btn btn-sm btn-success" onclick="searchTable()">
                     <i class="icon-search align-top bigger-125"></i>
                     查询
                 </button>
-                <button class="btn btn-sm btn-warning" onclick="javascript:rest()">
+                <button class="btn btn-sm btn-warning" onclick="rest()">
                     <i class="icon-undo align-top bigger-125"></i>
                     重置
                 </button>
@@ -113,11 +113,11 @@
             columns: [
                 {data: "grainname"},
                 {data: "itemname"},
-                {data: "grade1Str"},
-                {data: "grade2Str"},
-                {data: "grade3Str"},
-                {data: "grade4Str"},
-                {data: "grade5Str"},
+                {data: "grade1str"},
+                {data: "grade2str"},
+                {data: "grade3str"},
+                {data: "grade4str"},
+                {data: "grade5str"},
                 {data: "orderno"},
                 {
                     data: "keyid",
@@ -159,10 +159,10 @@
 
 
     function doDel() {
-        console.log($('#myTable').bootstrapTable("getChecked"))
+        console.log($('#myTable').bootstrapTable("getChecked"));
         var checkedList = $('#myTable').bootstrapTable("getChecked");
         if (checkedList.length == 0) {
-            $.bootstrapBox.alert.init({message: "请选择需要删除的行"})
+            $.bootstrapBox.alert.init({message: "请选择需要删除的行"});
             return
         }
         $.bootstrapBox.confirm.init({
