@@ -10,11 +10,28 @@
 
 <body>
 <div>
-    <script th:src="@{../js/huashi.js}"></script>
-    <script th:src="@{../js/d8.js}"></script>
-    <script th:src="@{../js/mscomm32.js}"></script>
+    <script th:src="@{/graindepot-inout/js/huashi.js}"></script>
+    <script th:src="@{/graindepot-inout/js/d8.js}"></script>
+    <script th:src="@{/graindepot-inout/js/mscomm32.js}"></script>
     <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
     <script th:src="@{/graindepot-video/js/hik3.js}"></script>
+    <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
+        function   MSComm1_OnComm()
+        {
+            switch(MSComm1.CommEvent)
+            {
+                case 1:{ window.alert("Send OK！"); break;}  //发送事件
+                case 2: { Receive();break;} //接收事件
+                default:
+                    alert("Event Raised!" + MSComm1.CommEvent);
+            }
+        }
+    </SCRIPT>
+
+    <SCRIPT   LANGUAGE="javascript"   FOR="MSComm1"   EVENT="OnComm">
+        // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
+        MSComm1_OnComm();
+    </SCRIPT>
     <script th:inline="javascript">
         var videolist = [[${videolist}]];
         var bZeroChannel = false;//默认不用模拟信号
@@ -59,6 +76,9 @@
                 videolist[i].bZeroChannel = bZeroChannel;
                 clickLogin(ip, httpport, channel, bZeroChannel, username, password, iStreamType);
                 clickStartRealPlay(ip, channel, bZeroChannel, iStreamType, wndIndex);
+                videolist[i].bZeroChannel=bZeroChannel;
+                //clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
+                //clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
             }
         });
 
@@ -156,6 +176,24 @@
                                                 <PARAM NAME="OutBufferSize" VALUE="512"/>
                                                 <PARAM NAME="SThreshold" VALUE="0"/>
                                                 <PARAM NAME="RThreshold" VALUE="1"/>
+                                                    codebase="mscomm32.ocx" type="application/x-oleobject"  style="width:2px;height:2px" >
+                                                <PARAM   NAME="CommPort"   VALUE="2"/>
+                                                <PARAM   NAME="DataBits"   VALUE="8"/>
+                                                <PARAM   NAME="StopBits"   VALUE="1"/>
+                                                <PARAM   NAME="BaudRate"   VALUE="9600"/>
+                                                <PARAM   NAME="Settings"   VALUE="9600,N,8,1"/>
+                                                <PARAM   NAME="RTSEnable"   VALUE="1"/>
+                                                <PARAM   NAME="DTREnable"   VALUE="1"/>
+                                                <PARAM   NAME="Handshaking"   VALUE="0"/>
+                                                <PARAM   NAME="NullDiscard"   VALUE="0"/>
+                                                <PARAM   NAME="ParityReplace"   VALUE="?"/>
+                                                <PARAM   NAME="EOFEnable"   VALUE="0"/>
+                                                <PARAM   NAME="InputMode"   VALUE="0"/>
+                                                <PARAM   NAME="InBufferSize"   VALUE="1024"/>
+                                                <PARAM   NAME="InputLen"   VALUE="0"/>
+                                                <PARAM   NAME="OutBufferSize"   VALUE="512"/>
+                                                <PARAM   NAME="SThreshold"   VALUE="0"/>
+                                                <PARAM   NAME="RThreshold"   VALUE="1"/>
                                             </OBJECT>
                                             <input type="button" id="OperateButton"
                                                    style="width:80px;height:30px;font-size:13px" name="OperateButton"
