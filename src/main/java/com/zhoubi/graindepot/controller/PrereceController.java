@@ -25,13 +25,13 @@ public class PrereceController extends BaseController{
     @Autowired
     private PrereceBiz prereceBiz;
     @GetMapping("prerece/list/page")
-    public PagerModel prerece(int start, int length, Integer traderID) {
+    public PagerModel prerece(int start, int length, Integer traderid) {
         BaseUser currentUser = getCurrentUser();
         PagerModel<Prerece> e =new PagerModel<Prerece>();
         e.setStart(start);
         e.setLength(length);
-        if (traderID!=null) {
-            e.putWhere("traderid", traderID);
+        if (traderid!=null) {
+            e.putWhere("traderid", traderid);
         }
         e.putWhere("graindepotid",currentUser.getGraindepotid());
         e.addOrder("billdate desc");
@@ -65,8 +65,7 @@ public class PrereceController extends BaseController{
             return new JsonResult("新增成功", true);
         }else{
             prerece.setUpdatetime(new Date());
-            Map map = initMap(prerece);
-            prereceBiz.updateMap(map);
+            prereceBiz.update(prerece);
         }
         return new JsonResult("修改成功", true);
     }
