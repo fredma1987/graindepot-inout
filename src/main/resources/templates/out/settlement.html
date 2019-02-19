@@ -10,7 +10,8 @@
 </head>
 
 <body>
-<div>
+<script th:src="@{/assets/js/bootstrap3-typeahead.js}"></script>
+<div class="main-container" id="main-container">
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
     <div th:replace="navbar::navbar"></div>
@@ -39,7 +40,8 @@
                                     <div style="width: 100%;height:100%;padding-left:20px;float: left">
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 购粮单位：</label>
+                                                <label class="col-sm-4 control-label no-padding-right"
+                                                       style="width:70px;padding-left:0px" id="trader"> 购粮单位：</label>
                                                 <div class="col-sm-4" style="width:300px;padding-left:0px">
                                                     <select id="traderid" name="traderid" class="form-control">
                                                     </select>
@@ -159,6 +161,7 @@
                                 </div>
                                 <!-- /span -->
                             </div>
+                            </div>
                             <div class="row" style="float: right;padding-right: 12px">
                                 <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-arrow-left icon-on-left"></i>
@@ -203,7 +206,7 @@
 </div>
 <!-- /.main-container -->
 
-<script type="text/javascript">
+<script  type="text/javascript">
     var param={};
     var theTable;
     jQuery(function ($) {
@@ -247,13 +250,7 @@
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
             valueField: 'traderid',
-            textfield: 'tradername',
-            onSelect: function (traderid, row) {
-                if (row) {
-                    param.traderid=row.traderid;
-                    //query(param);
-                }
-            }
+            textField: 'tradername'
         })
     }
     function initStorage() {
