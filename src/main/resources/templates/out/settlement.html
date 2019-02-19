@@ -86,7 +86,7 @@
                                         <div class="form-group">
                                             <div style="float: left;padding-left: 10px">
                                                 <label> 收款金额： </label>
-                                                <input type="text" id="accamt" name="accamt" style="width:150px"
+                                                <input type="text" id="accamt" name="accamt" style="width:150px;"
                                                        placeholder=""/>
                                             </div>
                                             <div style="float: left;padding-left: 10px">
@@ -121,8 +121,8 @@
                                         <div  style="margin-top: 4px;margin-bottom: 4px">
                                             <div class="col-sm-4">
                                                 <a class="btn btn-sm btn-primary" onclick="toAdd()">
-                                                    <i class="icon-save align-top bigger-125"></i>
-                                                    确认结算
+                                                    <i class="icon-plus align-top bigger-125"></i>
+                                                    添加到结算
                                                 </a>
                                                 <a class="btn btn-sm btn-danger" onclick="doDel()">
                                                     <i class="icon-trash align-top bigger-125"></i>
@@ -171,7 +171,7 @@
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
-                                <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
+                                <!--<OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
                                         classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
                                 </OBJECT>
                                 <a class="btn btn-success" style="border: 0;width: 120px;">
@@ -181,7 +181,7 @@
                                 <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-search"></i>
                                     单据查询
-                                </a>
+                                </a>-->
                                 <a class="btn btn-success" style="border: 0;width: 120px;">
                                     <i class="icon-legal"></i>
                                     确认结算
@@ -215,7 +215,24 @@
         comm_initSettle();
         comm_initContract(param);
         comm_initAccount(param);
+
     });
+    function toAdd(){
+        var checkedList =$('#myTable').bootstrapTable("getChecked");
+        if (checkedList.length==0) {
+            $.bootstrapBox.alert.init({message: "请选择本次结算的行"});
+            return
+        }
+        var sumamt=0,accamt=0;
+        for(var i=0;i<checkedList.length;i++){
+            if(checkedList[i].amount!=null){
+                sumamt+=checkedList[i].amount;
+                accamt+=checkedList[i].amount;
+            }
+        }
+        $("#sumamt").val(sumamt);
+        $("#accamt").val(accamt);
+    }
     function doDel() {
         if(theTable==undefined){
             $.bootstrapBox.alert.init({message: "请选择本次不结算的行"});
@@ -226,11 +243,24 @@
             $.bootstrapBox.alert.init({message: "请选择本次不结算的行"});
             return
         }
+
         $.bootstrapBox.confirm.init({
             message: "确认选择的单据本次不结算吗？",
             callback: function (result) {
                 if (result) {
-                    //删除监控
+                    //删除行
+                    var sumamt=$("#sumamt").val();
+                    var accamt=$("#accamt").val();
+                    for(var i=0;i<checkedList.length;i++){
+                        if(checkedList[i].amount!=null){
+                            if(sumamt!=null){
+                                sumamt-=checkedList[i].amount;
+                                accamt-=checkedList[i].amount;
+                            }
+                        }
+                    }
+                    $("#sumamt").val(sumamt);
+                    $("#accamt").val(accamt);
                     $('#myTable').bootstrapTable("remove");
                     /*$.post("/graindepot-inout/video/del", {ids:ids.join(",")}, function (result) {
                         $.bootstrapBox.alert.init({
@@ -310,6 +340,7 @@
 
             ]
         });
+
     }
 </script>
 </body>
