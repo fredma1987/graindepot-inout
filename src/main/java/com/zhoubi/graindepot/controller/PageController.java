@@ -35,7 +35,7 @@ public class PageController extends BaseController {
         model.addAttribute("title",title);
         model.addAttribute("item",item);
         model.addAttribute("id",id);
-        String path="/video/edit";
+        String path="/prerece/edit";
         return path;
     }
     @GetMapping("/prerece/detail/{id}")
@@ -44,7 +44,7 @@ public class PageController extends BaseController {
         Prerece item=prereceBiz.selectById(id);
         model.addAttribute("title",title);
         model.addAttribute("item",item);
-        String path="/video/detail";
+        String path="/prerece/detail";
         return path;
     }
 }

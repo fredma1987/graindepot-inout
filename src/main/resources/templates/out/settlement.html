@@ -320,14 +320,7 @@
                 type: "POST"
             },
             columns: [
-                {title:"出库日期", data: "billdate",
-                    render: function (data, type, row) {
-                    if(data!=null){
-                        var date = new Date(data);
-                        return date.Format("yyyy-MM-dd");
-                    }
-
-                }},
+                {title:"出库日期", data: "billdatestr"},
                 {title:"出库流水号", data: "billcode"},
                 {title:"车牌号", data: "trucknum"},
                 {title: "仓房号", data: "storagename"},

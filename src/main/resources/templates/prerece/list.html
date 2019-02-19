@@ -24,7 +24,7 @@
         <div class="col-sm-10">
             <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 往来单位：</label>
             <div class="col-sm-4" style="width:300px;padding-left:0px">
-                <select id="traderID" name="traderID" class="form-control">
+                <select id="traderid" name="traderid" class="form-control">
                 </select>
             </div>
             <div class="col-sm-2">
@@ -115,15 +115,7 @@
             },
             columns: [
                 {data: "tradername"},
-                {
-                    data: "billdate",
-                    render: function (data, type, row) {
-                        if (data != null) {
-                            var date = new Date(data);
-                            return date.Format("yyyy-MM-dd");
-                        }
-                    }
-                },
+                {data: "billdatestr"},
                 {data: "billcode"},
                 {data: "storagename"},
                 {data: "grainname"},
@@ -164,7 +156,7 @@
     }
     function getParam() {
         var param = {};
-        param.traderID = $("#traderID").val();
+        param.traderid = $("#traderid").val();
         return param;
     }
 
@@ -222,8 +214,8 @@
 
     function toEdit(videoid) {
         $.bootstrapBox.dialog.init({
-            title: "修改监控",
-            url: "/graindepot-video/page/video/edit?id=" + videoid,
+            title: "修改预付款",
+            url: "/graindepot-inout/page/prerece/edit?id=" + videoid,
             width: '1200px',
             height: '550px'
         })
