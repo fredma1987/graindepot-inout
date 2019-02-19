@@ -207,7 +207,7 @@
 <!-- /.main-container -->
 
 <script  type="text/javascript">
-    var param={};
+    var param={"inoutflag":-1,"buysellflag":-1};
     var theTable;
     jQuery(function ($) {
         initTrader();
@@ -250,7 +250,16 @@
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
             valueField: 'traderid',
-            textField: 'tradername'
+            textField: 'tradername',
+            onSelect: function (traderid,row) {
+                if(row){
+                    param.traderid=traderid;
+                }else{
+                    delete param["traderid"];
+                }
+                query(param);
+                comm_initContract(param);
+            }
         })
     }
     function initStorage() {
@@ -262,9 +271,10 @@
             onSelect: function (storageid, row) {
                 if (row) {
                     param.storageid=row.storageid;
-                    param.inoutflag=-1;
-                    query(param);
+                }else{
+                    delete param["storageid"];
                 }
+                query(param);
             }
         });
     }

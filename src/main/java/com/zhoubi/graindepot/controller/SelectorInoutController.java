@@ -5,6 +5,7 @@ import com.zhoubi.graindepot.biz.SelectorInoutBiz;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -37,11 +38,16 @@ public class SelectorInoutController extends BaseController{
         return storages;
     }
     @GetMapping("contractByMap")
-    public List<Contract> contractByMap(Integer grainid){
+    public List<Contract> contractByMap(@RequestParam Map param){
         UserAddress ua=getUserAddress();
-        Map param=new HashMap();
-        param.put("graindepotid",ua.getGraindepotid());
-        param.put("grainid",grainid);
+        Map params=new HashMap();
+        for(Object key:param.keySet()){
+            if(!key.toString().contains("[")){
+                String value = param.get(key).toString();//
+                params.put(key.toString(), value);
+            }
+        }
+        params.put("graindepotid",ua.getGraindepotid());
         List<Contract> list = selectorInoutBiz.contractByMap(param);
         return list;
     }
