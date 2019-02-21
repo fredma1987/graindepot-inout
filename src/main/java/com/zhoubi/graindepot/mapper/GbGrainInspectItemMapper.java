@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.GbGrainInspectItem;import com.zhoubi.graindepot.base.BaseMapper;import java.util.Map;public interface GbGrainInspectItemMapper extends BaseMapper<GbGrainInspectItem> {    int checkRepeat(Map map);}

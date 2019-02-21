@@ -51,29 +51,24 @@ public class GrainRankController extends BaseController{
     @GetMapping("/list/page")
     @ResponseBody
     public PagerModel ggrainRankPageList(int start, int length, Integer grainid) {
+        UserAddress ua=getUserAddress();
         PagerModel<GrainRank> e = new PagerModel();
         e.addOrder("grainid asc,orderno desc");
         e.setStart(start);
         e.setLength(length);
         e.putWhere("grainid", grainid);
+        e.putWhere("graindepotid", ua.getGraindepotid());
         PagerModel<GrainRank> result = grainRankBiz.selectListByPage(e);
         return result;
-    }
-    //获取所有的检验标准
-    @GetMapping("/inspectItem/list")
-    @ResponseBody
-    public List<InspectItem> inspectItemList(){
-        Map param=new HashMap();
-        List list = inspectItemBiz.selectList(param);
-        return list;
     }
 
     @PostMapping("/edit")
     @ResponseBody
     public JsonResult grainRankEdit(GrainRank item){
-
+        UserAddress ua=getUserAddress();
         if (item.getKeyid()==null) {
             //新增
+            item.setGraindepotid(ua.getGraindepotid());
             grainRankBiz.insert(item);
             return new JsonResult("添加成功", true);
         } else {
@@ -93,5 +88,23 @@ public class GrainRankController extends BaseController{
             grainRankBiz.deleteMap(map);
         }
         return new JsonResult("删除成功", true);
+    }
+
+
+    @PostMapping("/checkRepeat")
+    @ResponseBody
+    public String checkRepeat(Integer grainid, Integer keyid) {
+        UserAddress ua=getUserAddress();
+        Map map = new HashMap();
+        map.put("grainid", grainid);
+        map.put("keyid", keyid);
+        map.put("graindepotid", ua.getGraindepotid());
+        int result = grainRankBiz.checkRepeat(map);
+        if (result == 0) {
+            return "{\"valid\":true}";
+        } else {
+            return "{\"valid\":false}";
+        }
+
     }
 }

@@ -3,15 +3,13 @@ package com.zhoubi.graindepot.controller;
 import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
-import com.zhoubi.graindepot.bean.GrainInspectItem;
+import com.zhoubi.graindepot.bean.GbGrainInspectItem;
 import com.zhoubi.graindepot.bean.InspectItem;
 import com.zhoubi.graindepot.bean.UserAddress;
-import com.zhoubi.graindepot.biz.GrainInspectItemBiz;
+import com.zhoubi.graindepot.biz.GbGrainInspectItemBiz;
 import com.zhoubi.graindepot.biz.InspectItemBiz;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,51 +18,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("grainInspectItem")
-public class GrainInspectItemController  extends BaseController{
+@RequestMapping("gbGrainInspectItem")
+public class GbGrainInspectItemController extends BaseController{
     @Autowired
-    private GrainInspectItemBiz grainInspectItemBiz;
+    private GbGrainInspectItemBiz gbGrainInspectItemBiz;
     @Autowired
     private InspectItemBiz inspectItemBiz;
 
-    @GetMapping("toGrainInspectItem")
-    public String toGrainInspectItem(Model model){
+    @GetMapping("toGbGrainInspectItem")
+    public String toGbGrainInspectItem(Model model){
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
-        return "grainInspectItem/list";
+        return "gbGrainInspectItem/list";
     }
     @GetMapping("toEdit")
     public String toEdit(Model model,Integer id){
-        String title = "粮食品种检验标准";
+        String title = "粮食品种检验国际标准";
         model.addAttribute("title", title);
         model.addAttribute("id", id);
-        GrainInspectItem item = new GrainInspectItem();
+        GbGrainInspectItem item = new GbGrainInspectItem();
         if (id != null) {
-            item = grainInspectItemBiz.selectById(id);
+            item = gbGrainInspectItemBiz.selectById(id);
         }
         model.addAttribute("item", item);
-        return "grainInspectItem/edit";
+        return "gbGrainInspectItem/edit";
     }
 
     @GetMapping("/list/page")
     @ResponseBody
-    public PagerModel grainInspectItemPageList(int start, int length, Integer grainid) {
+    public PagerModel gbGrainInspectItemPageList(int start, int length, Integer grainid) {
         UserAddress ua=getUserAddress();
-        PagerModel<GrainInspectItem> e = new PagerModel();
+        PagerModel<GbGrainInspectItem> e = new PagerModel();
         e.addOrder("grainid asc,orderno desc");
         e.setStart(start);
         e.setLength(length);
         e.putWhere("grainid", grainid);
-        e.putWhere("graindepotid", ua.getGraindepotid());
-        PagerModel<GrainInspectItem> result = grainInspectItemBiz.selectListByPage(e);
+        PagerModel<GbGrainInspectItem> result = gbGrainInspectItemBiz.selectListByPage(e);
         return result;
     }
     //获取所有的检验标准
@@ -78,16 +74,15 @@ public class GrainInspectItemController  extends BaseController{
 
     @PostMapping("/edit")
     @ResponseBody
-    public JsonResult grainInspectItemEdit(GrainInspectItem item) throws ParseException {
-        UserAddress ua=getUserAddress();
+    public JsonResult gbGrainInspectItemEdit(GbGrainInspectItem item) throws ParseException {
+
         if (item.getKeyid()==null) {
             //新增
-            item.setGraindepotid(ua.getGraindepotid());
-            grainInspectItemBiz.insert(item);
+            gbGrainInspectItemBiz.insert(item);
             return new JsonResult("添加成功", true);
         } else {
             //修改
-            grainInspectItemBiz.update(item);
+            gbGrainInspectItemBiz.update(item);
             return new JsonResult("修改成功", true);
         }
 
@@ -95,15 +90,14 @@ public class GrainInspectItemController  extends BaseController{
 
     @PostMapping("/del")
     @ResponseBody
-    public JsonResult grainInspectItemDel(String ids) {
+    public JsonResult gbGrainInspectItemDel(String ids) {
         if (StringUtils.isNotEmpty(ids)) {
             Map map = new HashMap();
             map.put("Where_IdsStr", ids);
-            grainInspectItemBiz.deleteMap(map);
+            gbGrainInspectItemBiz.deleteMap(map);
         }
         return new JsonResult("删除成功", true);
     }
-
 
     @PostMapping("/checkRepeat")
     @ResponseBody
@@ -113,8 +107,7 @@ public class GrainInspectItemController  extends BaseController{
         map.put("grainid", grainid);
         map.put("inspectitemid", inspectitemid);
         map.put("keyid", keyid);
-        map.put("graindepotid", ua.getGraindepotid());
-        int result = grainInspectItemBiz.checkRepeat(map);
+        int result = gbGrainInspectItemBiz.checkRepeat(map);
         if (result == 0) {
             return "{\"valid\":true}";
         } else {

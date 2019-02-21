@@ -1,9 +1,11 @@
 package com.zhoubi.graindepot.controller;
 
 
+import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Inout;
+import com.zhoubi.graindepot.bean.InoutInsp;
 import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.InoutBiz;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -70,4 +74,29 @@ public class SettlementController extends BaseController{
         PagerModel<Inout> result=inoutBiz.selectListByPage(e);
         return result;
     }
+
+
+    @PostMapping("editSettlement")
+    @ResponseBody
+    public JsonResult editSettlement(Inout inout) {
+        BaseUser user=getCurrentUser();
+        Map param=new HashMap();
+        param.put("Where_billid",inout.getBillid());
+        param.put("extradedu",inout.getExtradedu());
+        param.put("paidweight",inout.getPaidweight());
+        param.put("price3",inout.getPrice());
+        param.put("amount",inout.getAmount());
+        param.put("billstage",7);
+        param.put("paidoptid",user.getUserid());
+        param.put("paidtime",new Date());
+        param.put("paiddate",new Date());
+        param.put("settlemothod",inout.getSettlemothod());
+        param.put("paidstate",1);
+        param.put("updatetime",new Date());
+        inoutBiz.updateMap(param);
+        return new JsonResult("保存成功", true);
+
+    }
+
+
 }

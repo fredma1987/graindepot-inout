@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.GbGrainRank;import com.zhoubi.graindepot.base.BaseMapper;import java.util.Map;public interface GbGrainRankMapper extends BaseMapper<GbGrainRank> {    int checkRepeat(Map map);}

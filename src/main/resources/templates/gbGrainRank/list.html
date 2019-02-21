@@ -13,7 +13,7 @@
             </li>
             <li>
                 <i class="icon-table home-icon"></i>
-                粮食品种检验标准<span class="red">(如未配置某粮食品种检验标准则默认使用国标)</span>
+                粮食品种等级划分国家标准
             </li>
         </ul>
     </div>
@@ -21,11 +21,11 @@
         <div class="col-sm-3">
             <button class="btn btn-sm btn-primary" onclick="toAdd()">
                 <i class="icon-plus align-top bigger-125"></i>
-                添加检验标准
+                添加划分标准
             </button>
             <button class="btn btn-sm btn-danger" onclick="doDel()">
                 <i class="icon-trash align-top bigger-125"></i>
-                删除检验标准
+                删除划分标准
             </button>
         </div>
         <div class="col-sm-9">
@@ -38,11 +38,11 @@
                 </div>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-success" onclick="javascript:searchTable()">
+                <button class="btn btn-sm btn-success" onclick="searchTable()">
                     <i class="icon-search align-top bigger-125"></i>
                     查询
                 </button>
-                <button class="btn btn-sm btn-warning" onclick="javascript:rest()">
+                <button class="btn btn-sm btn-warning" onclick="rest()">
                     <i class="icon-undo align-top bigger-125"></i>
                     重置
                 </button>
@@ -67,12 +67,12 @@
                     </label>
                 </th>
                 <th style="width: 5%">粮食品种</th>
-                <th style="width: 5%">检验项目</th>
-                <th style="width: 5%">有无升扣规则</th>
-                <th style="width: 20%">标准数据</th>
-                <th style="width: 5%">增扣上限</th>
-                <th style="width: 5%">增扣下限</th>
-                <th style="width: 20%">增扣规则</th>
+                <th style="width: 5%">划分依据</th>
+                <th style="width: 10%">一等范围</th>
+                <th style="width: 10%">二等范围</th>
+                <th style="width: 10%">三等范围</th>
+                <th style="width: 10%">四等范围</th>
+                <th style="width: 10%">五等范围</th>
                 <th style="width: 5%">排序号</th>
                 <th style="width: 5%">操作</th>
             </tr>
@@ -105,7 +105,7 @@
         theTable = $('#myTable').bootstrapTable({
             //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
             ajax: {
-                url: urlPrefix + "/grainInspectItem/list/page",
+                url: urlPrefix + "/gbGrainRank/list/page",
                 data: param,
                 type: "GET"
             },
@@ -113,20 +113,11 @@
             columns: [
                 {data: "grainname"},
                 {data: "itemname"},
-                {
-                    data: "isdedu",
-                    render: function (data, type, row) {
-                        if (data==1){
-                            return "有"
-                        } else {
-                            return "无"
-                        }
-                    }
-                },
-                {data: "standard"},
-                {data: "upperlimit"},
-                {data: "lowerlimit"},
-                {data: "standardrule"},
+                {data: "grade1str"},
+                {data: "grade2str"},
+                {data: "grade3str"},
+                {data: "grade4str"},
+                {data: "grade5str"},
                 {data: "orderno"},
                 {
                     data: "keyid",
@@ -168,21 +159,20 @@
 
 
     function doDel() {
-        console.log($('#myTable').bootstrapTable("getChecked"))
+        console.log($('#myTable').bootstrapTable("getChecked"));
         var checkedList = $('#myTable').bootstrapTable("getChecked");
         if (checkedList.length == 0) {
-            $.bootstrapBox.alert.init({message: "请选择需要删除的行"})
+            $.bootstrapBox.alert.init({message: "请选择需要删除的行"});
             return
         }
         $.bootstrapBox.confirm.init({
             message: "确认删除？",
             callback: function (result) {
                 if (result) {
-                    //删除用户
                     var ids = checkedList.map(function (curr) {
                         return curr.keyid
                     });
-                    $.post(urlPrefix + "/grainInspectItem/del", {ids: ids.join(",")}, function (result) {
+                    $.post(urlPrefix + "/gbGrainRank/del", {ids: ids.join(",")}, function (result) {
                         $.bootstrapBox.alert.init({
                             message: result.message
                         });
@@ -198,8 +188,8 @@
 
     function toAdd() {
         $.bootstrapBox.dialog.init({
-            title: "新增检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit",
+            title: "新增等级划分标准",
+            url: urlPrefix + "/gbGrainRank/toEdit",
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
         })
@@ -207,8 +197,8 @@
 
     function toEdit(id) {
         $.bootstrapBox.dialog.init({
-            title: "修改检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit?id=" + id,
+            title: "修改等级划分标准",
+            url: urlPrefix + "/gbGrainRank/toEdit?id=" + id,
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
         })

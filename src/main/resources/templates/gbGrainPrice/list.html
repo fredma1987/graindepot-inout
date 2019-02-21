@@ -13,7 +13,7 @@
             </li>
             <li>
                 <i class="icon-table home-icon"></i>
-                粮食品种检验标准<span class="red">(如未配置某粮食品种检验标准则默认使用国标)</span>
+                粮食品种收购价格国标
             </li>
         </ul>
     </div>
@@ -21,11 +21,11 @@
         <div class="col-sm-3">
             <button class="btn btn-sm btn-primary" onclick="toAdd()">
                 <i class="icon-plus align-top bigger-125"></i>
-                添加检验标准
+                添加收购价格
             </button>
             <button class="btn btn-sm btn-danger" onclick="doDel()">
                 <i class="icon-trash align-top bigger-125"></i>
-                删除检验标准
+                删除收购价格
             </button>
         </div>
         <div class="col-sm-9">
@@ -67,13 +67,12 @@
                     </label>
                 </th>
                 <th style="width: 5%">粮食品种</th>
-                <th style="width: 5%">检验项目</th>
-                <th style="width: 5%">有无升扣规则</th>
-                <th style="width: 20%">标准数据</th>
-                <th style="width: 5%">增扣上限</th>
-                <th style="width: 5%">增扣下限</th>
-                <th style="width: 20%">增扣规则</th>
-                <th style="width: 5%">排序号</th>
+                <th style="width: 5%">一等收购价格(元/公斤)</th>
+                <th style="width: 5%">二等收购价格(元/公斤)</th>
+                <th style="width: 5%">三等收购价格(元/公斤)</th>
+                <th style="width: 5%">四等收购价格(元/公斤)</th>
+                <th style="width: 5%">五等收购价格(元/公斤)</th>
+                <th style="width: 5%">年份</th>
                 <th style="width: 5%">操作</th>
             </tr>
             </thead>
@@ -105,29 +104,19 @@
         theTable = $('#myTable').bootstrapTable({
             //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
             ajax: {
-                url: urlPrefix + "/grainInspectItem/list/page",
+                url: urlPrefix + "/gbGrainPrice/list/page",
                 data: param,
                 type: "GET"
             },
             //sScrollY: 510,//表格高度
             columns: [
                 {data: "grainname"},
-                {data: "itemname"},
-                {
-                    data: "isdedu",
-                    render: function (data, type, row) {
-                        if (data==1){
-                            return "有"
-                        } else {
-                            return "无"
-                        }
-                    }
-                },
-                {data: "standard"},
-                {data: "upperlimit"},
-                {data: "lowerlimit"},
-                {data: "standardrule"},
-                {data: "orderno"},
+                {data: "price1"},
+                {data: "price2"},
+                {data: "price3"},
+                {data: "price4"},
+                {data: "price5"},
+                {data: "year"},
                 {
                     data: "keyid",
                     render: function (data, type, row) {
@@ -178,11 +167,10 @@
             message: "确认删除？",
             callback: function (result) {
                 if (result) {
-                    //删除用户
                     var ids = checkedList.map(function (curr) {
                         return curr.keyid
                     });
-                    $.post(urlPrefix + "/grainInspectItem/del", {ids: ids.join(",")}, function (result) {
+                    $.post(urlPrefix + "/gbGrainPrice/del", {ids: ids.join(",")}, function (result) {
                         $.bootstrapBox.alert.init({
                             message: result.message
                         });
@@ -198,19 +186,19 @@
 
     function toAdd() {
         $.bootstrapBox.dialog.init({
-            title: "新增检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit",
+            title: "新增粮食品种收购价格",
+            url: urlPrefix + "/gbGrainPrice/toEdit",
             width: $(window).width() * 0.6,
-            height: $(window).height() * 0.8
+            height: $(window).height() * 0.5
         })
     }
 
     function toEdit(id) {
         $.bootstrapBox.dialog.init({
-            title: "修改检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit?id=" + id,
+            title: "修改粮食品种收购价格",
+            url: urlPrefix + "/gbGrainPrice/toEdit?id=" + id,
             width: $(window).width() * 0.6,
-            height: $(window).height() * 0.8
+            height: $(window).height() * 0.5
         })
     }
 

@@ -94,9 +94,11 @@ public class GrainPriceController extends BaseController{
     @PostMapping("/checkRepeat")
     @ResponseBody
     public String checkRepeat(Integer grainid, Integer keyid) {
+        UserAddress ua=getUserAddress();
         Map map = new HashMap();
         map.put("grainid", grainid);
         map.put("keyid", keyid);
+        map.put("graindepotid", ua.getGraindepotid());
         int result = grainPriceBiz.checkRepeat(map);
         if (result == 0) {
             return "{\"valid\":true}";

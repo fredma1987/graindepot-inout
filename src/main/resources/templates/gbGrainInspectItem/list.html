@@ -13,7 +13,7 @@
             </li>
             <li>
                 <i class="icon-table home-icon"></i>
-                粮食品种检验标准<span class="red">(如未配置某粮食品种检验标准则默认使用国标)</span>
+                粮食品种检验国家标准
             </li>
         </ul>
     </div>
@@ -105,7 +105,7 @@
         theTable = $('#myTable').bootstrapTable({
             //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
             ajax: {
-                url: urlPrefix + "/grainInspectItem/list/page",
+                url: urlPrefix + "/gbGrainInspectItem/list/page",
                 data: param,
                 type: "GET"
             },
@@ -182,7 +182,7 @@
                     var ids = checkedList.map(function (curr) {
                         return curr.keyid
                     });
-                    $.post(urlPrefix + "/grainInspectItem/del", {ids: ids.join(",")}, function (result) {
+                    $.post(urlPrefix + "/gbGrainInspectItem/del", {ids: ids.join(",")}, function (result) {
                         $.bootstrapBox.alert.init({
                             message: result.message
                         });
@@ -199,7 +199,7 @@
     function toAdd() {
         $.bootstrapBox.dialog.init({
             title: "新增检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit",
+            url: urlPrefix + "/gbGrainInspectItem/toEdit",
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
         })
@@ -208,7 +208,7 @@
     function toEdit(id) {
         $.bootstrapBox.dialog.init({
             title: "修改检验标准",
-            url: urlPrefix + "/grainInspectItem/toEdit?id=" + id,
+            url: urlPrefix + "/gbGrainInspectItem/toEdit?id=" + id,
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
         })

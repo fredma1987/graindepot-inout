@@ -2,6 +2,7 @@ package com.zhoubi.graindepot.controller;
 
 
 import com.zhoubi.graindepot.base.JsonResult;
+import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.*;
 import com.zhoubi.graindepot.biz.IndividualBiz;
 import com.zhoubi.graindepot.biz.InoutBiz;
@@ -24,7 +25,7 @@ import java.util.Map;
  * Created by Administrator on 2018-12-19.
  */
 @Controller
-    @RequestMapping("register")
+@RequestMapping("register")
 public class RegisterController extends BaseController {
     @Autowired
     private InoutBiz inoutBiz;
@@ -46,7 +47,7 @@ public class RegisterController extends BaseController {
     public String toInRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
-        Video video=videoService.selectRegiterVideo(user.getGraindepotid());
+        Video video = videoService.selectRegiterVideo(user.getGraindepotid());
         model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
@@ -59,7 +60,7 @@ public class RegisterController extends BaseController {
     public String toOutRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
-        Video video=videoService.selectRegiterVideo(user.getGraindepotid());
+        Video video = videoService.selectRegiterVideo(user.getGraindepotid());
         model.addAttribute("video", video);
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
@@ -80,8 +81,8 @@ public class RegisterController extends BaseController {
 
     //补单出库单据
     @GetMapping("toOutSupple")
-    public String toOutSupple(Model model){
-        model.addAttribute("title","出库补单");
+    public String toOutSupple(Model model) {
+        model.addAttribute("title", "出库补单");
         return "out/outsupple";
     }
 
@@ -90,8 +91,8 @@ public class RegisterController extends BaseController {
     @ResponseBody
     public JsonResult editIn(Inout inout) {
         BaseUser user = getCurrentUser();
+        UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            inout.setBilldate(new Date());
             int graindepotid = user.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
@@ -106,14 +107,17 @@ public class RegisterController extends BaseController {
                     String format = sdf.format(new Date());
                     inout.setBillcode(format + "-0001");
                 }
-
+                inout.setBilldate(new Date());
+                inout.setGroupid(ua.getGroupid());
+                inout.setCompanyid(ua.getCompanyid());
+                inout.setGraindepotid(ua.getGraindepotid());
                 inout.setBilltype(1);
-                inout.setBillstate((short) 1);
-                inout.setInoutflag((short) 1);
-                inout.setBillstage((short) 1);
+                inout.setBillstate(1);
+                inout.setInoutflag(1);
+                inout.setBillstage(1);
                 inout.setRegopid(user.getUserid());
                 inout.setRegtime(new Date());
-                inout.setRegstate((short) 0);
+                inout.setRegstate(0);
                 inout.setCreateuserid(user.getUserid());
                 inout.setCreatetime(new Date());
                 inoutBiz.insert(inout);
@@ -122,7 +126,7 @@ public class RegisterController extends BaseController {
         } else {
             inout.setUpdatetime(new Date());
             inout.setRegtime(new Date());
-            inout.setRegstate((short) 0);
+            inout.setRegstate(0);
             inoutBiz.updateRegisterInout(inout);
             Inout io = inoutBiz.selectById(inout.getBillid());
             return new JsonResult(io, "修改成功", true);
@@ -152,12 +156,12 @@ public class RegisterController extends BaseController {
                 }
 
                 inout.setBilltype(1);
-                inout.setBillstate((short) 1);
-                inout.setInoutflag((short) -1);
-                inout.setBillstage((short) 1);
+                inout.setBillstate(1);
+                inout.setInoutflag(-1);
+                inout.setBillstage(1);
                 inout.setRegopid(user.getUserid());
                 inout.setRegtime(new Date());
-                inout.setRegstate((short) 0);
+                inout.setRegstate(0);
                 inout.setCreateuserid(user.getUserid());
                 inout.setCreatetime(new Date());
                 inoutBiz.insert(inout);
@@ -166,7 +170,7 @@ public class RegisterController extends BaseController {
         } else {
             inout.setUpdatetime(new Date());
             inout.setRegtime(new Date());
-            inout.setRegstate((short) 0);
+            inout.setRegstate(0);
             inoutBiz.updateRegisterInout(inout);
             Inout io = inoutBiz.selectById(inout.getBillid());
             return new JsonResult(io, "修改成功", true);
@@ -206,6 +210,7 @@ public class RegisterController extends BaseController {
         }
     }
 
+    //TODO 删除
     /**
      * 入库单查询
      *
@@ -228,7 +233,7 @@ public class RegisterController extends BaseController {
             trueBillcode = maxBillcode;
         }*/
         if (StringUtils.isEmpty(billcode)) {
-            return new JsonResult(new Inout(),"未查询到相关记录", false);
+            return new JsonResult(new Inout(), "未查询到相关记录", false);
         }
         Map param = new HashMap();
         param.put("graindepotid", ua.getGraindepotid());
@@ -242,6 +247,7 @@ public class RegisterController extends BaseController {
 
     }
 
+    //TODO 删除
     /**
      * 入库单查询
      *
@@ -324,10 +330,4 @@ public class RegisterController extends BaseController {
         return result;
     }
 
-    public static void main(String[] args) {
-        String test = "0007";
-        Integer a = Integer.parseInt(test);
-        // String format = String.format("%04d", a);
-        System.out.println(a);
-    }
 }

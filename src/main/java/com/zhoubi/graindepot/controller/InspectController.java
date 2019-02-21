@@ -33,6 +33,8 @@ public class InspectController extends BaseController {
     private GrainPriceBiz grainPriceBiz;
     @Autowired
     private GbGrainPriceBiz gbGrainPriceBiz;
+    @Autowired
+    private GbGrainRankBiz gbGrainRankBiz;
 
 
     @ModelAttribute("ctx")
@@ -88,10 +90,16 @@ public class InspectController extends BaseController {
     @GetMapping("grainInspectItem/byGrainid")
     @ResponseBody
     public JsonResult grainInspectItemByGrainid(Integer grainid) {
-        // UserAddress ua=getUserAddress();
+        UserAddress ua = getUserAddress();
         Map param = new HashMap();
         param.put("grainid", grainid);
-        List<GrainInspectItem> result = grainInspectItemBiz.listByGrainid(param);
+        param.put("graindepotid", ua.getGraindepotid());
+        List<GrainInspectItem> result = new ArrayList();
+        result = grainInspectItemBiz.listByGrainid(param);
+        if (result.size() == 0) {
+            //从国标里面取得数据
+            result = grainInspectItemBiz.listGbByGrainid(param);
+        }
         return new JsonResult(result, "获取成功", true);
     }
 
@@ -99,11 +107,18 @@ public class InspectController extends BaseController {
     @GetMapping("grainRank/byGrainid")
     @ResponseBody
     public JsonResult grainRankByGrainid(Integer grainid) {
-        // UserAddress ua=getUserAddress();
+        UserAddress ua = getUserAddress();
         Map param = new HashMap();
         param.put("grainid", grainid);
-        GrainRank result = grainRankBiz.oneByGrainid(param);
-        return new JsonResult(result, "获取成功", true);
+        param.put("graindepotid", ua.getGraindepotid());
+        GrainRank grainRank = grainRankBiz.oneByGrainid(param);
+        if (grainRank == null) {
+            GbGrainRank gbGrainRank = gbGrainRankBiz.selectOne(param);
+            return new JsonResult(gbGrainRank, "获取成功", true);
+        } else {
+            return new JsonResult(grainRank, "获取成功", true);
+        }
+
     }
 
     @PostMapping("editInoutInsp")
@@ -116,7 +131,6 @@ public class InspectController extends BaseController {
         param.put("graindepotid", ua.getGraindepotid());
         param.put("billcode", inoutInsp.getBillcode());
         InoutInsp item = inspectBiz.oneByBillcode(param);
-        param.put("billtype", 1);
         Inout inout = inoutBiz.selectOne(param);
         if (inout == null) {
             return new JsonResult("当前登记流水号不存在", false);
@@ -153,6 +167,7 @@ public class InspectController extends BaseController {
         return new JsonResult("保存成功", true);
     }
 
+    //TODO 删除
     //根据登记流水号来查询入库登记信息
     @GetMapping("/inout/oneByBillcode")
     @ResponseBody
@@ -162,12 +177,9 @@ public class InspectController extends BaseController {
             return new JsonResult(item, true);
         }
         UserAddress ua = getUserAddress();
-        //判断是否已存在，通过身份证号和库点id
         Map param = new HashMap();
         param.put("graindepotid", ua.getGraindepotid());
         param.put("billcode", billcode.trim());
-        //param.put("graindepotid", 1);
-        // param.put("billcode", "2019-02-17-0001");
         Inout result = inoutBiz.oneByBillcodeAndGraindepotid(param);
         return new JsonResult(result, true);
     }

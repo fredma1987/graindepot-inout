@@ -176,24 +176,6 @@
                                                 <PARAM NAME="OutBufferSize" VALUE="512"/>
                                                 <PARAM NAME="SThreshold" VALUE="0"/>
                                                 <PARAM NAME="RThreshold" VALUE="1"/>
-                                                    codebase="mscomm32.ocx" type="application/x-oleobject"  style="width:2px;height:2px" >
-                                                <PARAM   NAME="CommPort"   VALUE="2"/>
-                                                <PARAM   NAME="DataBits"   VALUE="8"/>
-                                                <PARAM   NAME="StopBits"   VALUE="1"/>
-                                                <PARAM   NAME="BaudRate"   VALUE="9600"/>
-                                                <PARAM   NAME="Settings"   VALUE="9600,N,8,1"/>
-                                                <PARAM   NAME="RTSEnable"   VALUE="1"/>
-                                                <PARAM   NAME="DTREnable"   VALUE="1"/>
-                                                <PARAM   NAME="Handshaking"   VALUE="0"/>
-                                                <PARAM   NAME="NullDiscard"   VALUE="0"/>
-                                                <PARAM   NAME="ParityReplace"   VALUE="?"/>
-                                                <PARAM   NAME="EOFEnable"   VALUE="0"/>
-                                                <PARAM   NAME="InputMode"   VALUE="0"/>
-                                                <PARAM   NAME="InBufferSize"   VALUE="1024"/>
-                                                <PARAM   NAME="InputLen"   VALUE="0"/>
-                                                <PARAM   NAME="OutBufferSize"   VALUE="512"/>
-                                                <PARAM   NAME="SThreshold"   VALUE="0"/>
-                                                <PARAM   NAME="RThreshold"   VALUE="1"/>
                                             </OBJECT>
                                             <input type="button" id="OperateButton"
                                                    style="width:80px;height:30px;font-size:13px" name="OperateButton"
@@ -551,7 +533,7 @@
         if ($("#validation-form").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
             var param = turnArrayToJson($('form').serializeArray());
             if (!g_billid){
-
+                return
             }
             param.billid=g_billid;
             //判断是称毛重还是皮重

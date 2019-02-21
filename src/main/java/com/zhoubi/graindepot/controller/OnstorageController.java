@@ -68,12 +68,12 @@ public class OnstorageController extends BaseController {
                     inout.setBillcode(format + "-0001");
                 }
                 inout.setBilltype(0);
-                inout.setBillstate((short) 1);
-                inout.setInoutflag((short) 1);
-                inout.setBillstage((short) 1);
+                inout.setBillstate(1);
+                inout.setInoutflag(1);
+                inout.setBillstage(1);
                 inout.setRegopid(user.getUserid());
                 inout.setRegtime(new Date());
-                inout.setRegstate((short) 0);
+                inout.setRegstate(0);
                 inout.setCreateuserid(user.getUserid());
                 inout.setCreatetime(new Date());
                 inoutBiz.insert(inout);
@@ -82,7 +82,7 @@ public class OnstorageController extends BaseController {
         } else {
             inout.setUpdatetime(new Date());
             inout.setRegtime(new Date());
-            inout.setRegstate((short) 0);
+            inout.setRegstate(0);
             inoutBiz.updateInitonstorage(inout);
             Inout io = inoutBiz.selectById(inout.getBillid());
             return new JsonResult(io, "修改成功", true);

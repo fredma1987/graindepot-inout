@@ -178,7 +178,6 @@
     .grade {
         display: none;
     }
-
     .hasStandard {
         display: none;
     }
@@ -195,7 +194,7 @@
         initGradesame();
         initInspectItem();
         initIsDedu();
-        if (g_item && g_item.gradesame == 1) {
+        if (g_item&&g_item.gradesame==1){
             $("#gradeValue").val(g_item.grade1)
         }
 
@@ -230,7 +229,6 @@
             }
         });
     }
-
     function initIsDedu() {
         var data = [{value: 1, text: "有"}, {value: 0, text: "无"}];
         $("#isdedu").bootstrapSelect({
@@ -251,7 +249,7 @@
 
     function initInspectItem() {
         $("#inspectitemid").bootstrapSelect({
-            url: urlPrefix + '/grainInspectItem/inspectItem/list',
+            url: urlPrefix + '/gbGrainInspectItem/inspectItem/list',
             type: 'GET',
             valueField: 'inspectitemid',
             textField: 'itemname',
@@ -272,7 +270,7 @@
                 inspectitemid: {
                     validators: {
                         remote: {
-                            url: urlPrefix + '/grainInspectItem/checkRepeat',
+                            url: urlPrefix + '/gbGrainInspectItem/checkRepeat',
                             message: '检验项目已存在',//提示消息
                             //delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                             type: 'POST',//请求方式
@@ -287,10 +285,12 @@
                     }
                 }
             }
-        }) .on('success.form.bv', function (e) {
+        })
+            .on('success.form.bv', function (e) {
                 // Prevent form submission
                 e.preventDefault();
                 var param = turnArrayToJson($('form').serializeArray());
+                console.log(param);
                 if (g_id) {
                     param.keyid = g_id
                 }
@@ -301,22 +301,22 @@
                     param.grade4 = param.gradeValue;
                     param.grade5 = param.gradeValue;
                 }
-                if (param.isdedu == 0) {
-                    param.upperlimit = undefined;
-                    param.lowerlimit = undefined;
-                    param.upperstandard = undefined;
-                    param.upperamount = undefined;
-                    param.lowerstandard = undefined;
-                    param.loweramount = undefined;
-                    param.grade1 = undefined;
-                    param.grade2 = undefined;
-                    param.grade3 = undefined;
-                    param.grade4 = undefined;
-                    param.grade5 = undefined;
-                    param.grade6 = undefined;
-                    param.gradesame = undefined;
+                if (param.isdedu==0){
+                    param.upperlimit=undefined;
+                    param.lowerlimit=undefined;
+                    param.upperstandard=undefined;
+                    param.upperamount=undefined;
+                    param.lowerstandard=undefined;
+                    param.loweramount=undefined;
+                    param.grade1=undefined;
+                    param.grade2=undefined;
+                    param.grade3=undefined;
+                    param.grade4=undefined;
+                    param.grade5=undefined;
+                    param.grade6=undefined;
+                    param.gradesame=undefined;
                 }
-                $.post(urlPrefix + "/grainInspectItem/edit", param, function (result) {
+                $.post(urlPrefix + "/gbGrainInspectItem/edit", param, function (result) {
                     parent.toSave(result)
                 })
             });
