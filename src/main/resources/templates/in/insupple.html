@@ -400,12 +400,12 @@
         $("#traderid").bootstrapSelect({
             url: '/graindepot-base/selector/traderList',
             type: 'GET',
-            valueField: 'traderID',
-            textField: 'traderName',
-            onSelect: function (traderID, row) {
+            valueField: 'traderid',
+            textField: 'tradername',
+            onSelect: function (traderid, row) {
                 if (row) {
-                    $("#sellmanphone").val(row.telNumber);
-                    $("#sellmanaddress").val(row.traderAddress);
+                    $("#sellmanphone").val(row.telnumber);
+                    $("#sellmanaddress").val(row.traderaddress);
                 }
             }
         })
