@@ -4,116 +4,70 @@
 </head>
 <body>
 <div class="main-container" id="main-container">
-    <!--<div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li th:if="${inoutflag==1}">
-                <i class="icon-table home-icon"></i>
-                入库单据列表
-            </li>
-            <li th:if="${inoutflag==-1}">
-                <i class="icon-table home-icon"></i>
-                出库单据列表
-            </li>
-        </ul>
-    </div>-->
-    <div style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-9">
-
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <span class="input-group-addon">单据日期:</span>
-                    <input size="16" type="text" name="billdate" id="billdate"
-                           readonly class="form_date form-control">
+    <div class="timeline-container timeline-style2">
+        <span class="timeline-label">
+            <b id="billdate">Today</b>
+        </span>
+        <div class="timeline-item clearfix">
+            <div class="timeline-info">
+                <span class="timeline-date">17:50</span>
+                <i class="timeline-indicator btn btn-info"></i>
+            </div>
+            <div class="widget-box transparent">
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        完成
+                        <span class="label label-sm label-success">扦样检验</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <span class="input-group-addon">单据流水号:</span>
-                    <input type="text" id="billcode" name="billcode"
-                           class="form-control" placeholder=""/>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <span class="input-group-addon">售粮人:</span>
-                    <input type="text" id="sellmanname" name="sellmanname"
-                           class="form-control" placeholder=""/>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-sm btn-success" onclick="javascript:searchTable()">
-                    <i class="icon-search align-top bigger-125"></i>
-                    查询
-                </button>
-                <button class="btn btn-sm btn-warning" onclick="javascript:rest()">
-                    <i class="icon-undo align-top bigger-125"></i>
-                    重置
-                </button>
-            </div>
-
         </div>
+        <div class="timeline-item clearfix">
+            <div class="timeline-info">
+                <span class="timeline-date">15:50</span>
 
+                <i class="timeline-indicator btn btn-info no-hover"></i>
+            </div>
 
+            <div class="widget-box transparent">
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        完成
+                        <span class="label label-sm label-success">入库登记</span>
+                        &nbsp;操作人:admin
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.timeline-items -->
+</div><!-- /.timeline-container -->
+<div class="container">
+    <h2>使用Bootstrap创建弹出框</h2>
+    <div class="well">
+        <a href="#" id="example" class="btn btn-success" rel="popover"
+           data-content="<a>dsds</a>"
+           data-original-title="单据流程情况">悬停弹出框</a>
     </div>
-
-
-    <div class="table-responsive" style="width:100%">
-
-        <table id="myTable" style="width:100%" class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr>
-                <th class="center" style="width: 2%"></th>
-                <th class="center" style="width: 2%">
-                    <label>
-                        <input id="CK" type="checkbox" class="ace"/>
-                        <span class="lbl"></span>
-                    </label>
-                </th>
-                <th style="width: 6%">单据日期</th>
-                <th style="width: 9%">单据流水号</th>
-                <th style="width: 5%">售粮人</th>
-                <th style="width: 5%">售粮人电话</th>
-                <th style="width: 5%">车船号</th>
-                <th style="width: 5%">绑卡状态</th>
-                <th style="width: 5%">当前阶段</th>
-                <th style="width: 5%">登记情况</th>
-                <th style="width: 5%">扦样情况</th>
-                <th style="width: 5%">检验情况</th>
-                <th style="width: 5%">称毛重情况</th>
-                <th style="width: 5%">值仓情况</th>
-                <th style="width: 5%">称皮重情况</th>
-                <th style="width: 5%">结算情况</th>
-                <th style="width: 5%">是否已退卡</th>
-                <th style="width: 6%">单据类型</th>
-                <!-- <th style="width: 10%">更新时间</th>
-                 <th style="width: 10%">创建时间</th>-->
-                <th style="width: 3%">操作</th>
-            </tr>
-            </thead>
-        </table>
-
-    </div>
-
-
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
-    </a>
 </div>
+
 </body>
 </html>
 <script th:inline="javascript">
-    var urlPrefix = "/graindepot-inout";
-    var theTable;
-    var g_inoutflag = [[${inoutflag}]];
-    var g_type = [[${type}]];//1:从登记检验跳转过来 2.从扦样
+    //var urlPrefix = "/graindepot-inout";
+    // var theTable;
+    // var g_inoutflag = [[${inoutflag}]];
+    // var g_type = [[${type}]];//1:从登记检验跳转过来 2.从扦样
     $(document).ready(function () {
-        $(".form_date").bootstrapDate();
-        $(".form_date").bootstrapDate("setValue", new Date());
-        var param={
-            billdate:$("#billdate").bootstrapDate("getValue"),
-            inoutflag:g_inoutflag
-        };
-        query(param);
+        $("#example").attr("data-content",$("#main-container").html());
+        $("#example").popover({html : true });
+
+        /* $(".form_date").bootstrapDate();
+         $(".form_date").bootstrapDate("setValue", new Date());
+         var param = {
+             billdate: $("#billdate").bootstrapDate("getValue"),
+             inoutflag: g_inoutflag
+         };*/
+        //  query(param);
 
     });
 
@@ -220,7 +174,7 @@
                             return '正常单据';
                         } else if (data == 2) {
                             return '补单';
-                        } else if (data == 0){
+                        } else if (data == 0) {
                             return '期初库存单';
                         }
 
@@ -278,10 +232,10 @@
 
     function getParam() {
         var param = {
-            billdate:$("#billdate").bootstrapDate("getValue"),
-            inoutflag:g_inoutflag,
-            billcode:$("#billcode").val(),
-            sellmanname:$("#sellmanname").val()
+            billdate: $("#billdate").bootstrapDate("getValue"),
+            inoutflag: g_inoutflag,
+            billcode: $("#billcode").val(),
+            sellmanname: $("#sellmanname").val()
         };
         return param
     }
@@ -298,19 +252,17 @@
     }
 
     function toChoose(billid) {
-        if (g_type==1){
-            parent.findInout(billid,2)
-        } else if(g_type==2){
-            parent.doFindInoutInsp(billid,2)
-        }else if(g_type==3){
-            parent.doFindWeightInout(billid,2)
-        }else if (g_type == 4) {
-            parent.doFindSettlementInout(billid,2)
+        if (g_type == 1) {
+            parent.findInout(billid, 2)
+        } else if (g_type == 2) {
+            parent.doFindInoutInsp(billid, 2)
+        } else if (g_type == 3) {
+            parent.doFindWeightInout(billid, 2)
+        } else if (g_type == 4) {
+            parent.doFindSettlementInout(billid, 2)
         }
         parent.$.bootstrapBox.dialog.close();
     }
-
-
 
 
 </script>

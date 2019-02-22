@@ -31,9 +31,15 @@ public class InoutController extends BaseController {
         model.addAttribute("user", user);
         model.addAttribute("userAddress", ua);
         model.addAttribute("inoutflag", inoutflag);
-        model.addAttribute("type", type);//1:从登记页跳转 2:从扦样 3:
+        model.addAttribute("type", type);//1:从登记页跳转 2:从检验 3:称毛重或者称皮重 4:结算
         model.addAttribute("title", "出入库列表");
         return "inout/list";
+    }
+    //出入库列表
+    @RequestMapping(value = "/toInoutTimeLine", method = RequestMethod.GET)
+    public String toInoutTimeLine(Model model, HttpServletRequest request
+            , HttpServletResponse response, Integer inoutflag,Integer type) {
+        return "inout/timeLine";
     }
 
     //查询出所有的出入库单据(显示正常单据 和 补单)

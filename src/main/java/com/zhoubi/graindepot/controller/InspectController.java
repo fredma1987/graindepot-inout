@@ -167,24 +167,6 @@ public class InspectController extends BaseController {
         return new JsonResult("保存成功", true);
     }
 
-    //TODO 删除
-    //根据登记流水号来查询入库登记信息
-    @GetMapping("/inout/oneByBillcode")
-    @ResponseBody
-    public JsonResult oneByBillcode(String billcode) {
-        if (StringUtils.isEmpty(billcode)) {
-            Inout item = new Inout();
-            return new JsonResult(item, true);
-        }
-        UserAddress ua = getUserAddress();
-        Map param = new HashMap();
-        param.put("graindepotid", ua.getGraindepotid());
-        param.put("billcode", billcode.trim());
-        Inout result = inoutBiz.oneByBillcodeAndGraindepotid(param);
-        return new JsonResult(result, true);
-    }
-
-
     //根据登记流水号来查询入库登记信息
     @GetMapping("/grainPrice/listByGrainid")
     @ResponseBody

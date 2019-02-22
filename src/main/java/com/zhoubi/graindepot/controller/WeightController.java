@@ -96,43 +96,6 @@ public class WeightController extends BaseController {
     }
 
     /**
-     * @param billid
-     * @param flag   1:前一单 2：当前单  3:后一单
-     * @return
-     */
-    @GetMapping("inout/findOneIn")
-    @ResponseBody
-    public JsonResult findOneIn(Integer billid, Integer flag) {
-        Inout inout = null;
-        if (flag == 2 && billid != null) {
-            inout = inoutBiz.selectById(billid);
-        }
-        if (flag != 2) {
-            UserAddress ua = getUserAddress();
-            Map param = new HashMap();
-            param.put("inoutflag", 1);
-            param.put("graindepotid", ua.getGraindepotid());
-            param.put("billtype", 1);
-            if (billid != null) {
-                param.put("billid", billid);
-                if (flag == 1) {
-                    inout = inoutBiz.selectBeforeOne(param);
-                } else if (flag == 3) {
-                    inout = inoutBiz.selectAfterOne(param);
-                }
-            } else {
-                inout = inoutBiz.findMaxBill(param);
-            }
-        }
-        if (inout != null) {
-            return new JsonResult(inout, "查询成功", true);
-        } else {
-            return new JsonResult(null, "未查询到相关记录", false);
-        }
-
-    }
-
-    /**
      * @param inout
      * @param type  1:称毛重 2：称皮重
      * @return
@@ -142,19 +105,15 @@ public class WeightController extends BaseController {
     public JsonResult editWeightInout(HttpServletRequest request, Inout inout, Integer type) {
         //判断的当前登记流水号状态能否进行称毛或者称皮重
         Inout item = inoutBiz.selectById(inout.getBillid());
-        if (type == 1 && item.getBillstage() < 3) {
-            return new JsonResult("当前单据处在"
-                    + Constant.Billstage.getText(item.getBillstage()) + "阶段，请检验完成后进行称毛重", false);
+        if (type == 1 && (item.getInspectstate() == null || item.getInspectstate() == 0)) {
+            return new JsonResult("请检验完成后进行称毛重", false);
         }
-        if (type == 2 && item.getBillstage() < 5) {
-            return new JsonResult("当前单据处在"
-                    + Constant.Billstage.getText(item.getBillstage()) + "阶段，请值仓完成后进行称皮重", false);
+        if (type == 2 && (item.getValuebinstate() == null || item.getValuebinstate() == 0)) {
+            return new JsonResult("请值仓后进行称皮重", false);
         }
 
         //根据登记流水号对应的billid存在于l_inout_insp表中
-        Double waterdeduweight = null, impudeduweight= null, bulkdensitydeduweight= null,yrkdeduweight= null
-                ,ukdeduweight= null,otmsdeduweight= null,zjmldeduweight= null,cmldeduweight= null,gwcmdeduweight= null
-                ,hhldeduweight= null,wdeduweightx= null,ideduweightx= null,odeduweightx= null;
+        Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
         Double netweight = inout.getNetweight();
         if (type == 2) {
             //计算各种增扣量
@@ -162,16 +121,16 @@ public class WeightController extends BaseController {
             waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
             impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
             bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
-            yrkdeduweight=multiply(netweight,inoutInsp.getYrkdedurate());
-            ukdeduweight=multiply(netweight,inoutInsp.getUkdedurate());
-            otmsdeduweight=multiply(netweight,inoutInsp.getOtmsdedurate());
-            zjmldeduweight=multiply(netweight,inoutInsp.getZjmldedurate());
-            cmldeduweight=multiply(netweight,inoutInsp.getCmldedurate());
-            gwcmdeduweight=multiply(netweight,inoutInsp.getGwcmdedurate());
-            hhldeduweight=multiply(netweight,inoutInsp.getHhldedurate());
-            wdeduweightx=multiply(netweight,inoutInsp.getWdeduratex());
-            ideduweightx=multiply(netweight,inoutInsp.getIdeduratex());
-            odeduweightx=multiply(netweight,inoutInsp.getOdeduratex());
+            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
+            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
+            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
+            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
+            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
+            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
+            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
+            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
+            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
+            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
 
         }
         BaseUser user = getCurrentUser();
@@ -196,10 +155,11 @@ public class WeightController extends BaseController {
             param.put("taretime", new Date());
             param.put("tarestate", 1);
             param.put("billstage", 6);
-            param.put("totalincdedu",plus(waterdeduweight , impudeduweight, bulkdensitydeduweight,yrkdeduweight
-                    ,ukdeduweight,otmsdeduweight,zjmldeduweight,cmldeduweight,gwcmdeduweight
-                    ,hhldeduweight));
-            param.put("extradedu",plus(wdeduweightx,ideduweightx,odeduweightx));
+            param.put("totalincdedu", plus(waterdeduweight, impudeduweight, bulkdensitydeduweight, yrkdeduweight
+                    , ukdeduweight, otmsdeduweight, zjmldeduweight, cmldeduweight, gwcmdeduweight
+                    , hhldeduweight));
+            param.put("extradedu", plus(wdeduweightx, ideduweightx, odeduweightx
+                    , inout.getAdddeduweightx()));
         }
         inoutBiz.updateMap(param);
         //更新b_inout_insp数据
@@ -208,19 +168,19 @@ public class WeightController extends BaseController {
         param.put("wdeduratex", inout.getWdeduratex());
         param.put("ideduratex", inout.getIdeduratex());
         param.put("adddeduweightx", inout.getAdddeduweightx());
-        param.put("waterdeduweight",waterdeduweight);
-        param.put("impudeduweight",impudeduweight);
-        param.put("bulkdensitydeduweight",bulkdensitydeduweight);
-        param.put("yrkdeduweight",yrkdeduweight);
-        param.put("ukdeduweight",ukdeduweight);
-        param.put("otmsdeduweight",otmsdeduweight);
-        param.put("zjmldeduweight",zjmldeduweight);
-        param.put("cmldeduweight",cmldeduweight);
-        param.put("gwcmdeduweight",gwcmdeduweight);
-        param.put("hhldeduweight",hhldeduweight);
-        param.put("wdeduweightx",wdeduweightx);
-        param.put("ideduweightx",ideduweightx);
-        param.put("odeduweightx",odeduweightx);
+        param.put("waterdeduweight", waterdeduweight);
+        param.put("impudeduweight", impudeduweight);
+        param.put("bulkdensitydeduweight", bulkdensitydeduweight);
+        param.put("yrkdeduweight", yrkdeduweight);
+        param.put("ukdeduweight", ukdeduweight);
+        param.put("otmsdeduweight", otmsdeduweight);
+        param.put("zjmldeduweight", zjmldeduweight);
+        param.put("cmldeduweight", cmldeduweight);
+        param.put("gwcmdeduweight", gwcmdeduweight);
+        param.put("hhldeduweight", hhldeduweight);
+        param.put("wdeduweightx", wdeduweightx);
+        param.put("ideduweightx", ideduweightx);
+        param.put("odeduweightx", odeduweightx);
         inspectBiz.updateMap(param);
         return new JsonResult("保存成功", true);
     }
@@ -230,7 +190,7 @@ public class WeightController extends BaseController {
         if (a == null || b == null) {
             return null;
         } else {
-            BigDecimal c = new BigDecimal(a * (b/100));
+            BigDecimal c = new BigDecimal(a * (b / 100));
             BigDecimal r = c.setScale(10, BigDecimal.ROUND_HALF_UP);
             double o = r.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             return o;

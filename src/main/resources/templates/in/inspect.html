@@ -8,7 +8,7 @@
 
     </script>
 </head>
-
+<script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
 <body>
 <div>
     <script th:src="@{../js/huashi.js}"></script>
@@ -42,7 +42,12 @@
                                         </label>
                                         <div class="col-sm-3">
                                             <input type="text" name="billcode" id="billcode" class="form-control"
-                                                   readonly placeholder=""/>
+                                                   readonly placeholder="" data-bv-notempty/>
+                                            <div class="well">
+                                                <a href="#" id="timeLine" class="btn btn-success" rel="popover"
+                                                   data-content=""
+                                                   data-original-title="单据流程情况">单据进度</a>
+                                            </div>
                                         </div>
                                         <label class="col-sm-1 control-label no-padding-right"
                                                for="billstate">
@@ -248,9 +253,11 @@
         comm_initGrainattr();
         initGrade();
         //登记流水号自动显示
-        billcodeAutoComplete();
+       // billcodeAutoComplete();
         $(".form_date").bootstrapDate();
         $('.form_date').bootstrapDate('setValue', new Date());
+        //加载单据进度tooltip
+        $("#timeLine").popover({html : true });
     });
 
     //登记流水号自动显示
@@ -275,7 +282,7 @@
             afterSelect: function (item) {
                 //选择项之后的事件 ，item是当前选中的。
                 console.log(item);
-                initInoutInsp(item);
+                setInoutInsp(item);
             },
             delay: 500//延迟时间
         });
@@ -607,7 +614,7 @@
     }
 
     //根据查出的出入库单和质检信息单初始化页面显示
-    function initInoutInsp(inout) {
+    function setInoutInsp(inout) {
         if (inout.billcode) {
             $("#billcode").val(inout.billcode);
         }
@@ -617,7 +624,7 @@
         $("#storageid").bootstrapSelect("setValue", inout.storageid);
         $("#grainid").bootstrapSelect("setValue", inout.grainid);
         $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
-        $("#grade").bootstrapSelect("setValue", inout.grade);
+        $("#grade").bootstrapSelect("setValue", inout.grade?inout.grade:3);
         $("#producingyear").val(inout.producingyear);
         $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
         $("#contractid").bootstrapSelect("setValue", inout.contractid);
@@ -637,8 +644,12 @@
                     reset();
                     $("#billstate").html("未保存")
                 }
-                $("#price").val(inout.price);
             })
+        if (inout.price){
+            $("#price").val(inout.price);
+        }
+
+        $("#timeLine").attr("data-content",getInoutTooltipHtml(inout));
 
 
     }
@@ -657,16 +668,16 @@
         //根据billcode获取billid
         $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:billcode})
             .then(function (result) {
-                findInoutInsp(result.data, flag);
+                doFindInoutInsp(result.data, flag);
             });
     }
 
-    function findInoutInsp(billid, flag) {
+    function doFindInoutInsp(billid, flag) {
         $.get("/graindepot-inout/inout/findOneIn", {billid: billid, flag: flag})
             .then(function (result) {
                 if (result.success) {
                     var inout = result.data;
-                    initInoutInsp(inout);
+                    setInoutInsp(inout);
                 }else {
                     $.bootstrapBox.alert.init({message: result.message})
                 }
@@ -689,7 +700,7 @@
                 .then(function (result) {
                     if (result.success) {
                         var inout = result.data;
-                        initInoutInsp(inout);
+                        setInoutInsp(inout);
                     } else {
                         $.bootstrapBox.alert.init({message: result.message})
                     }
