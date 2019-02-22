@@ -55,8 +55,8 @@ function getInoutTooltipHtml(inout) {
             '<div class="widget-box transparent">' +
             '<div class="widget-body">' +
             '<div class="widget-main no-padding">' +
-            '完成' +
-            '<span class="label label-sm label-success">'+
+            '' +
+            '<span class="label  label-success">完成'+
             value.text+'</span>' +
             '</div></div></div></div>'
     });

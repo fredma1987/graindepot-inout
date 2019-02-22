@@ -15,6 +15,13 @@
     <script th:src="@{../js/d8.js}"></script>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
+        <!--<div class="well">
+            <a href="#" id="timeLine"  rel="popover"
+               data-content=""
+               data-original-title="单据进度">
+                单据进度
+            </a>
+        </div>-->
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
             <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
@@ -27,11 +34,9 @@
                     </h1>
                 </div>
                 <!-- /.page-header -->
-
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-
                         <form class="form-horizontal" id="validation-form" role="form">
                             <div class="row">
                                 <div class="col-xs-8 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
@@ -43,12 +48,14 @@
                                         <div class="col-sm-3">
                                             <input type="text" name="billcode" id="billcode" class="form-control"
                                                    readonly placeholder="" data-bv-notempty/>
-                                            <div class="well">
-                                                <a href="#" id="timeLine" class="btn btn-success" rel="popover"
-                                                   data-content=""
-                                                   data-original-title="单据流程情况">单据进度</a>
-                                            </div>
                                         </div>
+                                        <a class="col-sm-1 btn btn-info" style="border: 0;width: 80px;"
+                                           id="timeLine"  rel="popover"
+                                           data-content="无"
+                                           data-original-title="单据进度">
+                                            <i class="icon-question-sign icon-on-right"></i>
+                                            进度
+                                        </a>
                                         <label class="col-sm-1 control-label no-padding-right"
                                                for="billstate">
                                             状态:
@@ -253,11 +260,11 @@
         comm_initGrainattr();
         initGrade();
         //登记流水号自动显示
-       // billcodeAutoComplete();
+        // billcodeAutoComplete();
         $(".form_date").bootstrapDate();
         $('.form_date').bootstrapDate('setValue', new Date());
         //加载单据进度tooltip
-        $("#timeLine").popover({html : true });
+        $("#timeLine").popover({html: true, trigger: 'hover'});
     });
 
     //登记流水号自动显示
@@ -624,7 +631,7 @@
         $("#storageid").bootstrapSelect("setValue", inout.storageid);
         $("#grainid").bootstrapSelect("setValue", inout.grainid);
         $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
-        $("#grade").bootstrapSelect("setValue", inout.grade?inout.grade:3);
+        $("#grade").bootstrapSelect("setValue", inout.grade ? inout.grade : 3);
         $("#producingyear").val(inout.producingyear);
         $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
         $("#contractid").bootstrapSelect("setValue", inout.contractid);
@@ -645,11 +652,11 @@
                     $("#billstate").html("未保存")
                 }
             })
-        if (inout.price){
+        if (inout.price) {
             $("#price").val(inout.price);
         }
 
-        $("#timeLine").attr("data-content",getInoutTooltipHtml(inout));
+        $("#timeLine").attr("data-content", getInoutTooltipHtml(inout));
 
 
     }
@@ -657,16 +664,16 @@
     //type 1:前一单 2:刷卡查单  3:后一单
     function toFindInoutInspDetail(flag) {
         var billcode;
-        if (flag==2){
+        if (flag == 2) {
             billcode = d8ReadCard(1);
             if (!billcode) {
                 $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
             }
-        }else {
-            billcode=$("#billcode").val();
+        } else {
+            billcode = $("#billcode").val();
         }
         //根据billcode获取billid
-        $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:billcode})
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
             .then(function (result) {
                 doFindInoutInsp(result.data, flag);
             });
@@ -678,7 +685,7 @@
                 if (result.success) {
                     var inout = result.data;
                     setInoutInsp(inout);
-                }else {
+                } else {
                     $.bootstrapBox.alert.init({message: result.message})
                 }
             }, function () {

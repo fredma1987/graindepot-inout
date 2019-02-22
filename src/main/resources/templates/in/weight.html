@@ -15,6 +15,7 @@
     <script th:src="@{/graindepot-inout/js/mscomm32.js}"></script>
     <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
     <script th:src="@{/graindepot-video/js/hik3.js}"></script>
+    <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
     <SCRIPT ID="clientEventHandlersJS" LANGUAGE="javascript">
         function MSComm1_OnComm() {
             switch (MSComm1.CommEvent) {
@@ -196,6 +197,13 @@
                                                 <input type="text" name="billcode" id="billcode" class="form-control"
                                                        readonly placeholder=""/>
                                             </div>
+                                            <a class="col-sm-1 btn btn-info" style="border: 0;width: 80px;"
+                                               id="timeLine"  rel="popover"
+                                               data-content="无"
+                                               data-original-title="单据进度">
+                                                <i class="icon-question-sign icon-on-right"></i>
+                                                进度
+                                            </a>
                                             <label class="col-sm-1 control-label no-padding-right"
                                                    for="grossFlag">
                                                 状态:
@@ -453,6 +461,8 @@
         comm_initGrainattr();
         comm_initStorage(param);
         comm_initTrader();
+        //加载单据进度tooltip
+        $("#timeLine").popover({html: true, trigger: 'hover'});
         // query(param);
     });
 
@@ -601,6 +611,7 @@
                 $("#adddeduweightx").val("");
             }
         }
+        $("#timeLine").attr("data-content", getInoutTooltipHtml(inout));
 
     }
 

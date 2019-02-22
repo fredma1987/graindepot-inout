@@ -58,8 +58,12 @@
     // var g_inoutflag = [[${inoutflag}]];
     // var g_type = [[${type}]];//1:从登记检验跳转过来 2.从扦样
     $(document).ready(function () {
-        $("#example").attr("data-content",$("#main-container").html());
-        $("#example").popover({html : true });
+        $("#example").attr("data-content", $("#main-container").html());
+        $("#example").popover(
+            {
+                html: true,
+                trigger:'hover'
+            });
 
         /* $(".form_date").bootstrapDate();
          $(".form_date").bootstrapDate("setValue", new Date());

@@ -11,6 +11,7 @@
 
 <body>
 <div>
+    <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
     <div th:replace="navbar::navbar"></div>
@@ -65,6 +66,13 @@
                                                 <input type="text" name="billcode" id="billcode" class="form-control"
                                                        readonly placeholder=""/>
                                             </div>
+                                            <a class="col-sm-1 btn btn-info" style="border: 0;width: 80px;"
+                                               id="timeLine"  rel="popover"
+                                               data-content="无"
+                                               data-original-title="单据进度">
+                                                <i class="icon-question-sign icon-on-right"></i>
+                                                进度
+                                            </a>
                                             <label class="col-sm-1 control-label no-padding-right"
                                                    for="billstate">
                                                 状态:
@@ -361,6 +369,8 @@
         initSettlemothod();
         initTrucktype();
         comm_initStorage();
+        //加载单据进度tooltip
+        $("#timeLine").popover({html: true, trigger: 'hover'});
     });
 
     function initTrader() {
@@ -516,6 +526,8 @@
                     });
                 }
             })
+
+        $("#timeLine").attr("data-content", getInoutTooltipHtml(inout));
     }
 
     //根据粮食品种动态生成质检标准
