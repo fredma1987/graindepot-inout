@@ -28,21 +28,21 @@
                 删除收购价格
             </button>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-8">
 
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">粮食品种:</span>
                     <select id="grainid" class="form-control" style="height: 50px;">
                     </select>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <button class="btn btn-sm btn-success" onclick="javascript:searchTable()">
+            <div class="col-sm-4">
+                <button class="btn btn-sm btn-success" onclick="searchTable()">
                     <i class="icon-search align-top bigger-125"></i>
                     查询
                 </button>
-                <button class="btn btn-sm btn-warning" onclick="javascript:rest()">
+                <button class="btn btn-sm btn-warning" onclick="rest()">
                     <i class="icon-undo align-top bigger-125"></i>
                     重置
                 </button>
@@ -157,10 +157,10 @@
 
 
     function doDel() {
-        console.log($('#myTable').bootstrapTable("getChecked"))
+        console.log($('#myTable').bootstrapTable("getChecked"));
         var checkedList = $('#myTable').bootstrapTable("getChecked");
         if (checkedList.length == 0) {
-            $.bootstrapBox.alert.init({message: "请选择需要删除的行"})
+            $.bootstrapBox.alert.init({message: "请选择需要删除的行"});
             return
         }
         $.bootstrapBox.confirm.init({

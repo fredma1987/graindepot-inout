@@ -37,7 +37,7 @@ public class GrainRankController extends BaseController{
     }
     @GetMapping("toEdit")
     public String toEdit(Model model,Integer id){
-        String title = "粮食品种等级划分";
+        String title = "粮食品种等级标准";
         model.addAttribute("title", title);
         model.addAttribute("id", id);
         GrainRank item = new GrainRank();
@@ -66,9 +66,9 @@ public class GrainRankController extends BaseController{
     @ResponseBody
     public JsonResult grainRankEdit(GrainRank item){
         UserAddress ua=getUserAddress();
+        item.setGraindepotid(ua.getGraindepotid());
         if (item.getKeyid()==null) {
             //新增
-            item.setGraindepotid(ua.getGraindepotid());
             grainRankBiz.insert(item);
             return new JsonResult("添加成功", true);
         } else {
