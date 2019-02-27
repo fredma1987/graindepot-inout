@@ -50,7 +50,7 @@ public class GrainRankController extends BaseController{
 
     @GetMapping("/list/page")
     @ResponseBody
-    public PagerModel ggrainRankPageList(int start, int length, Integer grainid) {
+    public PagerModel grainRankPageList(int start, int length, Integer grainid) {
         UserAddress ua=getUserAddress();
         PagerModel<GrainRank> e = new PagerModel();
         e.addOrder("grainid asc,orderno desc");

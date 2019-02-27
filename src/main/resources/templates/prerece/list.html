@@ -21,13 +21,23 @@
         </ul>
     </div>
     <div  style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-10">
-            <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 往来单位：</label>
+        <div class="col-sm-3">
+            <button class="btn btn-sm btn-primary" onclick="toAdd()">
+                <i class="icon-plus align-top bigger-125"></i>
+                添加预收款
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="doDel()">
+                <i class="icon-trash align-top bigger-125"></i>
+                删除预收款
+            </button>
+        </div>
+        <div class="col-sm-8">
+            <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 往来单位:</label>
             <div class="col-sm-4" style="width:300px;padding-left:0px">
                 <select id="traderid" name="traderid" class="form-control">
                 </select>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
                 <button class="btn btn-sm btn-success" onclick="searchTable()">
                     <i class="icon-search align-top bigger-125"></i>
                     查询
@@ -38,16 +48,6 @@
                 </button>
             </div>
 
-        </div>
-        <div class="col-sm-4">
-            <button class="btn btn-sm btn-primary" onclick="toAdd()">
-                <i class="icon-plus align-top bigger-125"></i>
-                添加预收款
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="doDel()">
-                <i class="icon-trash align-top bigger-125"></i>
-                删除预收款
-            </button>
         </div>
     </div>
 

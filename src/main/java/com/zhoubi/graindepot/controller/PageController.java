@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController extends BaseController {
     @Autowired
     private PrereceBiz prereceBiz;
-    @GetMapping("/prerece/list")
+    @GetMapping("/prerece")
     public String prerece(Model model){
         String title="预收款";
         model.addAttribute("title",title);

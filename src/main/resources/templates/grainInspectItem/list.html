@@ -13,7 +13,7 @@
             </li>
             <li>
                 <i class="icon-table home-icon"></i>
-                粮食品种检验标准<span class="red">(如未配置某粮食品种检验标准则默认使用国标)</span>
+                粮食增扣标准<span class="red">(如未配置某粮食增扣标准则默认使用国标)</span>
             </li>
         </ul>
     </div>
@@ -21,11 +21,11 @@
         <div class="col-sm-3">
             <button class="btn btn-sm btn-primary" onclick="toAdd()">
                 <i class="icon-plus align-top bigger-125"></i>
-                添加检验标准
+                添加增扣标准
             </button>
             <button class="btn btn-sm btn-danger" onclick="doDel()">
                 <i class="icon-trash align-top bigger-125"></i>
-                删除检验标准
+                删除增扣标准
             </button>
         </div>
         <div class="col-sm-8">
@@ -198,7 +198,7 @@
 
     function toAdd() {
         $.bootstrapBox.dialog.init({
-            title: "新增检验标准",
+            title: "新增增扣标准",
             url: urlPrefix + "/grainInspectItem/toEdit",
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
@@ -207,7 +207,7 @@
 
     function toEdit(id) {
         $.bootstrapBox.dialog.init({
-            title: "修改检验标准",
+            title: "修改增扣标准",
             url: urlPrefix + "/grainInspectItem/toEdit?id=" + id,
             width: $(window).width() * 0.6,
             height: $(window).height() * 0.8
