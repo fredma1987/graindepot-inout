@@ -7,6 +7,7 @@
 function writeCart() {
     m1CardTest_bak();
 }
+
 function m1CardTest_bak() {
     var rd = document.getElementById("rd");
     var st;
@@ -628,6 +629,7 @@ function mBeep() {
 function mExit() {
     rd.dc_exit();
 }
+
 //初始化
 function initD8(rd) {
     /*
@@ -697,8 +699,13 @@ function doWriteCard(rd, position, data) {
     /**
      * 功 能：向卡中写入数据,参数：表示第几块，从0开始，0块为卡号
      */
-    rd.put_bstrSBuffer = data;
-    //rd.put_bstrSBuffer_asc = data;
+        //rd.put_bstrSBuffer = data;
+    var hexData = toUTF8Hex(data);
+    if (hexData.length <= 30) {
+        hexData += '21'//加入!分隔
+    }
+    // rd.put_bstrSBuffer_asc = data;
+    rd.put_bstrSBuffer_asc = hexData;
     var st = rd.dc_write(position);
     if (st != 0) {
         var msg = "写卡异常!";
@@ -723,7 +730,7 @@ function d8WriteCard(data, rd) {
                 var position = curr.position;
                 var fanNum = getFanNum(position);
                 if (initPWD(rd, fanNum) && checkPWD(rd, fanNum) && curr.data != null) {
-                    var success = doWriteCard(rd, position,curr.data);
+                    var success = doWriteCard(rd, position, curr.data);
                     if (!success) {
                         rd.dc_exit();
                         return false;
@@ -748,15 +755,71 @@ function d8WriteCard(data, rd) {
     }
 }
 
-//读卡
+//读卡 读卡失败返回 'ERROR'
 function d8ReadCard(position, rd) {
     var rd = rd ? rd : document.getElementById("rd");
     var fanNum = getFanNum(position);
     if (initD8(rd) && getCard(rd) && initPWD(rd, fanNum) && checkPWD(rd, fanNum)) {
         var st = rd.dc_read(position);
-        var result = rd.get_bstrRBuffer;
+        //var result = rd.get_bstrRBuffer;
+        //var result = rd.get_bstrRBuffer_asc;
+        console.log(rd.get_bstrRBuffer);
+        console.log(rd.get_bstrRBuffer_asc);
+        var va = utf8HexToStr(rd.get_bstrRBuffer_asc);
+        var result=null;
+        if (va != null) {
+            result = va.split("!")[0];
+        }
         rd.dc_beep(20);
         rd.dc_beep(20);
+        rd.dc_exit();
+        return result;
+    } else {
+        rd.dc_exit();
+        return "ERROR";
+    }
+}
+
+//读卡全部
+function d8ReadCardAll(rd) {
+    var rd = rd ? rd : document.getElementById("rd");
+    var results = [];
+    for (var i = 0; i <= 15; i++) {
+        for (var j = 0; j <= 2; j++) {
+            if ((i + 1) % 4 != 0) {
+                var position = i * 4 + j;
+                var fanNum = getFanNum(position);
+                if (initD8(rd) && getCard(rd) && initPWD(rd, fanNum) && checkPWD(rd, fanNum)) {
+                    var st = rd.dc_read(position);
+                    //var result = rd.get_bstrRBuffer;
+                    var va = utf8HexToStr(rd.get_bstrRBuffer_asc);
+                    var result;
+                    if (va != null) {
+                        result = va.split("!")[0];
+                    }
+                    results.push({
+                        index: i + "_" + j,
+                        data: result
+                    });
+                    rd.dc_exit();
+                }
+            }
+        }
+    }
+    rd.dc_beep(20);
+    rd.dc_beep(20);
+    return results;
+}
+
+//读取ic卡号
+function getIcNumber(rd) {
+    var rd = rd ? rd : document.getElementById("rd");
+    var position = 0;
+    var fanNum = getFanNum(position);
+    var result;
+    if (initD8(rd) && getCard(rd) && initPWD(rd, fanNum) && checkPWD(rd, fanNum)) {
+        var st = rd.dc_read(position);
+        result = rd.get_bstrRBuffer_asc;
         rd.dc_exit();
         return result;
     } else {
@@ -764,83 +827,5 @@ function d8ReadCard(position, rd) {
         return false;
     }
 }
-//16进制和中文互转
-function writeUTF(str, isGetBytes) {
-    var back = [];
-    var byteSize = 0;
-    for (var i = 0; i < str.length; i++) {
-        var code = str.charCodeAt(i);
-        if (0x00 <= code && code <= 0x7f) {
-            byteSize += 1;
-            back.push(code);
-        } else if (0x80 <= code && code <= 0x7ff) {
-            byteSize += 2;
-            back.push((192 | (31 & (code >> 6))));
-            back.push((128 | (63 & code)))
-        } else if ((0x800 <= code && code <= 0xd7ff)
-            || (0xe000 <= code && code <= 0xffff)) {
-            byteSize += 3;
-            back.push((224 | (15 & (code >> 12))));
-            back.push((128 | (63 & (code >> 6))));
-            back.push((128 | (63 & code)))
-        }
-    }
-    for (i = 0; i < back.length; i++) {
-        back[i] &= 0xff;
-    }
-    if (isGetBytes) {
-        return back
-    }
-    if (byteSize <= 0xff) {
-        return [0, byteSize].concat(back);
-    } else {
-        return [byteSize >> 8, byteSize & 0xff].concat(back);
-    }
-}
 
 
-function readUTF(arr) {
-    if (typeof arr === 'string') {
-        return arr;
-    }
-    var UTF = '', _arr = arr;
-    for (var i = 0; i < _arr.length; i++) {
-        var one = _arr[i].toString(2),
-            v = one.match(/^1+?(?=0)/);
-        if (v && one.length == 8) {
-            var bytesLength = v[0].length;
-            var store = _arr[i].toString(2).slice(7 - bytesLength);
-            for (var st = 1; st < bytesLength; st++) {
-                store += _arr[st + i].toString(2).slice(2)
-            }
-            UTF += String.fromCharCode(parseInt(store, 2));
-            i += bytesLength - 1
-        } else {
-            UTF += String.fromCharCode(_arr[i])
-        }
-    }
-    return UTF
-}
-
-
-function toUTF8Hex(str) {
-    var charBuf = writeUTF(str, true);
-    var re = '';
-    for (var i = 0; i < charBuf.length; i++) {
-        var x = (charBuf[i] & 0xFF).toString(16);
-        if (x.length === 1) {
-            x = '0' + x;
-        }
-        re += x;
-    }
-    return re;
-}
-
-
-function utf8HexToStr(str) {
-    var buf = [];
-    for (var i = 0; i < str.length; i += 2) {
-        buf.push(parseInt(str.substring(i, i + 2), 16));
-    }
-    return readUTF(buf);
-}

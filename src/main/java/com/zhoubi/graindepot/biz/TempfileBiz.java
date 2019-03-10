@@ -1,0 +1,2 @@
+package com.zhoubi.graindepot.biz;import com.zhoubi.graindepot.bean.Tempfile;import com.zhoubi.graindepot.mapper.TempfileMapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.base.BaseService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;@Servicepublic class TempfileBiz extends BaseService<Tempfile>  {	@Autowired	private TempfileMapper TempfileMapper;	@Override
+	protected BaseMapper<Tempfile> getMapper() {		return TempfileMapper;	}}

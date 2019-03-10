@@ -1,0 +1,2 @@
+package com.zhoubi.graindepot.biz;import com.zhoubi.graindepot.bean.OutpayDetail;import com.zhoubi.graindepot.mapper.OutpayDetailMapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.base.BaseService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;@Servicepublic class OutpayDetailBiz extends BaseService<OutpayDetail>  {	@Autowired	private OutpayDetailMapper OutpayDetailMapper;	@Override
+	protected BaseMapper<OutpayDetail> getMapper() {		return OutpayDetailMapper;	}}

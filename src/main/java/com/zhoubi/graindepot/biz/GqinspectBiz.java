@@ -1,0 +1,2 @@
+package com.zhoubi.graindepot.biz;import com.zhoubi.graindepot.bean.Gqinspect;import com.zhoubi.graindepot.mapper.GqinspectMapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.base.BaseService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;@Servicepublic class GqinspectBiz extends BaseService<Gqinspect>  {	@Autowired	private GqinspectMapper GqinspectMapper;	@Override
+	protected BaseMapper<Gqinspect> getMapper() {		return GqinspectMapper;	}}

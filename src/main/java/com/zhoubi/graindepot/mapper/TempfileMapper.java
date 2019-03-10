@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Tempfile;import com.zhoubi.graindepot.base.BaseMapper;public interface TempfileMapper extends BaseMapper<Tempfile> {}

@@ -2,10 +2,23 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
 </head>
+<script th:src="@{/graindepot-inout/js/d8.js}"></script>
+<script th:src="@{/graindepot-inout/js/IC.js}"></script>
 <body>
+<object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
+</object>
+<div th:replace="navbar::navbar"></div>
 <div class="main-container" id="main-container">
-    <!--<div class="breadcrumbs" id="breadcrumbs">
+    <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                首页
+            </li>
+            <li>
+                <i class="icon-table home-icon"></i>
+                单据列表
+            </li>
             <li th:if="${inoutflag==1}">
                 <i class="icon-table home-icon"></i>
                 入库单据列表
@@ -15,45 +28,74 @@
                 出库单据列表
             </li>
         </ul>
-    </div>-->
+    </div>
     <div style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-10">
-
-            <div class="col-sm-3">
+        <div class="col-sm-12">
+            <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon">单据日期:</span>
                     <input size="16" type="text" name="billdate" id="billdate"
                            readonly class="form_date form-control">
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon">是否已绑卡:</span>
+                    <select id="regstate" name="regstate" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon">是否退卡:</span>
+                    <select id="backicflag" name="backicflag" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon">是否已终止:</span>
+                    <select id="stopflag" name="stopflag" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon">单据流水号:</span>
                     <input type="text" id="billcode" name="billcode"
                            class="form-control" placeholder=""/>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon">售粮人:</span>
                     <input type="text" id="sellmanname" name="sellmanname"
                            class="form-control" placeholder=""/>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <button class="btn btn-sm btn-success" onclick="searchTable()">
-                    <i class="icon-search align-top bigger-125"></i>
-                    查询
-                </button>
-                <button class="btn btn-sm btn-warning" onclick="rest()">
-                    <i class="icon-undo align-top bigger-125"></i>
-                    重置
-                </button>
-            </div>
 
         </div>
+    </div>
 
-
+    <div style="margin-top: 4px;margin-bottom: 4px">
+        <div class="col-sm-4" style="margin-top: 4px;margin-left: 15px;">
+            <button class="btn btn-sm btn-success" onclick="searchTable()">
+                <i class="icon-search align-top bigger-125"></i>
+                查询
+            </button>
+            <button class="btn btn-sm btn-warning" onclick="rest()">
+                <i class="icon-undo align-top bigger-125"></i>
+                重置
+            </button>
+            <button class="btn btn-sm btn-success" onclick="getInoutByCard()">
+                <i class="icon-credit-card align-top bigger-125"></i>
+                刷卡查单
+            </button>
+            <button class="btn btn-sm btn-danger" onclick="toBackIC()">
+                <i class="icon-credit-card align-top bigger-125"></i>
+                刷IC卡退卡
+            </button>
+        </div>
     </div>
 
 
@@ -74,26 +116,28 @@
                 <th style="width: 5%">售粮人</th>
                 <th style="width: 5%">售粮人电话</th>
                 <th style="width: 5%">车船号</th>
-                <th style="width: 5%">绑卡状态</th>
-                <th style="width: 5%">当前阶段</th>
                 <th style="width: 5%">登记情况</th>
-                <th style="width: 5%">扦样情况</th>
-                <th style="width: 5%">检验情况</th>
+                <th style="width: 4%">扦样情况</th>
+                <th style="width: 4%">检验情况</th>
                 <th style="width: 5%">称毛重情况</th>
-                <th style="width: 5%">值仓情况</th>
+                <th style="width: 4%">值仓情况</th>
                 <th style="width: 5%">称皮重情况</th>
-                <th style="width: 5%">结算情况</th>
+                <th style="width: 4%">结算情况</th>
+                <th style="width: 5%">绑卡状态</th>
                 <th style="width: 5%">是否已退卡</th>
-                <th style="width: 6%">单据类型</th>
+                <th style="width: 5%">是否已终止</th>
+                <th style="width: 4%">单据类型</th>
                 <!-- <th style="width: 10%">更新时间</th>
                  <th style="width: 10%">创建时间</th>-->
-                <th style="width: 3%">操作</th>
+                <th style="width: 5%">操作</th>
             </tr>
             </thead>
         </table>
 
     </div>
-
+    <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
+            classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
+    </OBJECT>
 
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
         <i class="icon-double-angle-up icon-only bigger-110"></i>
@@ -105,25 +149,60 @@
     var urlPrefix = "/graindepot-inout";
     var theTable;
     var g_inoutflag = [[${inoutflag}]];
-    var g_type = [[${type}]];//1:从登记页跳转 2:从检验 3:称毛重或者称皮重 4:结算 5:补单
+    var IcObject=new IcFactory(1).createIcObject();
     $(document).ready(function () {
         $(".form_date").bootstrapDate();
         $(".form_date").bootstrapDate("setValue", new Date());
-        var param={
-            billdate:$("#billdate").bootstrapDate("getValue"),
-            inoutflag:g_inoutflag,
-            billtype:g_type==5?2:1
+        initBackicflag();
+        initRegstate();
+        initStopflag();
+        var param = {
+            billdate: $("#billdate").bootstrapDate("getValue"),
+            inoutflag: g_inoutflag
         };
         query(param);
 
     });
+
+    //是否绑卡
+    function initRegstate() {
+        var data = [{value: 1, text: "已绑卡"}, {value: 0, text: "未绑卡"}];
+        $("#regstate").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text'
+        });
+
+    }
+
+    //是否退卡
+    function initBackicflag() {
+        var data = [{value: 1, text: "已退卡"}, {value: 0, text: "未退卡"}];
+        $("#backicflag").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text'
+        });
+
+    }
+
+    //是否终止
+    function initStopflag() {
+        var data = [{value: 1, text: "已终止"}, {value: 0, text: "未终止"}];
+        $("#stopflag").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text'
+        });
+
+    }
 
 
     function query(param) {
         theTable = $('#myTable').bootstrapTable({
             //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
             ajax: {
-                url: urlPrefix + "/inout/list/page",
+                url: urlPrefix + "/exception/inout/list/page",
                 data: param,
                 type: "GET"
             },
@@ -134,8 +213,6 @@
                 {data: "sellmanname"},
                 {data: "sellmanphone"},
                 {data: "trucknum"},
-                {data: "regstatestr"},
-                {data: "billstagestr"},
                 {
                     data: "billid",
                     render: function (data, type, row) {
@@ -213,7 +290,19 @@
 
                     }
                 },
+                {data: "regstatestr"},
                 {data: "backicflagstr"},
+                {
+                    data: "stopflag",
+                    render: function (data, type, row) {
+                        if (data == 1) {
+                            return '已终止';
+                        } else {
+                            return '未终止';
+                        }
+
+                    }
+                },
                 {
                     data: "billtype",
                     render: function (data, type, row) {
@@ -221,7 +310,7 @@
                             return '正常单据';
                         } else if (data == 2) {
                             return '补单';
-                        } else if (data == 0){
+                        } else if (data == 0) {
                             return '期初库存单';
                         }
 
@@ -230,13 +319,23 @@
                 {
                     data: "billid",
                     render: function (data, type, row) {
-                        return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
-                            '<a class="green" href="javascript:toChoose(' + data + ')"' +
-                            ' title="选择" ' +
+                        var htmlStr = '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
+                            '<a class="red" href="javascript:toStop(' + data + ')"' +
+                            ' title="终止" ' +
                             '>' +
-                            '<i class="icon-hand-up bigger-130"></i>' +
-                            '</a>' +
-                            '</div>';
+                            '终止' +
+                            '</a>';
+                        /* //如果已绑卡未退卡则显示退卡按钮
+                         if (row.regstate == 1 && !row.backicflag) {
+                             htmlStr += '<a class="red" href="javascript:toBackIC(' + data + ')"' +
+                                 ' title="退卡" ' +
+                                 '>' +
+                                 '退卡' +
+                                 '</a>'
+                         }*/
+                        htmlStr += '</div>';
+
+                        return htmlStr;
 
                     }
                 }
@@ -279,11 +378,13 @@
 
     function getParam() {
         var param = {
-            billdate:$("#billdate").bootstrapDate("getValue"),
-            inoutflag:g_inoutflag,
-            billtype:g_type==5?2:1,
-            billcode:$("#billcode").val(),
-            sellmanname:$("#sellmanname").val()
+            billdate: $("#billdate").bootstrapDate("getValue"),
+            backicflag: $("#backicflag").bootstrapDate("getValue"),
+            regstate: $("#regstate").bootstrapDate("getValue"),
+            stopflag: $("#stopflag").bootstrapDate("getValue"),
+            inoutflag: g_inoutflag,
+            billcode: $("#billcode").val(),
+            sellmanname: $("#sellmanname").val()
 
         };
         return param
@@ -300,22 +401,74 @@
 
     }
 
-    function toChoose(billid) {
-        if (g_type==1){
-            parent.doFindInout(billid,2)
-        } else if(g_type==2){
-            parent.doFindInoutInsp(billid,2)
-        }else if(g_type==3){
-            parent.doFindWeightInout(billid,2,1)
-        }else if (g_type == 4) {
-            parent.doFindSettlementInout(billid,2)
-        }else if (g_type == 5) {
-            parent.doFindInoutInsupple(billid,2)
-        }
-        parent.$.bootstrapBox.dialog.close();
+    function toStop(billid) {
+        $.bootstrapBox.prompt.init({
+            title: '终止原由(终止单据将导致单据无法进行后续的出入库操作)',
+            inputType: 'textarea',
+            callback: function (result) {
+                if (result != null) {
+                    //更新终止标志位 和 终止原有
+                    $.post("/graindepot-inout/exception/setInoutStop", {
+                        billid: billid,
+                        stopreason: result
+                    }).then(function (result) {
+                        $.bootstrapBox.alert.init({message: result.message})
+                        $("#myTable").bootstrapTable("reload", true)
+                    })
+                }
+
+            }
+
+        })
     }
 
+    function toBackIC() {
+        $.bootstrapBox.confirm.init({
+            message: '确认退卡？(如退卡请将ic卡置于读卡器上)',
+            callback: function (result) {
+                if (result) {
+                    var billcode = IcObject.readCard(1);
+                    if (billcode=="ERROR"){
+                        return
+                    } else {
+                        if (!billcode) {
+                            $.bootstrapBox.alert.init({message: "ic卡未绑定单据,无需退卡"})
+                        } else {
+                            var result = IcObject.writeCard([{position: 1, data: ''}]);
+                            if (result){
+                                $.post("/graindepot-inout/exception/setInoutBackIC",{
+                                    billcode:billcode,
+                                    inoutflag: g_inoutflag
+                                }).then(function () {
+                                    $.bootstrapBox.alert.init({message: "退卡成功"});
+                                    $("#myTable").bootstrapTable("reload", true)
+                                })
+                            } else {
+                                $.bootstrapBox.alert.init({message:'清卡失败'})
+                            }
+                        }
+                    }
 
+
+                }
+            }
+        })
+
+    }
+
+    function getInoutByCard() {
+        var billcode = IcObject.readCard(1);
+        if (billcode=="ERROR"){
+            return
+        } else{
+            if (!billcode) {
+                $.bootstrapBox.alert.init({message: "ic卡未绑定单据"})
+            } else {
+                theTable.destroy();
+                query({billcode: billcode});
+            }
+        }
+    }
 
 
 </script>

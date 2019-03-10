@@ -6,6 +6,7 @@ import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.*;
 import com.zhoubi.graindepot.biz.IndividualBiz;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.biz.InspectBiz;
 import com.zhoubi.graindepot.rpc.IVideoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +35,8 @@ public class RegisterController extends BaseController {
     private IVideoService videoService;
     @Autowired
     private IndividualBiz individualBiz;
+    @Autowired
+    private InspectBiz inspectBiz;
 
     @ModelAttribute("ctx")
     public void getAccount(Model model, HttpServletRequest request) {
@@ -82,6 +86,10 @@ public class RegisterController extends BaseController {
     //补单出库单据
     @GetMapping("toOutSupple")
     public String toOutSupple(Model model) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
         model.addAttribute("title", "出库补单");
         return "out/outsupple";
     }
@@ -125,8 +133,6 @@ public class RegisterController extends BaseController {
             return new JsonResult(inout, "添加成功", true);
         } else {
             inout.setUpdatetime(new Date());
-            inout.setRegtime(new Date());
-            inout.setRegstate(0);
             inoutBiz.updateRegisterInout(inout);
             Inout io = inoutBiz.selectById(inout.getBillid());
             return new JsonResult(io, "修改成功", true);
@@ -138,8 +144,8 @@ public class RegisterController extends BaseController {
     @ResponseBody
     public JsonResult editOut(Inout inout) {
         BaseUser user = getCurrentUser();
+        UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            inout.setBilldate(new Date());
             int graindepotid = user.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
@@ -154,7 +160,10 @@ public class RegisterController extends BaseController {
                     String format = sdf.format(new Date());
                     inout.setBillcode(format + "-0001");
                 }
-
+                inout.setBilldate(new Date());
+                inout.setGroupid(ua.getGroupid());
+                inout.setCompanyid(ua.getCompanyid());
+                inout.setGraindepotid(ua.getGraindepotid());
                 inout.setBilltype(1);
                 inout.setBillstate(1);
                 inout.setInoutflag(-1);
@@ -169,8 +178,6 @@ public class RegisterController extends BaseController {
             return new JsonResult(inout, "添加成功", true);
         } else {
             inout.setUpdatetime(new Date());
-            inout.setRegtime(new Date());
-            inout.setRegstate(0);
             inoutBiz.updateRegisterInout(inout);
             Inout io = inoutBiz.selectById(inout.getBillid());
             return new JsonResult(io, "修改成功", true);
@@ -179,10 +186,19 @@ public class RegisterController extends BaseController {
 
     @PostMapping("/inout/updateByMap")
     @ResponseBody
-    public JsonResult updateByMap(HttpServletRequest request) {
-        Map param = request.getParameterMap();
-        inoutBiz.updateMap(param);
-        return new JsonResult("更新写卡字段成功", true);
+    public JsonResult updateByMap(Integer Where_billid,Integer regstate,String iccardnum) {
+        Map param = new HashMap();
+        if (Where_billid==null||regstate==null) {
+            return new JsonResult("更新写卡字段失败",false);
+        }else {
+            param.put("Where_billid",Where_billid);
+            param.put("regstate",regstate);
+            param.put("iccardnum",iccardnum);
+            param.put("backicflag",0);
+            inoutBiz.updateMap(param);
+            return new JsonResult("更新写卡字段成功", true);
+        }
+
     }
 
 
@@ -256,6 +272,303 @@ public class RegisterController extends BaseController {
         param.put("name", "%" + name + "%");
         List<Individual> result = individualBiz.listByNameAndGraindepotid(param);
         return result;
+    }
+
+
+    //保存更新入库单
+    @PostMapping("/editInSupple")
+    @ResponseBody
+    public JsonResult editIn(Inout inout,InoutInsp inoutInsp) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua=getUserAddress();
+        if (inout.getBillid() == null) {
+            int graindepotid = user.getGraindepotid();
+            synchronized (graindepotid + "") {
+                String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
+                if (StringUtils.isNotEmpty(maxBillcode)) {
+                    //能找到当天最大的单据号
+                    String[] maxBillcodes = maxBillcode.split("-");
+                    inout.setBillcode(maxBillcodes[0] + "-" + maxBillcodes[1]
+                            + "-" + maxBillcodes[2] + "-" + String.format("%04d", Integer.parseInt(maxBillcodes[3]) + 1));
+                } else {
+                    //不能能找到当天最大的单据号
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String format = sdf.format(new Date());
+                    inout.setBillcode(format + "-0001");
+                }
+                inout.setBilldate(new Date());
+                inout.setGroupid(ua.getGroupid());
+                inout.setCompanyid(ua.getCompanyid());
+                inout.setGraindepotid(ua.getGraindepotid());
+                inout.setBilltype(2);
+                inout.setBillstate(1);
+                inout.setInoutflag(1);
+                inout.setBillstage(7);
+                inout.setRegopid(user.getUserid());
+                inout.setRegtime(new Date());
+                inout.setRegstate(0);
+                inout.setSamplingoptid(user.getUserid());
+                inout.setSamplingstate(1);
+                inout.setSamplingtime(new Date());
+                inout.setInspectoptid(user.getUserid());
+                inout.setInspecttime(new Date());
+                inout.setInspectstate(1);
+                inout.setGwopid(user.getUserid());
+                inout.setGwtime(new Date());
+                inout.setGwstate(1);
+                inout.setTarestate(1);
+                inout.setTareoptid(user.getUserid());
+                inout.setTaretime(new Date());
+                inout.setValuebinoptid(user.getUserid());
+                inout.setValuebinstarttime(new Date());
+                inout.setValuebinendtime(new Date());
+                inout.setValuebinstate(1);
+                inout.setPaidoptid(user.getUserid());
+                inout.setPaidtime(new Date());
+                inout.setPaiddate(new Date());
+                inout.setPaidstate(1);
+                inout.setCreateuserid(user.getUserid());
+                inout.setCreatetime(new Date());
+                inoutBiz.insert(inout);
+                //插入b_inout_insp
+                inoutInsp.setBillid(inout.getBillid());
+                Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
+                Double netweight = inout.getNetweight();
+                waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
+                impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
+                bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
+                yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
+                ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
+                otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
+                zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
+                cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
+                gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
+                hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
+                wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
+                ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
+                odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
+                inoutInsp.setWaterdeduweight(waterdeduweight);
+                inoutInsp.setImpudeduweight(impudeduweight);
+                inoutInsp.setBulkdensitydeduweight(bulkdensitydeduweight);
+                inoutInsp.setYrkdeduweight(yrkdeduweight);
+                inoutInsp.setUkdeduweight(ukdeduweight);
+                inoutInsp.setOtmsdeduweight(otmsdeduweight);
+                inoutInsp.setZjmldeduweight(zjmldeduweight);
+                inoutInsp.setCmldeduweight(cmldeduweight);
+                inoutInsp.setGwcmdeduweight(cmldeduweight);
+                inoutInsp.setHhldeduweight(hhldeduweight);
+                inoutInsp.setGwcmdeduweight(gwcmdeduweight);
+                inoutInsp.setHhldeduweight(hhldeduweight);
+                inoutInsp.setWdeduweightx(wdeduweightx);
+                inoutInsp.setIdeduweightx(ideduweightx);
+                inoutInsp.setOdeduweightx(odeduweightx);
+                inspectBiz.insert(inoutInsp);
+            }
+            return new JsonResult(inout, "添加成功", true);
+        } else {
+            inout.setUpdatetime(new Date());
+            inout.setRegtime(new Date());
+            inout.setRegstate(0);
+            inoutBiz.updateInsupple(inout);
+            //更新b_inout_insp
+            inout.setBillid(inout.getBillid());
+            Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
+            Double netweight = inout.getNetweight();
+            waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
+            impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
+            bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
+            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
+            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
+            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
+            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
+            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
+            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
+            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
+            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
+            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
+            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
+            inoutInsp.setWaterdeduweight(waterdeduweight);
+            inoutInsp.setImpudeduweight(impudeduweight);
+            inoutInsp.setBulkdensitydeduweight(bulkdensitydeduweight);
+            inoutInsp.setYrkdeduweight(yrkdeduweight);
+            inoutInsp.setUkdeduweight(ukdeduweight);
+            inoutInsp.setOtmsdeduweight(otmsdeduweight);
+            inoutInsp.setZjmldeduweight(zjmldeduweight);
+            inoutInsp.setCmldeduweight(cmldeduweight);
+            inoutInsp.setGwcmdeduweight(cmldeduweight);
+            inoutInsp.setHhldeduweight(hhldeduweight);
+            inoutInsp.setGwcmdeduweight(gwcmdeduweight);
+            inoutInsp.setHhldeduweight(hhldeduweight);
+            inoutInsp.setWdeduweightx(wdeduweightx);
+            inoutInsp.setIdeduweightx(ideduweightx);
+            inoutInsp.setOdeduweightx(odeduweightx);
+            inspectBiz.update(inoutInsp);
+            Inout io = inoutBiz.selectById(inout.getBillid());
+            return new JsonResult(io, "修改成功", true);
+        }
+    }
+
+    //保存更新入库单
+    @PostMapping("/editOutSupple")
+    @ResponseBody
+    public JsonResult editOut(Inout inout,InoutInsp inoutInsp) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua=getUserAddress();
+        if (inout.getBillid() == null) {
+            int graindepotid = user.getGraindepotid();
+            synchronized (graindepotid + "") {
+                String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
+                if (StringUtils.isNotEmpty(maxBillcode)) {
+                    //能找到当天最大的单据号
+                    String[] maxBillcodes = maxBillcode.split("-");
+                    inout.setBillcode(maxBillcodes[0] + "-" + maxBillcodes[1]
+                            + "-" + maxBillcodes[2] + "-" + String.format("%04d", Integer.parseInt(maxBillcodes[3]) + 1));
+                } else {
+                    //不能能找到当天最大的单据号
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String format = sdf.format(new Date());
+                    inout.setBillcode(format + "-0001");
+                }
+                inout.setBilldate(new Date());
+                inout.setGroupid(ua.getGroupid());
+                inout.setCompanyid(ua.getCompanyid());
+                inout.setGraindepotid(ua.getGraindepotid());
+                inout.setBilltype(2);
+                inout.setBillstate(1);
+                inout.setInoutflag(-1);
+                inout.setBillstage(7);
+                inout.setRegopid(user.getUserid());
+                inout.setRegtime(new Date());
+                inout.setRegstate(0);
+                inout.setSamplingoptid(user.getUserid());
+                inout.setSamplingstate(1);
+                inout.setSamplingtime(new Date());
+                inout.setInspectoptid(user.getUserid());
+                inout.setInspecttime(new Date());
+                inout.setInspectstate(1);
+                inout.setGwopid(user.getUserid());
+                inout.setGwtime(new Date());
+                inout.setGwstate(1);
+                inout.setTarestate(1);
+                inout.setTareoptid(user.getUserid());
+                inout.setTaretime(new Date());
+                inout.setValuebinoptid(user.getUserid());
+                inout.setValuebinstarttime(new Date());
+                inout.setValuebinendtime(new Date());
+                inout.setValuebinstate(1);
+               /* inout.setPaidoptid(user.getUserid());
+                inout.setPaidtime(new Date());
+                inout.setPaiddate(new Date());
+                inout.setPaidstate(1);*/
+                inout.setCreateuserid(user.getUserid());
+                inout.setCreatetime(new Date());
+                inoutBiz.insert(inout);
+                //插入b_inout_insp
+                inoutInsp.setBillid(inout.getBillid());
+                Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
+                Double netweight = inout.getNetweight();
+                waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
+                impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
+                bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
+                yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
+                ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
+                otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
+                zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
+                cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
+                gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
+                hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
+                wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
+                ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
+                odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
+                inoutInsp.setWaterdeduweight(waterdeduweight);
+                inoutInsp.setImpudeduweight(impudeduweight);
+                inoutInsp.setBulkdensitydeduweight(bulkdensitydeduweight);
+                inoutInsp.setYrkdeduweight(yrkdeduweight);
+                inoutInsp.setUkdeduweight(ukdeduweight);
+                inoutInsp.setOtmsdeduweight(otmsdeduweight);
+                inoutInsp.setZjmldeduweight(zjmldeduweight);
+                inoutInsp.setCmldeduweight(cmldeduweight);
+                inoutInsp.setGwcmdeduweight(cmldeduweight);
+                inoutInsp.setHhldeduweight(hhldeduweight);
+                inoutInsp.setGwcmdeduweight(gwcmdeduweight);
+                inoutInsp.setHhldeduweight(hhldeduweight);
+                inoutInsp.setWdeduweightx(wdeduweightx);
+                inoutInsp.setIdeduweightx(ideduweightx);
+                inoutInsp.setOdeduweightx(odeduweightx);
+                inspectBiz.insert(inoutInsp);
+            }
+            return new JsonResult(inout, "添加成功", true);
+        } else {
+            inout.setUpdatetime(new Date());
+            inout.setRegtime(new Date());
+            inout.setRegstate(0);
+            inoutBiz.updateOutsupple(inout);
+            //更新b_inout_insp
+            inout.setBillid(inout.getBillid());
+            Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
+            Double netweight = inout.getNetweight();
+            waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
+            impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
+            bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
+            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
+            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
+            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
+            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
+            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
+            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
+            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
+            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
+            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
+            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
+            inoutInsp.setWaterdeduweight(waterdeduweight);
+            inoutInsp.setImpudeduweight(impudeduweight);
+            inoutInsp.setBulkdensitydeduweight(bulkdensitydeduweight);
+            inoutInsp.setYrkdeduweight(yrkdeduweight);
+            inoutInsp.setUkdeduweight(ukdeduweight);
+            inoutInsp.setOtmsdeduweight(otmsdeduweight);
+            inoutInsp.setZjmldeduweight(zjmldeduweight);
+            inoutInsp.setCmldeduweight(cmldeduweight);
+            inoutInsp.setGwcmdeduweight(cmldeduweight);
+            inoutInsp.setHhldeduweight(hhldeduweight);
+            inoutInsp.setGwcmdeduweight(gwcmdeduweight);
+            inoutInsp.setHhldeduweight(hhldeduweight);
+            inoutInsp.setWdeduweightx(wdeduweightx);
+            inoutInsp.setIdeduweightx(ideduweightx);
+            inoutInsp.setOdeduweightx(odeduweightx);
+            inspectBiz.update(inoutInsp);
+            Inout io = inoutBiz.selectById(inout.getBillid());
+            return new JsonResult(io, "修改成功", true);
+        }
+    }
+
+    @GetMapping("canWriteCard")
+    @ResponseBody
+    public JsonResult canWriteCard(String iccardnum){
+        BaseUser user=getCurrentUser();
+        Map param=new HashMap();
+        param.put("graindepot",user.getGraindepotid());
+        param.put("iccardnum",iccardnum);
+        param.put("notbackicflag",1);
+        List<Inout> list = inoutBiz.selectList(param);
+        if (list.size()>0) {
+            return new JsonResult("写卡失败(该ic卡还未退卡)",false);
+        }else {
+            return new JsonResult("ic卡已退卡",true);
+        }
+
+    }
+
+
+    // 1.1*200 =>2.200  null*200=>null 保留三位小数
+    private static Double multiply(Double a, Double b) {
+        if (a == null || b == null) {
+            return null;
+        } else {
+            BigDecimal c = new BigDecimal(a * (b / 100));
+            BigDecimal r = c.setScale(10, BigDecimal.ROUND_HALF_UP);
+            double o = r.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            return o;
+        }
     }
 
 }

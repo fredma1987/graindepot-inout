@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Outpay;import com.zhoubi.graindepot.base.BaseMapper;public interface OutpayMapper extends BaseMapper<Outpay> {    String getMaxBillcode(Integer graindepotid);}

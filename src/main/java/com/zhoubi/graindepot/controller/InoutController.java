@@ -4,8 +4,10 @@ import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Inout;
+import com.zhoubi.graindepot.bean.Tempfile;
 import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.biz.TempfileBiz;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import java.util.*;
 public class InoutController extends BaseController {
     @Autowired
     private InoutBiz inoutBiz;
+    @Autowired
+    private TempfileBiz tempfileBiz;
 
     //出入库列表
     @RequestMapping(value = "/toInout", method = RequestMethod.GET)
@@ -46,7 +50,7 @@ public class InoutController extends BaseController {
     @GetMapping("list/page")
     @ResponseBody
     public PagerModel<Inout> inout_list(int start, int length, Integer inoutflag
-            , String billdate, String billcode, String sellmanname) {
+            , String billdate, String billcode, String sellmanname,Integer billtype) {
         UserAddress ua = getUserAddress();
         PagerModel<Inout> e = new PagerModel();
         e.addOrder("billdate desc,billcode desc");
@@ -55,6 +59,7 @@ public class InoutController extends BaseController {
         e.putWhere("graindepotid", ua.getGraindepotid());
         e.putWhere("inoutflag", inoutflag);
         e.putWhere("billdate", billdate);
+        e.putWhere("billtype", billtype);
         if (StringUtils.isNotEmpty(sellmanname)) {
             e.putWhere("sellmanname", "%" + sellmanname + "%");
         }
@@ -94,6 +99,9 @@ public class InoutController extends BaseController {
             map.put("graindepotid", ua.getGraindepotid());
             map.put("billcode", billcode);
             inout = inoutBiz.selectOne(map);
+            if (inout==null) {
+                inout = new Inout();
+            }
         }
         return new JsonResult(inout.getBillid(), true);
     }
@@ -105,7 +113,10 @@ public class InoutController extends BaseController {
      */
     @GetMapping("findOneIn")
     @ResponseBody
-    public JsonResult findOneIn(Integer billid, Integer flag) {
+    public JsonResult findOneIn(Integer billid, Integer flag,Integer billtype) {
+        if (billtype==null) {
+            billtype=1;
+        }
         Inout inout = null;
         if (flag == 2 && billid != null) {
             inout = inoutBiz.selectById(billid);
@@ -115,7 +126,48 @@ public class InoutController extends BaseController {
             Map param = new HashMap();
             param.put("inoutflag", 1);
             param.put("graindepotid", ua.getGraindepotid());
-            param.put("billtype", 1);
+            param.put("billtype", billtype);
+            if (billid != null) {
+                param.put("billid", billid);
+                if (flag == 1) {
+                    inout = inoutBiz.selectBeforeOne(param);
+                } else if (flag == 3) {
+                    inout = inoutBiz.selectAfterOne(param);
+                }
+            } else {
+                inout = inoutBiz.findMaxBill(param);
+            }
+        }
+        if (inout != null) {
+            return new JsonResult(inout, "查询成功", true);
+        } else {
+            return new JsonResult(null, "未查询到相关记录", false);
+        }
+
+    }
+
+
+    /**
+     * @param billid
+     * @param flag   1:前一单 2：当前单  3:后一单
+     * @return
+     */
+    @GetMapping("findOneOut")
+    @ResponseBody
+    public JsonResult findOneOut(Integer billid, Integer flag,Integer billtype) {
+        if (billtype==null) {
+            billtype=1;
+        }
+        Inout inout = null;
+        if (flag == 2 && billid != null) {
+            inout = inoutBiz.selectById(billid);
+        }
+        if (flag != 2) {
+            UserAddress ua = getUserAddress();
+            Map param = new HashMap();
+            param.put("inoutflag", -1);
+            param.put("graindepotid", ua.getGraindepotid());
+            param.put("billtype", billtype);
             if (billid != null) {
                 param.put("billid", billid);
                 if (flag == 1) {

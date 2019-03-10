@@ -9,7 +9,10 @@
     </script>
 </head>
 <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
+<script th:src="@{/graindepot-inout/js/IC.js}"></script>
 <body>
+<object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
+</object>
 <div>
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
@@ -250,6 +253,7 @@
     var g_grainInspectItem = [];//当前质检信息标准数据
     var g_grainRank = {};//当前粮食品种等级划分标准
     var g_userAddress = [[${userAddress}]];
+    var IcObject=new IcFactory(1).createIcObject();
     $(function () {
         initStorage();
         initInspresult();
@@ -597,7 +601,11 @@
         if (grainid) {
             //根据品种id获取价格
             var result = dataJson("GET", "/graindepot-inout/inspect/grainPrice/listByGrainid", {grainid: grainid});
-            $("#price").val(result.data["price" + grade]);
+            if (result.data){
+                $("#price").val(result.data["price" + grade]);
+            }else {
+                $("#price").val("");
+            }
             /*$.get("/graindepot-inout/inspect/grainPrice/listByGrainid", {grainid: grainid})
                 .then(function (result) {
                     $("#price").val(result.data["price" + grade])
@@ -665,9 +673,13 @@
     function toFindInoutInspDetail(flag) {
         var billcode;
         if (flag == 2) {
-            billcode = d8ReadCard(1);
-            if (!billcode) {
-                $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+            billcode = IcObject.readCard(1);
+            if (billcode=="ERROR"){
+                return
+            } else{
+                if (!billcode) {
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                }
             }
         } else {
             billcode = $("#billcode").val();

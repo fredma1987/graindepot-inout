@@ -4,8 +4,10 @@ package com.zhoubi.graindepot.controller;
 import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.*;
+import com.zhoubi.graindepot.biz.GqinspectBiz;
 import com.zhoubi.graindepot.biz.InoutBiz;
 import com.zhoubi.graindepot.biz.InspectBiz;
+import com.zhoubi.graindepot.rpc.IAuthorityService;
 import com.zhoubi.graindepot.rpc.IVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,11 @@ public class WeightController extends BaseController {
     private IVideoService videoService;
     @Autowired
     private InspectBiz inspectBiz;
+    @Autowired
+    private GqinspectBiz gqinspectBiz;
+    @Autowired
+    private IAuthorityService iAuthorityService;
+
 
     @ModelAttribute("ctx")
     public void getAccount(Model model, HttpServletRequest request) {
@@ -105,32 +112,28 @@ public class WeightController extends BaseController {
     public JsonResult editWeightInout(HttpServletRequest request, Inout inout, Integer type) {
         //判断的当前登记流水号状态能否进行称毛或者称皮重
         Inout item = inoutBiz.selectById(inout.getBillid());
-        if (type == 1 && (item.getInspectstate() == null || item.getInspectstate() == 0)) {
+        if (item.getInspectstate() == null || item.getInspectstate() == 0) {
             return new JsonResult("请检验完成后进行称毛重", false);
         }
-        if (type == 2 && (item.getValuebinstate() == null || item.getValuebinstate() == 0)) {
-            return new JsonResult("请值仓后进行称皮重", false);
-        }
-
         //根据登记流水号对应的billid存在于l_inout_insp表中
         Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
         Double netweight = inout.getNetweight();
-        if (type == 2) {
+        if (type!=null&&type == 2) {
             //计算各种增扣量
             InoutInsp inoutInsp = inspectBiz.selectById(inout.getBillid());
-            waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate());
-            impudeduweight = multiply(netweight, inoutInsp.getImpudedurate());
-            bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate());
-            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate());
-            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate());
-            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate());
-            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate());
-            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate());
-            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate());
-            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate());
-            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex());
-            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex());
-            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex());
+            waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate(),3);
+            impudeduweight = multiply(netweight, inoutInsp.getImpudedurate(),3);
+            bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate(),3);
+            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate(),3);
+            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate(),3);
+            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate(),3);
+            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate(),3);
+            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate(),3);
+            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate(),3);
+            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate(),3);
+            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex(),3);
+            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex(),3);
+            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex(),3);
 
         }
         BaseUser user = getCurrentUser();
@@ -138,19 +141,20 @@ public class WeightController extends BaseController {
         //更新b_inout数据
         param.clear();
         param.put("Where_billid", inout.getBillid());
+        param.put("traderid", inout.getTraderid());
         param.put("storageid", inout.getStorageid());
         param.put("grainid", inout.getGrainid());
         param.put("grainattrid", inout.getGrainattrid());
         param.put("grossweight", inout.getGrossweight());
         param.put("tareweight", inout.getTareweight());
         param.put("netweight", netweight);
-        if (type == 1) {
+        if (type!=null&&type == 1) {
             param.put("gwopid", user.getUserid());
             param.put("gwtime", new Date());
             param.put("gwstate", 1);
             param.put("billstage", 4);
         }
-        if (type == 2) {
+        if (type!=null&&type == 2) {
             param.put("tareoptid", user.getUserid());
             param.put("taretime", new Date());
             param.put("tarestate", 1);
@@ -185,14 +189,145 @@ public class WeightController extends BaseController {
         return new JsonResult("保存成功", true);
     }
 
-    // 1.1*200 =>2.200  null*200=>null 保留三位小数
-    private static Double multiply(Double a, Double b) {
+    //获取出库检验的值
+    @GetMapping("gqinspect/one")
+    @ResponseBody
+    public JsonResult gqinspect_one(Integer storageid, Integer grainid) {
+        Map param = new HashMap();
+        param.put("storageid", storageid);
+        param.put("grainid", grainid);
+        param.put("insptype", 2);
+        List<Gqinspect> list = gqinspectBiz.selectList(param);
+        if (list != null && list.size() > 0) {
+            return new JsonResult(list.get(0), true);
+        } else {
+            return new JsonResult(null, "无数据", false);
+        }
+
+    }
+
+
+    /**
+     * 出库称重
+     *
+     * @param inout
+     * @param type  1:未全部称重完成 2：全部称重完成
+     * @return
+     */
+    @PostMapping("editWeightOut")
+    @ResponseBody
+    public JsonResult editWeightOut(HttpServletRequest request
+            , Inout inout, InoutInsp inoutInsp, Integer type) {
+        //根据登记流水号对应的billid存在于l_inout_insp表中
+        Double waterdeduweight = null, impudeduweight = null,
+                bulkdensitydeduweight = null, yrkdeduweight = null,
+                ukdeduweight = null, otmsdeduweight = null,
+                zjmldeduweight = null, cmldeduweight = null,
+                gwcmdeduweight = null, hhldeduweight = null,
+                wdeduweightx = null, ideduweightx = null,
+                odeduweightx = null, paidweight = null;
+        Double netweight = inout.getNetweight();
+        if (netweight != null) {
+            //计算各种增扣量
+            waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate(),3);
+            impudeduweight = multiply(netweight, inoutInsp.getImpudedurate(),3);
+            bulkdensitydeduweight = multiply(netweight, inoutInsp.getBulkdensitydedurate(),3);
+            yrkdeduweight = multiply(netweight, inoutInsp.getYrkdedurate(),3);
+            ukdeduweight = multiply(netweight, inoutInsp.getUkdedurate(),3);
+            otmsdeduweight = multiply(netweight, inoutInsp.getOtmsdedurate(),3);
+            zjmldeduweight = multiply(netweight, inoutInsp.getZjmldedurate(),3);
+            cmldeduweight = multiply(netweight, inoutInsp.getCmldedurate(),3);
+            gwcmdeduweight = multiply(netweight, inoutInsp.getGwcmdedurate(),3);
+            hhldeduweight = multiply(netweight, inoutInsp.getHhldedurate(),3);
+            wdeduweightx = multiply(netweight, inoutInsp.getWdeduratex(),3);
+            ideduweightx = multiply(netweight, inoutInsp.getIdeduratex(),3);
+            odeduweightx = multiply(netweight, inoutInsp.getOdeduratex(),3);
+        }
+        BaseUser user = getCurrentUser();
+        Map param = new HashMap();
+        //更新b_inout数据
+        param.clear();
+        param.put("Where_billid", inout.getBillid());
+        param.put("traderid", inout.getTraderid());
+        param.put("storageid", inout.getStorageid());
+        param.put("grainid", inout.getGrainid());
+        param.put("grainattrid", inout.getGrainattrid());
+        param.put("grossweight", inout.getGrossweight());
+        param.put("tareweight", inout.getTareweight());
+        param.put("netweight", netweight);
+        param.put("price", inout.getPrice());
+        param.put("grade", inout.getGrade());
+        if (type != null && type == 1) {
+            param.put("gwopid", user.getUserid());
+            param.put("gwtime", new Date());
+            param.put("gwstate", 1);
+            param.put("billstage", 4);
+        }
+        if (type != null && type == 2) {
+            param.put("tareoptid", user.getUserid());
+            param.put("taretime", new Date());
+            param.put("tarestate", 1);
+            param.put("billstage", 6);
+        }
+        param.put("totalincdedu", plus(waterdeduweight, impudeduweight, bulkdensitydeduweight, yrkdeduweight
+                , ukdeduweight, otmsdeduweight, zjmldeduweight, cmldeduweight, gwcmdeduweight
+                , hhldeduweight));
+        param.put("extradedu", plus(wdeduweightx, ideduweightx, odeduweightx
+                , inout.getAdddeduweightx()));
+        if (netweight != null) {
+            paidweight = reduce(netweight, waterdeduweight, impudeduweight
+                    , bulkdensitydeduweight, yrkdeduweight, ukdeduweight, otmsdeduweight, zjmldeduweight
+                    , cmldeduweight, gwcmdeduweight, hhldeduweight, wdeduweightx, ideduweightx, odeduweightx
+                    , inout.getAdddeduweightx());
+            param.put("paidweight", paidweight);
+            param.put("amount", multiply(paidweight,inout.getPrice()*100,2));
+
+        }
+        inoutBiz.updateMap(param);
+        //插入b_inout_insp数据
+        inoutInsp.setBillid(inout.getBillid());
+        inoutInsp.setWaterdeduweight(waterdeduweight);
+        inoutInsp.setImpudeduweight(impudeduweight);
+        inoutInsp.setBulkdensitydeduweight(bulkdensitydeduweight);
+        inoutInsp.setYrkdeduweight(yrkdeduweight);
+        inoutInsp.setUkdeduweight(ukdeduweight);
+        inoutInsp.setOtmsdeduweight(otmsdeduweight);
+        inoutInsp.setZjmldeduweight(zjmldeduweight);
+        inoutInsp.setCmldeduweight(cmldeduweight);
+        inoutInsp.setGwcmdeduweight(gwcmdeduweight);
+        inoutInsp.setHhldeduweight(hhldeduweight);
+        inoutInsp.setWdeduweightx(wdeduweightx);
+        inoutInsp.setIdeduweightx(ideduweightx);
+        inoutInsp.setOdeduweightx(odeduweightx);
+        InoutInsp insp = inspectBiz.selectById(inout.getBillid());
+        if (insp == null) {
+            inspectBiz.insert(inoutInsp);
+        } else {
+            inspectBiz.update(inoutInsp);
+        }
+
+
+        param.clear();
+
+        inspectBiz.updateMap(param);
+        return new JsonResult("保存成功", true);
+    }
+
+    @GetMapping("isAllow")
+    @ResponseBody
+    public  boolean isAllow(){
+        boolean b = iAuthorityService.authority_isAllow("1001");
+        return b;
+    }
+
+    // 1.1*200 =>2.200  null*200=>null 保留两位小数
+    private static Double multiply(Double a, Double b,Integer scale) {
         if (a == null || b == null) {
             return null;
         } else {
             BigDecimal c = new BigDecimal(a * (b / 100));
             BigDecimal r = c.setScale(10, BigDecimal.ROUND_HALF_UP);
-            double o = r.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double o = r.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
             return o;
         }
     }
@@ -207,11 +342,12 @@ public class WeightController extends BaseController {
         return r;
     }
 
-    public static void main(String[] args) {
-        Double a = 2.5;
-        Double b = 2.63;
-        System.out.println(multiply(a, b));
-        System.out.println("===");
+    private static Double reduce(Double r, Double... as) {
+        for (Double a : as) {
+            if (a != null) {
+                r -= a;
+            }
+        }
+        return r;
     }
-
 }

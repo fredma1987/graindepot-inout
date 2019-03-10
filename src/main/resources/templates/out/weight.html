@@ -2,88 +2,120 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script  th:inline="javascript">
+    <meta name="renderer" content="ie-comp"/>
+    <script th:inline="javascript">
 
     </script>
 </head>
 
 <body>
+<object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
+</object>
 <div>
-    <script th:src="@{../js/huashi.js}"></script>
-    <script th:src="@{../js/d8.js}"></script>
-    <script th:src="@{../js/mscomm32.js}"></script>
+    <script th:src="@{/graindepot-inout/js/huashi.js}"></script>
+    <script th:src="@{/graindepot-inout/js/d8.js}"></script>
+    <script th:src="@{/graindepot-inout/js/mscomm32.js}"></script>
     <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
     <script th:src="@{/graindepot-video/js/hik3.js}"></script>
-    <script th:inline="javascript">
-        var videolist=[[${videolist}]];
-        var bZeroChannel=false;//默认不用模拟信号
-        var iStreamType = 1; //码流类型，1 主码流， 2 子码流
-        // 初始化插件
-        // 全局保存当前选中窗口
-        var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
-        $(function() {
-            // 检查插件是否已经安装过
-            if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
-                alert("您还未安装过插件，点击下载视频播放控件!");
-                return;
-            }
-            var height=$("#divPlugin").height();
-            var width=$("#divPlugin").width();
-            // 初始化插件参数及插入插件
-            WebVideoCtrl.I_InitPlugin(width, height,{
-                iWndowType : 1,
-                cbSelWnd : function(xmlDoc) {
-                    g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
-                    //var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
-                }
-            });
-            WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
-            changeWndNum(2);
-            for(var i=0;i<videolist.length;i++){
-                var wndIndex=i;
-                var ip = videolist[i].ip,
-                        httpport = videolist[i].httpport,
-                        username = videolist[i].username,
-                        password = videolist[i].password,
-                        channel = videolist[i].channel,
-                        maliu=videolist[i].maliu,
-                        datasignal = videolist[i].datasignal;
-                if(""!=maliu){
-                    iStreamType=maliu;
-                }
-                videolist[i].iStreamType=iStreamType;
-                if(datasignal==2){//模拟
-                    bZeroChannel=true;
-                }
-                videolist[i].bZeroChannel=bZeroChannel;
-                clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
-                clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
-            }
-        });
-        function rePlay(){
-            for(var i=0;i<videolist.length;i++){
-                var wndIndex=i;
-                clickStartRealPlay(videolist[i].ip,videolist[i].channel,
-                        videolist[i].bZeroChannel,videolist[i].iStreamType,wndIndex);
-            }
-        }
-    </script>
-    <SCRIPT   ID="clientEventHandlersJS"   LANGUAGE="javascript">
-        function   MSComm1_OnComm()
-        {
-            switch(MSComm1.CommEvent)
-            {
-                case 1:{ window.alert("Send OK！"); break;}  //发送事件
-                case 2: { Receive();break;} //接收事件
+    <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
+    <script th:src="@{/graindepot-inout/js/IC.js}"></script>
+    <SCRIPT ID="clientEventHandlersJS" LANGUAGE="javascript">
+        function MSComm1_OnComm() {
+            switch (MSComm1.CommEvent) {
+                case 1: {
+                    window.alert("Send OK！");
+                    break;
+                }  //发送事件
+                case 2: {
+                    Receive();
+                    break;
+                } //接收事件
                 default:
                     alert("Event Raised!" + MSComm1.CommEvent);
             }
         }
     </SCRIPT>
 
-    <SCRIPT   LANGUAGE="javascript"   FOR="MSComm1"   EVENT="OnComm">
+    <SCRIPT LANGUAGE="javascript" FOR="MSComm1" EVENT="OnComm">
+        // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
+        MSComm1_OnComm();
+    </SCRIPT>
+    <script th:inline="javascript">
+        var videolist = [[${videolist}]];
+        var bZeroChannel = false;//默认不用模拟信号
+        var iStreamType = 1; //码流类型，1 主码流， 2 子码流
+        // 初始化插件
+        // 全局保存当前选中窗口
+        var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
+        $(function () {
+            // 检查插件是否已经安装过
+            if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
+                alert("您还未安装过插件，点击下载视频播放控件!");
+                return;
+            }
+            var height = $("#divPlugin").height();
+            var width = $("#divPlugin").width();
+            // 初始化插件参数及插入插件
+            WebVideoCtrl.I_InitPlugin(width, height, {
+                iWndowType: 1,
+                cbSelWnd: function (xmlDoc) {
+                    g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
+                    //var szInfo = "当前选择的窗口编号：" + g_iWndIndex;
+                }
+            });
+            WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+            changeWndNum(2);
+            for (var i = 0; i < videolist.length; i++) {
+                var wndIndex = i;
+                var ip = videolist[i].ip,
+                    httpport = videolist[i].httpport,
+                    username = videolist[i].username,
+                    password = videolist[i].password,
+                    channel = videolist[i].channel,
+                    maliu = videolist[i].maliu,
+                    datasignal = videolist[i].datasignal;
+                if ("" != maliu) {
+                    iStreamType = maliu;
+                }
+                videolist[i].iStreamType = iStreamType;
+                if (datasignal == 2) {//模拟
+                    bZeroChannel = true;
+                }
+                videolist[i].bZeroChannel = bZeroChannel;
+                clickLogin(ip, httpport, channel, bZeroChannel, username, password, iStreamType);
+                clickStartRealPlay(ip, channel, bZeroChannel, iStreamType, wndIndex);
+                videolist[i].bZeroChannel = bZeroChannel;
+                //clickLogin(ip,httpport,channel,bZeroChannel,username,password,iStreamType);
+                //clickStartRealPlay(ip,channel,bZeroChannel,iStreamType,wndIndex);
+            }
+        });
+
+        function rePlay() {
+            for (var i = 0; i < videolist.length; i++) {
+                var wndIndex = i;
+                clickStartRealPlay(videolist[i].ip, videolist[i].channel,
+                    videolist[i].bZeroChannel, videolist[i].iStreamType, wndIndex);
+            }
+        }
+    </script>
+    <SCRIPT ID="clientEventHandlersJS" LANGUAGE="javascript">
+        function MSComm1_OnComm() {
+            switch (MSComm1.CommEvent) {
+                case 1: {
+                    window.alert("Send OK！");
+                    break;
+                }  //发送事件
+                case 2: {
+                    Receive();
+                    break;
+                } //接收事件
+                default:
+                    alert("Event Raised!" + MSComm1.CommEvent);
+            }
+        }
+    </SCRIPT>
+
+    <SCRIPT LANGUAGE="javascript" FOR="MSComm1" EVENT="OnComm">
         // MSComm1控件每遇到 OnComm 事件就调用 MSComm1_OnComm()函数
         MSComm1_OnComm();
     </SCRIPT>
@@ -93,7 +125,7 @@
             <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
-                          出库检斤
+                        出库检斤
                         <small>
                             <i class="icon-double-angle-right"></i>
 
@@ -113,7 +145,8 @@
                                         <div id="divPlugin" style="width:100%;height:492px"></div>
                                         <div style="width:100%;height:20px;text-align: right;padding-right:10px">
                                             <span id="msg" style="color:red"></span>
-                                            <a class="red" href="javascript:rePlay()" style="padding-left:5px;" title="播放刷新">
+                                            <a class="red" href="javascript:rePlay()" style="padding-left:5px;"
+                                               title="播放刷新">
                                                 <i class="icon-facetime-video bigger-130"></i>
                                             </a>
                                         </div>
@@ -132,160 +165,249 @@
                                             </div>
                                             <label style="padding-left:10px;float: left;display: block;font-size: 24px;line-height: 55px">Kg</label>
                                             <OBJECT id="MSComm1" CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014"
-                                                    codebase="MSCOMM32.OCX" type="application/x-oleobject"  style="width:0px;height:0px" >
-                                                <PARAM   NAME="CommPort"   VALUE="2"/>
-                                                <PARAM   NAME="DataBits"   VALUE="8"/>
-                                                <PARAM   NAME="StopBits"   VALUE="1"/>
-                                                <PARAM   NAME="BaudRate"   VALUE="9600"/>
-                                                <PARAM   NAME="Settings"   VALUE="9600,N,8,1"/>
-                                                <PARAM   NAME="RTSEnable"   VALUE="1"/>
-                                                <PARAM   NAME="DTREnable"   VALUE="1"/>
-                                                <PARAM   NAME="Handshaking"   VALUE="0"/>
-                                                <PARAM   NAME="NullDiscard"   VALUE="0"/>
-                                                <PARAM   NAME="ParityReplace"   VALUE="?"/>
-                                                <PARAM   NAME="EOFEnable"   VALUE="0"/>
-                                                <PARAM   NAME="InputMode"   VALUE="0"/>
-                                                <PARAM   NAME="InBufferSize"   VALUE="1024"/>
-                                                <PARAM   NAME="InputLen"   VALUE="0"/>
-                                                <PARAM   NAME="OutBufferSize"   VALUE="512"/>
-                                                <PARAM   NAME="SThreshold"   VALUE="0"/>
-                                                <PARAM   NAME="RThreshold"   VALUE="1"/>
+                                                    codebase="MSCOMM32.OCX" type="application/x-oleobject"
+                                                    style="width:0px;height:0px">
+                                                <PARAM NAME="CommPort" VALUE="2"/>
+                                                <PARAM NAME="DataBits" VALUE="8"/>
+                                                <PARAM NAME="StopBits" VALUE="1"/>
+                                                <PARAM NAME="BaudRate" VALUE="9600"/>
+                                                <PARAM NAME="Settings" VALUE="9600,N,8,1"/>
+                                                <PARAM NAME="RTSEnable" VALUE="1"/>
+                                                <PARAM NAME="DTREnable" VALUE="1"/>
+                                                <PARAM NAME="Handshaking" VALUE="0"/>
+                                                <PARAM NAME="NullDiscard" VALUE="0"/>
+                                                <PARAM NAME="ParityReplace" VALUE="?"/>
+                                                <PARAM NAME="EOFEnable" VALUE="0"/>
+                                                <PARAM NAME="InputMode" VALUE="0"/>
+                                                <PARAM NAME="InBufferSize" VALUE="1024"/>
+                                                <PARAM NAME="InputLen" VALUE="0"/>
+                                                <PARAM NAME="OutBufferSize" VALUE="512"/>
+                                                <PARAM NAME="SThreshold" VALUE="0"/>
+                                                <PARAM NAME="RThreshold" VALUE="1"/>
                                             </OBJECT>
-                                            <input   type="button" id="OperateButton" style="width:80px;height:30px;font-size:13px"   name="OperateButton"   value="打开串口"   onClick="OperatePort()">
+                                            <input type="button" id="OperateButton"
+                                                   style="width:80px;height:30px;font-size:13px" name="OperateButton"
+                                                   value="打开串口" onClick="OperatePort()">
 
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 19px">
-                                                <label style="display:block;float:left;"> 登记流水号： </label>
-                                                <input type="text" id="billcode" name="billcode" style="width:125px"
-                                                       placeholder=""/>
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="billcode">
+                                                登记流水号:
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="billcode" id="billcode" class="form-control"
+                                                       readonly placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="float: left;padding-left:42px"> 仓房号： </label>
-                                                <div class="col-sm-4" style="width:125px;padding-left:0px">
-                                                    <select id="storageid" name="storageid" class="form-control">
-                                                    </select>
-                                                </div>
+                                            <a class="col-sm-1 btn btn-info" style="border: 0;width: 80px;"
+                                               id="timeLine"  rel="popover"
+                                               data-content="无"
+                                               data-original-title="单据进度">
+                                                <i class="icon-question-sign icon-on-right"></i>
+                                                进度
+                                            </a>
+                                            <label class="col-sm-1 control-label no-padding-right"
+                                                   for="grossFlag">
+                                                状态:
+                                            </label>
+                                            <label class="col-sm-1 control-label no-padding-right"
+                                                   for="grossFlag" style="width: 6%">
+                                                毛重:
+                                            </label>
+                                            <div class="col-sm-1" style="width:80px">
+                                                <label id="grossFlag" style="margin-top: 4px;"
+                                                       class="center red">未保存</label>
                                             </div>
-                                            <div style="float: left;padding-left: 24px">
-                                                <label> 皮重：</label>
-                                                <input type="text" id="tareweight" name="tareweight" style="width:80px"/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
-                                                <span class="label label-primary arrowed"  onclick="setTareWeight()" style="cursor:pointer;vertical-align: middle">皮重</span>
+                                            <label class="col-sm-1 control-label no-padding-right"
+                                                   for="tareFlag" style="width: 6%">
+                                                皮重:
+                                            </label>
+                                            <div class="col-sm-1" style="width:80px">
+                                                <label id="tareFlag" style="margin-top: 4px;"
+                                                       class="center red">未保存</label>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 47px">
-                                                <label style="display:block;float:left;"> 车牌号： </label>
-                                                <input type="text" id="trucknum" name="trucknum" style="width:125px"
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="sellmanname">
+                                                售粮人:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="sellmanname" name="sellmanname"
+                                                       class="form-control" readonly
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 38px">
-                                                <label class="col-sm-4 control-label no-padding-right"
-                                                       style="width:70px;padding-left:0px"> 粮食品种： </label>
-                                                <div class="col-sm-4" style="width:125px;padding-left:0px">
-                                                    <select id="grainid" name="grainid" class="form-control">
-                                                    </select>
-                                                </div>
+                                            <label class="col-sm-2 control-label no-padding-right" for="traderid">
+                                                售粮单位:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <select id="traderid" name="traderid" class="form-control">
+                                                </select>
                                             </div>
-                                            <div style="float: left;padding-left: 24px">
-                                                <label> 毛重：</label>
-                                                <input type="text" id="grossweight" name="grossweight" style="width:80px"/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
-                                                <span class="label label-primary arrowed" onclick="setGrossWeight()" style="cursor:pointer;vertical-align: middle">毛重</span>
+                                            <label  class="col-sm-2 control-label no-padding-right"
+                                                   for="trucknum">
+                                                车船号:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="trucknum" name="trucknum"
+                                                       class="form-control" readonly
+                                                       placeholder=""/>
                                             </div>
 
+                                        </div>
 
+                                        <div class="form-group">
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="storageid">
+                                                仓房号:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <select id="storageid" name="storageid" class="form-control">
+                                                </select>
+                                            </div>
+                                            <label class="col-sm-2 control-label no-padding-right"
+                                                   for="grainid">
+                                                粮食品种:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <select id="grainid" name="grainid" class="form-control">
+                                                </select>
+                                            </div>
+                                            <label class="col-sm-2 control-label no-padding-right"
+                                                   for="grainattrid">
+                                                粮食性质:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <select id="grainattrid" name="grainattrid" class="form-control">
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <div style="float: left;padding-left: 61px">
-                                                <label style="display:block;float:left;"> 货主： </label>
-                                                <input type="text" id="sellmanname" name="sellmanname" style="width:125px"
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="grossweight">
+                                                毛重:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="grossweight" name="grossweight" onchange="setNetWeight()"
+                                                       class="form-control"/>
+
+                                            </div>
+                                            <div  class="col-sm-1 control-label no-padding-left"
+                                                 style="width: 4%">
+                                                <span class="label label-primary arrowed" onclick="setGrossWeight()"
+                                                      style="cursor:pointer;vertical-align: middle">毛重</span>
+                                            </div>
+                                            <label class="col-sm-1 control-label no-padding-right"
+                                                   for="tareweight" style="width: 6%">
+                                                皮重:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="tareweight" name="tareweight" onchange="setNetWeight()"
+                                                       class="form-control"/>
+                                            </div>
+                                            <div class="col-sm-1 control-label no-padding-left"
+                                                 style="width: 4%">
+                                                <span class="label label-primary arrowed" onclick="setTareWeight()"
+                                                      style="cursor:pointer;vertical-align: middle">皮重</span>
+                                            </div>
+
+                                            <label class="col-sm-2 control-label no-padding-right"
+                                                   for="netweight">
+                                                净重(毛重-皮重):
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="netweight" name="netweight"
+                                                       class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="wdeduratex">
+                                                水分增加扣率:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="wdeduratex" name="wdeduratex"
+                                                       class="form-control"
                                                        placeholder=""/>
                                             </div>
-                                            <div style="float: left;padding-left: 38px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 粮食性质：</label>
-                                                <div class="col-sm-4" style="width:125px;padding-left:0px">
-                                                    <select id="grainattrid" name="grainattrid" class="form-control">
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="ideduratex">
+                                                杂质增加扣率:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="ideduratex" name="ideduratex"
+                                                       class="form-control"
+                                                       placeholder=""/>
+                                            </div>
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
+                                                   for="adddeduweightx">
+                                                增加扣重:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="adddeduweightx" name="adddeduweightx"
+                                                       class="form-control"
+                                                       placeholder=""/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label style="width: 14%" class="col-sm-1 control-label no-padding-right"
+                                                   for="price">
+                                                价格:
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input type="text" id="price" name="price"
+                                                       class="form-control"
+                                                       placeholder=""/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right"
+                                                       for="grade">
+                                                    粮食等级:
+                                                </label>
+                                                <div class="col-sm-2">
+                                                    <select id="grade" name="grade" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div style="float: left;padding-left: 24px">
-                                                <label> 净重：</label>
-                                                <input type="text" id="netweight" name="netweight" style="width:80px"/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px;height:29.4px;line-height: 29.4px">
-                                                <label style="display:block;float:left;color:red"> =(毛重-皮重)</label>
-                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div style="float: left;padding-left: 5px">
-                                                <label style="display:block;float:left;">水分增加扣率： </label>
-                                                <input type="text" id="wdeduratex" name="wdeduratex" style="width:125px"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 10px">
-                                                <label style="display:block;float:left;">杂质增加扣率： </label>
-                                                <input type="text" id="ideduratex" name="ideduratex" style="width:110px"
-                                                       placeholder=""/>
-                                            </div>
-                                            <div style="float: left;padding-left: 11px">
-                                                <label> 增加扣重：</label>
-                                                <input type="text" id="extradedu" name="extradedu" style="width:80px"/>
-                                            </div>
+                                        <div id="inspect">
+                                            请选择粮食品种生成检验标准值
                                         </div>
-                                        <hr style="margin-bottom:5px;margin-top:5px"/>
-                                        <div class="col-xs-12">
-                                            <div class="table-responsive">
-                                                    <table id="myTable" style="width:100%" class="table table-striped table-bordered table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th class="center" style="width: 20px"></th>
-                                                            <th class="center" style="width: 20px;">
-                                                                <label>
-                                                                    <input id="CK" type="checkbox" class="ace"/>
-                                                                    <span class="lbl"></span>
-                                                                </label>
-                                                            </th>
-                                                            <th style="width: 200px">登记流水号</th>
-                                                            <th style="width: 100px">车牌号</th>
-                                                            <th style="width: 100px">货主</th>
-                                                            <th style="width: 100px">毛重状态</th>
-                                                            <th style="width: 100px">皮重状态</th>
-                                                            <th style="width: 100px">操作</th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
-                                            </div>
+                                        <hr style="margin-bottom:5px;margin-top:15px"/>
+                                        <div id="inspectDedu">
+                                            请选择粮食品种生成升扣值
                                         </div>
                                     </div>
                                 </div>
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindWeightInoutDetail(1)">
                                     <i class="icon-arrow-left icon-on-left"></i>
                                     前一单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindWeightInoutDetail(3)">
                                     <i class="icon-arrow-right icon-on-right"></i>
                                     后一单
                                 </a>
                                 <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
                                         classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
                                 </OBJECT>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindWeightInoutDetail(2)">
                                     <i class="icon-credit-card"></i>
                                     刷卡查单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
-                                    <i class="icon-save"></i>
-                                    保存写卡
+                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toInoutList()">
+                                    <i class="icon-tint"></i>
+                                    流水号查单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
+                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toSave()">
                                     <i class="icon-save"></i>
                                     保存
                                 </a>
@@ -313,111 +435,453 @@
 <script type="text/javascript">
     var theTable;
     var param;
+    var g_flag;//1:称毛重  2:称皮重
+    var g_grainInspectItem = [];//当前质检信息标准数据
+    var g_grainRank = {};//当前粮食品种等级划分标准
+    var IcObject=new IcFactory(1).createIcObject();
     $(document).ready(function () {
-        comm_initGrain();
+        initGrain();
         comm_initGrainattr();
-        comm_initStorage(param);
-        query(param);
+        initStorage();
+        comm_initTrader();
+        initGrade();
+        //加载单据进度tooltip
+        $("#timeLine").popover({html: true, trigger: 'hover'});
     });
-    function query(param) {
-        theTable = $('#myTable').bootstrapTable({
-            //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
-            ajax: {
-                url: "/graindepot-inout/weight/newOutPageList",
-                data: param,
-                type: "GET"
-            },
-            columns: [
-                {title:"登记流水号", data: "billcode"},
-                {title:"车牌号", data: "trucknum"},
-                {title: "货主", data: "sellmanname"},
-                {
-                    title: "毛重状态",
-                    data: "gwstate",
-                    render: function (data, type, row) {
-                        if(data==1){
-                            return '<span class="label label-sm label-success">已称重</span>';
-                        }else{
-                            return '<span class="label label-sm label-warning">未称重</span>';
-                        }
 
-                    }
-                },
-                {
-                    title: "皮重状态",
-                    data: "tarestate",
-                    render: function (data, type, row) {
-                        if(data==1){
-                            return '<span class="label label-sm label-success">已称重</span>';
-                        }else{
-                            return '<span class="label label-sm label-warning">未称重</span>';
-                        }
-
-                    }
-                },
-                {
-                    title: "操作",
-                    data: "billid",
-                    render: function (data,type,row){
-                        var obj=encodeURI(JSON.stringify(row));
-                        return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">'+
-                                    /*'<a class="blue" href="javascript:doView('+'\''+obj+'\')">'+
-                                        '<i class="icon-zoom-in bigger-130"></i>'+
-                                    '</a>'+*/
-                                    '<a class="green" href="javascript:doEdit('+'\''+obj+'\')">'+
-                                        '<i class="icon-pencil bigger-130"></i>'+
-                                    '</a>'+
-                                '</div>';
-                    }
-                }
-            ]
+    function initStorage() {
+        $("#storageid").bootstrapSelect({
+            url: '/graindepot-base/selector/storageList',
+            type: 'GET',
+            valueField: 'storageid',
+            textField: 'storagename',
+            onSelect:function (storageid) {
+                setInspectRate();
+            }
         });
     }
-    function doEdit(obj){
-        var obj=JSON.parse(decodeURI(obj));
-        $("#billcode").val(obj.billcode);
-        $("#storageid").val(obj.storageid);
-        $("#grossweight").val(obj.grossweight);
-        $("#tareweight").val(obj.tareweight);
-        $("#netweight").val(obj.netweight);
-        $("#sellmanname").val(obj.sellmanname);
-        $("#trucknum").val(obj.trucknum);
-        $("#extradedu").val(obj.extradedu);
-        $("#storageid").bootstrapSelect("setValue", obj.storageid);
-        $("#grainid").bootstrapSelect("setValue", obj.grainid);
-        $("#grainattrid").bootstrapSelect("setValue", obj.grainattrid);
-
-        //查询保管员增加扣率
-        var param={"billid":obj.billid};
-        var url="/graindepot-inout/inspect/selectById";
-        var data=getDataJson(url,param);
-        if(data!=undefined){
-            $("#wdeduratex").val(data.wdeduratex);
-            $("#ideduratex").val(data.ideduratex);
-        }else{
-            $("#wdeduratex").val("");
-            $("#ideduratex").val("");
-        }
+    function initGrade() {
+        var data = [{value: 1, text: "一等"}, {value: 2, text: "二等"}, {value: 3, text: "三等"}
+            , {value: 4, text: "四等"}, {value: 5, text: "五等"}, {value: 6, text: "等外"}];
+        $("#grade").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: 3,
+            onSelect: function (value, item) {
+                //收购价格
+                setInspectDeduByGrade();
+            }
+        });
     }
-    function doView(obj){
+
+    function initGrain(defaultGrainid) {
+        $("#grainid").bootstrapSelect({
+            url: '/graindepot-base/selector/grainList',
+            type: 'GET',
+            valueField: 'grainid',
+            textField: 'grainname',
+            defaultValue: defaultGrainid,
+            onSelect: function (grainid, row) {
+                if (grainid) {
+                    //获取该品种的等级划分标准
+                    var result = dataJson("GET", "/graindepot-inout/inspect/grainRank/byGrainid", {grainid: grainid});
+                    g_grainRank = result.data;
+                    //根据粮食品种动态生成质检标准
+                    autoInspect(grainid);
+                    setInspectRate();
+                }
+            }
+        });
+    }
+
+    function doEdit(obj) {
+        var obj = JSON.parse(decodeURI(obj));
+        setWeightInout(obj)
+    }
+
+    function doView(obj) {
 
     }
-    function  setGrossWeight(){
+
+    function setGrossWeight() {
         $("#grossweight").val($("#weight").val().trim());
-        var grossweight=$("#grossweight").val();
-        var tareweight=$("#tareweight").val();
-        if(grossweight!=""&&tareweight!=""){
-            $("#netweight").val(grossweight-tareweight);
+        var grossweight = $("#grossweight").val();
+        var tareweight = $("#tareweight").val();
+        if (grossweight != "" && tareweight != "") {
+            $("#netweight").val(grossweight - tareweight);
         }
+        g_flag = 1;
     }
-    function  setTareWeight(){
+
+    function setTareWeight() {
         $("#tareweight").val($("#weight").val().trim());
-        var grossweight=$("#grossweight").val();
-        var tareweight=$("#tareweight").val();
-        if(grossweight!=""&&tareweight!=""){
-            $("#netweight").val(grossweight-tareweight);
+        var grossweight = $("#grossweight").val();
+        var tareweight = $("#tareweight").val();
+        if (grossweight != "" && tareweight != "") {
+            $("#netweight").val(grossweight - tareweight);
+        }
+        g_flag = 2;
+    }
+
+    function setNetWeight() {
+        var grossweight = $("#grossweight").val();
+        var tareweight = $("#tareweight").val();
+        if (grossweight != "" && tareweight != "") {
+            $("#netweight").val(grossweight - tareweight);
         }
     }
+
+    function setWeightInout(inout, flag,from) {
+        $("#billcode").val(inout.billcode);
+        $("#storageid").val(inout.storageid);
+        $("#grossweight").val(inout.grossweight);
+        $("#tareweight").val(inout.tareweight);
+        $("#netweight").val(inout.netweight);
+        $("#sellmanname").val(inout.sellmanname);
+        $("#trucknum").val(inout.trucknum);
+        $("#traderid").bootstrapSelect("setValue", inout.traderid);
+        $("#extradedu").val(inout.extradedu);
+        $("#storageid").bootstrapSelect("setValue", inout.storageid);
+        $("#grainid").bootstrapSelect("setValue", inout.grainid);
+        $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
+        $("#price").val(inout.price);
+        $("#grade").bootstrapSelect("setValue", inout.grade);
+        if (inout.gwstate == 1) {
+            $("#grossFlag").html("已保存");
+        } else {
+            $("#grossFlag").html("未保存");
+        }
+        if (inout.tarestate == 1) {
+            $("#tareFlag").html("已保存");
+        } else {
+            $("#tareFlag").html("未保存");
+        }
+        //查询保管员增加扣率
+        if (flag == 2&&from!=1) {
+            //TODO 从ic卡中读取数据
+            // d8ReadCard()
+
+        } else {
+            var param = {"billid": inout.billid};
+            var url = "/graindepot-inout/inspect/selectById";
+            var data = getDataJson(url, param);
+            if (data != undefined) {
+                $("#wdeduratex").val(data.wdeduratex);
+                $("#ideduratex").val(data.ideduratex);
+                $("#adddeduweightx").val(data.adddeduweightx);
+                //设置扣率
+                $("#inspectDedu").find("input").each(function (index,curr) {
+                    $(this).val(data[$(this).attr("name")])
+
+                })
+            } else {
+                $("#wdeduratex").val("");
+                $("#ideduratex").val("");
+                $("#adddeduweightx").val("");
+            }
+
+
+
+        }
+        $("#timeLine").attr("data-content", getInoutTooltipHtml(inout));
+
+
+    }
+
+    //type 1:前一单 2:刷卡查单  3:后一单
+    function toFindWeightInoutDetail(flag) {
+        var billcode;
+        if (flag == 2) {
+            billcode = IcObject.readCard(1);
+            if (billcode=="ERROR"){
+                return
+            } else{
+                if (!billcode) {
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                }
+            }
+        } else {
+            billcode = $("#billcode").val();
+        }
+        //根据billcode获取billid
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
+            .then(function (result) {
+                doFindWeightInout(result.data, flag);
+            });
+    }
+
+    //from 1:从流水号查单页面跳转过来
+    function doFindWeightInout(billid, flag,from) {
+        $.get("/graindepot-inout/inout/findOneOut", {billid: billid, flag: flag})
+            .then(function (result) {
+                if (result.success) {
+                    var inout = result.data;
+                    setWeightInout(inout, flag,from);
+                } else {
+                    $.bootstrapBox.alert.init({message: result.message})
+                }
+            }, function () {
+                $.bootstrapBox.alert.init({message: "查询失败"})
+            })
+    }
+
+    function toSave() {
+        //验证必填项
+        if (!$("#billcode").val()) {
+            $.bootstrapBox.alert.init({message: "等级流水号不能为空"});
+            return
+        }
+        if (!$("#storageid").bootstrapSelect("getValue")) {
+            $.bootstrapBox.alert.init({message: "仓房号不能为空"});
+            return
+        }
+        if (!$("#grainid").bootstrapSelect("getValue")) {
+            $.bootstrapBox.alert.init({message: "粮食品种不能为空"});
+            return
+        }
+
+        var param = turnArrayToJson($('form').serializeArray());
+        //判断是称毛重还是皮重
+        if (g_flag) {
+            param.type = g_flag;
+        } else {
+            if (isNumber(param.grossweight) && !isNumber(param.tareweight)) {
+                param.type = 1;
+            } else if (!isNumber(param.grossweight) && isNumber(param.tareweight)) {
+                param.type = 2;
+            } else {
+                param.type = g_flag;
+            }
+        }
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
+            .then(function (result) {
+                param.billid = result.data;
+                $.post("/graindepot-inout/weight/editWeightOut", param, function (result) {
+                    if (result.success) {
+                        if (param.type == 1) {
+                            $("#grossFlag").html("已保存");
+                        }
+                        if (param.type == 2) {
+                            $("#tareFlag").html("已保存");
+                        }
+
+                    }
+                    $.bootstrapBox.alert.init({message: result.message})
+                });
+            });
+
+
+    }
+
+    //流水号查单
+    function toInoutList() {
+        $.bootstrapBox.dialog.init({
+            title: "出库单据列表",
+            url: "/graindepot-inout/inout/toInout?inoutflag=-1&type=3",
+            width: $(window).width() * 1,
+            height: $(window).height() * 0.8
+        })
+    }
+
+    //根据粮食品种动态生成质检标准
+    function autoInspect(grainid) {
+        var result = dataJson("GET", "/graindepot-inout/inspect/grainInspectItem/byGrainid", {grainid: grainid});
+        g_grainInspectItem = result.data;
+        var formGroup = "<div class=\"form-group\">";
+        var label = '<label class="col-sm-2 control-label no-padding-right" for="';
+        var o = '">';
+        var _label = "</label>";
+        var divStyle = '<div class="col-sm-2">';
+        var _div = "</div>";
+        var r = ":";
+        var inspectHtml = "";
+        var inspectDeduHtml = "";
+        if (result.data.length > 0) {
+            //配置粮质信息
+            result.data.forEach(function (curr, index) {
+                var inspectitem = curr.inspectitem;
+                if (index % 3 == 0) {
+                    inspectHtml += formGroup;
+                }
+                inspectHtml += label;
+                inspectHtml += inspectitem.itemfield + o + inspectitem.itemname + r + _label;
+                inspectHtml += divStyle;
+                inspectHtml += '<input type="text" id="' + inspectitem.itemfield + '" name="'
+                    + inspectitem.itemfield + '" readonly  class="form-control" placeholder="" ';
+                inspectHtml += 'onChange="setInspectDeduByInspectItem(' + curr.keyid + ')"';
+                inspectHtml += '/>' + _div;
+                if (index % 2 == 0 && index > 0) {
+                    inspectHtml += _div;
+                }
+            });
+            //配置检验标准扣率
+            var inspectItemDedu = result.data.filter(function (curr) {
+                return curr.isdedu == 1;
+            });
+            if (inspectItemDedu.length > 0) {
+                inspectItemDedu.forEach(function (curr, index) {
+                    var inspectitem = curr.inspectitem;
+                    if (index % 3 == 0) {
+                        inspectDeduHtml += formGroup;
+                    }
+                    inspectDeduHtml += label;
+                    inspectDeduHtml += inspectitem.itemratefield + o + inspectitem.itemname + '(扣率)' + r + _label;
+                    inspectDeduHtml += divStyle;
+                    inspectDeduHtml += '<input type="text" id="' + inspectitem.itemratefield + '" name="'
+                        + inspectitem.itemratefield + '" class="form-control" placeholder=""/>' + _div;
+                    if (index % 2 == 0 && index > 0) {
+                        inspectDeduHtml += _div;
+                    }
+                })
+            }
+        } else {
+            inspectHtml = "暂未配置该品种的质检标准"
+        }
+        $("#inspect").html(inspectHtml);
+        $("#inspectDedu").html(inspectDeduHtml);
+        /* $.get("/graindepot-inout/inspect/grainInspectItem/byGrainid", {grainid: grainid})
+             .then(function (result) {
+
+             })*/
+    }
+
+    //修改检验标准的值导致设置增扣率和等级
+    function setInspectDeduByInspectItem(keyid) {
+        var grainInspectItem = g_grainInspectItem.filter(function (value, index) {
+            return value.keyid == keyid
+        })[0];
+        //设置等级
+        setGradeByInspectItem(grainInspectItem);
+        //设置扣率
+        if (grainInspectItem.isdedu == 1) {
+            setInspectDedu(grainInspectItem);
+        }
+    }
+
+    function setInspectDedu(grainInspectItem) {
+        var grade = $("#grade").bootstrapSelect("getValue");
+        if (!grade) {
+            return;
+        }
+        var inspectitem = grainInspectItem.inspectitem;
+        //获取输入框输入的值
+        var theValue = $("#" + inspectitem.itemfield).val();
+        if (!isNumber(theValue)) {
+            return
+        }
+        //判断是否超过增扣上限或者低于增扣下限
+        var upperlimit = grainInspectItem.upperlimit;
+        var lowerlimit = grainInspectItem.lowerlimit;
+        if (isNumber(upperlimit) && upperlimit < theValue) {
+            theValue = upperlimit
+        }
+        if (isNumber(lowerlimit) && lowerlimit > theValue) {
+            theValue = lowerlimit
+        }
+        //根据等级获取标准值
+        var standardValue = grainInspectItem["grade" + grade];
+        var upperstandard = grainInspectItem.upperstandard;
+        var upperamount = grainInspectItem.upperstandard;
+        var lowerstandard = grainInspectItem.lowerstandard;
+        var loweramount = grainInspectItem.loweramount;
+        var difference = theValue - standardValue;
+        var dedu = "";
+        if (difference > 0) {
+            //表示超出标准值
+            if (isNumber(upperstandard) && isNumber(upperamount)) {
+                dedu = (parseInt(difference / upperstandard) * upperamount).toFixed(2);
+            }
+        } else {
+            //表示低于标准值
+            if (isNumber(lowerstandard) && isNumber(loweramount)) {
+                dedu = (parseInt(-difference / lowerstandard) * loweramount).toFixed(2);
+            }
+        }
+        if (isNumber(dedu)) {
+            $("#" + inspectitem.itemratefield).val(dedu);
+        }
+    }
+
+    //1.1,2.2 => [1.1,2.2]
+    function toDoubleArry(gradeRangeStr) {
+        var gradeArry = [];
+        if (gradeRangeStr) {
+            var gradeRangeArry = gradeRangeStr.split(",");
+            if (isNumber(gradeRangeArry[0])) {
+                gradeArry.push(parseFloat(gradeRangeArry[0]))
+            } else {
+                gradeArry.push(Number.NEGATIVE_INFINITY);
+            }
+            if (isNumber(gradeRangeArry[1])) {
+                gradeArry.push(parseFloat(gradeRangeArry[1]))
+            } else {
+                gradeArry.push(Number.POSITIVE_INFINITY);
+            }
+            return gradeArry;
+        }
+        return [1, -1];
+    }
+
+    //修改检验标准的值导致设置等级
+    function setGradeByInspectItem(grainInspectItem) {
+        var rankInspectItemId = g_grainRank.inspectitemid;//粮食品种划分等级标准
+        //如果修改的检验标准正好是等级划分标准
+        if (grainInspectItem.inspectitemid == rankInspectItemId) {
+            //获取填入的值
+            var rankValue = $("#" + grainInspectItem.inspectitem.itemfield).val();
+            var grade1Arry = toDoubleArry(g_grainRank.grade1);
+            if (rankValue >= grade1Arry[0] && rankValue < grade1Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 1);
+            }
+            var grade2Arry = toDoubleArry(g_grainRank.grade2);
+            if (rankValue >= grade2Arry[0] && rankValue < grade2Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 2);
+            }
+            var grade3Arry = toDoubleArry(g_grainRank.grade3);
+            if (rankValue >= grade3Arry[0] && rankValue < grade3Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 3);
+            }
+            var grade4Arry = toDoubleArry(g_grainRank.grade4);
+            if (rankValue >= grade4Arry[0] && rankValue < grade4Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 4);
+            }
+            var grade5Arry = toDoubleArry(g_grainRank.grade5);
+            if (rankValue >= grade5Arry[0] && rankValue < grade5Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 5);
+            }
+            var grade6Arry = toDoubleArry(g_grainRank.grade6);
+            if (rankValue >= grade6Arry[0] && rankValue < grade6Arry[1]) {
+                $("#grade").bootstrapSelect("setValue", 6);
+            }
+        }
+    }
+
+    //修改等级的值导致设置增扣率
+    function setInspectDeduByGrade() {
+        g_grainInspectItem.forEach(function (value, index) {
+            if (value.isdedu == 1) {
+                setInspectDedu(value);
+            }
+        })
+    }
+    //获取出库检验的值往检验标准值
+    function setInspectRate() {
+        var storageid=$("#storageid").bootstrapSelect("getValue");
+        var grainid=$("#grainid").bootstrapSelect("getValue");
+        if (!storageid||!grainid){
+            return
+        }
+        var result = dataJson("GET", "/graindepot-inout/weight/gqinspect/one"
+            , {storageid:storageid,grainid: grainid});
+        if (result.success) {
+            $("#inspect").find("input").each(function (index, curr) {
+                $(this).val(result.data[$(this).attr("name")])
+                $(this).trigger("onchange");
+            })
+        }
+    }
+
 </script>
 </body>
 </html>

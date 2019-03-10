@@ -31,7 +31,7 @@ public class GbGrainPriceController extends BaseController {
     private InspectItemBiz inspectItemBiz;
 
     @GetMapping("toGbGrainPrice")
-    public String toGbGrainPrice(Model model) {
+    public  String toGbGrainPrice(Model model) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
         model.addAttribute("user", user);

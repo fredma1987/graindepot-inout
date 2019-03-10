@@ -10,8 +10,11 @@
 <script th:src="@{/assets/js/bootstrap3-typeahead.js}"></script>
 <script th:src="@{../js/huashi.js}"></script>
 <script th:src="@{../js/d8.js}"></script>
+<script th:src="@{../js/jlcard.js}"></script>
 <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
 <script th:src="@{/graindepot-video/js/hik3.js}"></script>
+<script th:src="@{/graindepot-inout/js/IC.js}"></script>
+<script th:src="@{/graindepot-inout/js/ID.js}"></script>
 <script th:inline="javascript">
     var ip = [[${video.ip}]],
         httpport = [[${video.httpport}]],
@@ -59,6 +62,8 @@
     }
 </script>
 <div th:replace="navbar::navbar"></div>
+<object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
+</object>
 <div class="main-container" id="main-container">
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="margin-left:0px;width:100%">
@@ -162,7 +167,8 @@
                                                 状态:
                                             </label>
                                             <div class="col-sm-2">
-                                                <label id="billstate" style="margin-top: 4px;" class="center red">未保存</label>
+                                                <label id="billstate" style="margin-top: 4px;"
+                                                       class="center red">未保存</label>
                                             </div>
                                         </div>
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
@@ -176,14 +182,16 @@
                                                 </select>
                                             </div>
 
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right" for="onetomany">
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
+                                                   for="onetomany">
                                                 检斤方式:
                                             </label>
                                             <div class="col-sm-2">
                                                 <select id="onetomany" name="onetomany" class="form-control">
                                                 </select>
                                             </div>
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right" for="settlemothod">
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
+                                                   for="settlemothod">
                                                 结算类型:
                                             </label>
                                             <div class="col-sm-2">
@@ -212,7 +220,8 @@
                                                 </label>
                                             </div>
 
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right" for="traderid">
+                                            <label style="width: 12%" id="trader"
+                                                   class="col-sm-1 control-label no-padding-right" for="traderid">
                                                 售粮单位:
                                             </label>
                                             <div class="col-sm-4">
@@ -223,7 +232,8 @@
 
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12%" id="manname"
+                                                   class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanname">
                                                 *售粮人:
                                             </label>
@@ -231,7 +241,8 @@
                                                 <input type="text" data-bv-notempty id="sellmanname" name="sellmanname"
                                                        placeholder="" class="form-control"/>
                                             </div>
-                                            <label style="width: 12% " class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12% " id="idcard"
+                                                   class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanidcard">
                                                 *身份证号:
                                             </label>
@@ -259,7 +270,7 @@
                                                        placeholder="" class="form-control"/>
                                             </div>
                                             <a class="btn btn-primary col-sm-2"
-                                               style="margin-left:5px;border:0"  onclick="readCert()">
+                                               style="margin-left:5px;border:0" onclick="readCert()">
                                                 <i class="icon-credit-card"></i>
                                                 售粮人身份证
                                             </a>
@@ -316,8 +327,8 @@
                                                        placeholder="" class="form-control"/>
                                             </div>
 
-                                            <a class="btn btn-primary col-sm-2"
-                                               style="margin-left:5px;border:0" >
+                                            <a class="btn btn-primary col-sm-2" onclick="readCarrierCert()"
+                                               style="margin-left:5px;border:0">
                                                 <i class="icon-credit-card"></i>
                                                 承运人身份证
                                             </a>
@@ -337,15 +348,16 @@
                                                 <select id="storageid" name="storageid" class="form-control">
                                                 </select>
                                             </div>
-                                            <label style="width: 12%"  class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
                                                    for="grainid">
                                                 粮食品种:
                                             </label>
                                             <div class="col-sm-2">
-                                                <select id="grainid" name="grainid" class="form-control">
+                                                <select id="grainid" name="grainid" class="form-control"
+                                                        data-bv-notempty>
                                                 </select>
                                             </div>
-                                            <label style="width: 12%"  class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
                                                    for="inplanid">
                                                 计划安排:
                                             </label>
@@ -424,7 +436,7 @@
                                                 <select id="fcityid" name="fcityid" class="form-control">
                                                 </select>
                                             </div>
-                                            <label  class="col-sm-1 control-label no-padding-right"
+                                            <label class="col-sm-1 control-label no-padding-right"
                                                    for="soucearea">
                                                 原产地:
                                             </label>
@@ -441,8 +453,8 @@
                                                     </select>
                                                 </div>
                                             </div>-->
-                                            <label style="width: 12%;"  class="col-sm-1 control-label no-padding-right"
-                                                    for="remark">
+                                            <label style="width: 12%;" class="col-sm-1 control-label no-padding-right"
+                                                   for="remark">
                                                 备注:
                                             </label>
                                             <div class="col-sm-5">
@@ -455,13 +467,13 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                        <object id="CertCtl" type="application/cert-reader" width="0"
-                                                height="0">
-                                            <p style="color:#FF0000;">控件不可用，可能未正确安装控件及驱动，或者控件未启用。<a
-                                                    onclick="download_Huashi()"
-                                                    style="text-decoration: underline;color:blue;cursor:pointer;">下载</a>
-                                            </p>
-                                        </object>
+                                <object id="CertCtl" type="application/cert-reader" width="0"
+                                        height="0">
+                                    <p style="color:#FF0000;">控件不可用，可能未正确安装控件及驱动，或者控件未启用。<a
+                                            onclick="download_Huashi()"
+                                            style="text-decoration: underline;color:blue;cursor:pointer;">下载</a>
+                                    </p>
+                                </object>
                                 <a class="btn btn-success" style="border: 0;width: 120px;"
                                    onclick="toFindInoutDetail(1)">
                                     <i class="icon-arrow-left icon-on-left"></i>
@@ -475,7 +487,8 @@
                                 <OBJECT id=rd codeBase="comRD800.cab" WIDTH="10" HEIGHT="0"
                                         classid="clsid:638B238E-EB84-4933-B3C8-854B86140668">
                                 </OBJECT>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toFindInoutDetail(2)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toFindInoutDetail(2)">
                                     <i class="icon-credit-card"></i>
                                     刷卡查单
                                 </a>
@@ -518,6 +531,8 @@
     //var urlPrefix = "";
     var urlPrefix = "/graindepot-inout";
     var g_userAddress = [[${userAddress}]];
+    var IcObject=new IcFactory(1).createIcObject();
+    var IdObject=new IdFactory(1).createIdObject();
     $(function ($) {
         initOnetomany();
         initSettlemothod();
@@ -551,24 +566,39 @@
         $("#validation-form").bootstrapValidator('validate');//提交验证
         if ($("#validation-form").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
             var param = turnArrayToJson($('form').serializeArray());
-            $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:param.billcode})
+            $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
                 .then(function (result) {
-                    param.billid=result.data;
+                    param.billid = result.data;
                     param.sellmansex = getSexByText($("#gender").text());
                     $.post("/graindepot-inout/register/editIn", param, function (result) {
                         if (result.success) {
+                            //将保存成功的单据保存到cache中，便于新增或者取消时显示上次数据
+                            setCookie("latestIn", JSON.stringify(result.data), 1);
+
                             $("#billcode").val(result.data.billcode);
                             if (flag == 2) {
+                                //判断当前的卡能否进行绑定（粮库下无未退卡的单据跟其绑定）
+                                var iccardnum = IcObject.readCardNum();
+                                if (iccardnum=="ERROR"){
+                                    $("#billstate").html("已保存写卡失败");
+                                    return
+                                }
+                                var canWriteCard = dataJson("GET"
+                                    , "/graindepot-inout/register/canWriteCard", {iccardnum: iccardnum});
+                                if (!canWriteCard.success) {
+                                    $.bootstrapBox.alert.init({message: "单据保存成功," + canWriteCard.message});
+                                    return
+                                }
+                                //可以写卡后继续操作
                                 var writeSuccess = writeCard(result.data);
                                 if (writeSuccess) {
-                                    //去更新绑卡字段
+                                    //去更新绑卡字段和ic卡号
                                     $.post("/graindepot-inout/register/inout/updateByMap", {
                                         Where_billid: result.data.billid,
-                                        regstate: 1
+                                        regstate: 1,
+                                        iccardnum: iccardnum
                                     }).then(function () {
                                         $("#billstate").html("已保存已写卡");
-                                    }, function () {
-                                        $("#billstate").html("已保存写卡失败");
                                     });
                                 } else {
                                     $("#billstate").html("已保存写卡失败");
@@ -583,17 +613,12 @@
                     });
 
                 });
-
-
-
-
-
             //保存大户信息
             var individual = {
                 name: param.sellmanname,
                 idcard: param.sellmanidcard,
                 address: param.sellmanaddress,
-                sex: param.sellmansex,
+                gender: param.sellmansex,
                 phone: param.sellmanphone,
                 trucktype: param.trucktype,
                 trucknum: param.trucknum,
@@ -644,12 +669,7 @@
                 $("#sellmanidcard").val(item.idcard);
                 $("#sellmanphone").val(item.phone);
                 $("#sellmanaddress").val(item.address);
-                $("#nation").html(item.nation);
-                $("#bornday").html(item.bornday);
-                $("#certorg").html(item.certorg);
-                $("#effdate").html(item.effdate);
-                $("#expdate").html(item.expdate);
-
+                setIndividualOtherInfo(item);
             },
             delay: 500//延迟时间
         });
@@ -696,7 +716,7 @@
             textField: 'storagename',
             onSelect: function (storageid, row) {
                 if (storageid) {
-                    $("#grainid").bootstrapSelect("setValue", row.defGrainID)
+                    $("#grainid").bootstrapSelect("setValue", row.defgrainid)
                 }
             }
         });
@@ -856,14 +876,15 @@
     function toAdd() {
         clearForm();
         $("input").val("");
-        $("#validation-form").find("select").each(function (index,curr) {
+        $("#validation-form").find("select").each(function (index, curr) {
             $(this).bootstrapSelect("reload")
         });
         $("#billstate").html("未保存");
-        $("#customtype1").attr("checked","checked");
-        $("#customtype2").attr("checked",false);
+        $("#customtype1").attr("checked", "checked");
+        $("#customtype2").attr("checked", false);
         //触发change事件
         $("select").trigger("change");
+        setDefaultInfo();
     }
 
     //根据查出的入库信息初始化页面显示
@@ -907,21 +928,28 @@
         } else if (inout.regstate == -1) {
             $("#billstate").html("已保存已退港");
         }
+        //清除证件其他信息
+        clearIndividualOtherInfo()
     }
 
     //type 1:前一单 2:刷卡查单  3:后一单
     function toFindInoutDetail(flag) {
         var billcode;
-        if (flag==2){
-            billcode = d8ReadCard(1);
-            if (!billcode) {
-                $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+        if (flag == 2) {
+            //billcode = d8ReadCard(1);
+            billcode = IcObject.readCard(1);
+            if (billcode == "ERROR") {
+                return
+            } else {
+                if (!billcode) {
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                }
             }
-        }else {
-            billcode=$("#billcode").val();
+        } else {
+            billcode = $("#billcode").val();
         }
         //根据billcode获取billid
-        $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:billcode})
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
             .then(function (result) {
                 doFindInout(result.data, flag);
             });
@@ -934,7 +962,7 @@
                 if (result.success) {
                     var inout = result.data;
                     setInout(inout);
-                }else {
+                } else {
                     $.bootstrapBox.alert.init({message: result.message})
                 }
             }, function () {
@@ -961,12 +989,13 @@
         ];
         if (inout.sellmanidcard && inout.sellmanidcard.length > 16) {
             data.push({position: 5, data: inout.sellmanidcard.substr(0, 16)});
-            data.push({position: 6, data: inout.sellmanidcard.substr(16) + "|"})
+            data.push({position: 6, data: inout.sellmanidcard.substr(16)})
         } else {
             data.push({position: 5, data: inout.sellmanidcard});
         }
-        var rd = document.getElementById("rd");
-        return d8WriteCard(data, rd);
+      //  var rd = document.getElementById("rd");
+       // return d8WriteCard(data, rd);
+        return IcObject.writeCard(data);
     }
 
     //取消按钮
@@ -978,6 +1007,64 @@
         $(".form-group").find("select").each(function () {
             $(this).bootstrapSelect("reload")
         })*/
+    }
+
+    //填充证件其他信息
+    function setIndividualOtherInfo(individual) {
+        $("#gender").html(individual.genderstr);
+        $("#nation").html(individual.nation);
+        $("#bornday").html(individual.bornday);
+        $("#certorg").html(individual.certorg);
+        $("#effdate").html(individual.effdate);
+        $("#expdate").html(individual.expdate);
+    }
+
+    //清除证件其他信
+    function clearIndividualOtherInfo(individual) {
+        $("#gender").html("");
+        $("#nation").html("");
+        $("#bornday").html("");
+        $("#certorg").html("");
+        $("#effdate").html("");
+        $("#expdate").html("");
+    }
+
+    //点击新增或者取消时填充上条记录的信息到表中
+    function setDefaultInfo() {
+        var inoutStr = getCookie("latestIn");
+        var inout = JSON.parse(inoutStr);
+        $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
+        $("#storageid").bootstrapSelect("setValue", inout.storageid);
+        $("#grainid").bootstrapSelect("setValue", inout.grainid);
+        $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
+        $("#contractid").bootstrapSelect("setValue", inout.contractid);
+        $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
+        $("#producingyear").val(inout.producingyear);
+        $("#soucearea").val(inout.soucearea);
+    }
+
+    function readCert() {
+        var info = IdObject.readIdCard();
+        if (info){
+            $("#sellmanname").val(info.name);
+            $("#sellmanaddress").val(info.address);
+            $("#sellmanidcard").val(info.idnumber);
+            $("#gender").text(info.sex);
+            $("#nation").text(info.nation);
+            $("#bornday").text(info.birthday);
+            $("#certorg").text(info.agency);
+            $("#effdate").text(info.valid.split("-")[0]);
+            $("#expdate").text(info.valid.split("-")[1]);
+            $("#photostr").attr("src", "data:image/jpeg;base64," + info.picBase64);
+        }
+    }
+
+    function readCarrierCert() {
+        var info = IdObject.readIdCard();
+        if (info){
+            $("#carriername").val(info.name);
+            $("#carrieridcard").val(info.idnumber);
+        }
     }
 
 </script>

@@ -10,10 +10,13 @@
 </head>
 
 <body>
+<object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
+</object>
 <div>
     <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
+    <script th:src="@{/graindepot-inout/js/IC.js}"></script>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
@@ -67,7 +70,7 @@
                                                        readonly placeholder=""/>
                                             </div>
                                             <a class="col-sm-1 btn btn-info" style="border: 0;width: 80px;"
-                                               id="timeLine"  rel="popover"
+                                               id="timeLine" rel="popover"
                                                data-content="无"
                                                data-original-title="单据进度">
                                                 <i class="icon-question-sign icon-on-right"></i>
@@ -129,7 +132,7 @@
                                                        class="form-control"
                                                        placeholder="" readonly/>
                                             </div>
-                                            <label style="width: 12%"  class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanphone">
                                                 联系电话:
                                             </label>
@@ -275,7 +278,7 @@
                                             <div class="col-sm-2">
                                                 <input type="text" id="extradedu" name="extradedu"
                                                        onchange="toSetWeightAndMoney()"
-                                                       class="form-control"  placeholder=""/>
+                                                       class="form-control" placeholder=""/>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
                                                    for="paidweight" style="width: 9%;">
@@ -292,7 +295,7 @@
                                             </label>
                                             <div class="col-sm-1" style="width:13%;">
                                                 <input type="text" id="price" name="price"
-                                                       class="form-control"  placeholder=""/>
+                                                       class="form-control" placeholder=""/>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
                                                    for="amount" style="width: 9%;">
@@ -331,14 +334,20 @@
                                     <i class="icon-tint"></i>
                                     流水号查单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;">
-                                    <i class="icon-search"></i>
-                                    单据查询
-                                </a>
                                 <a class="btn btn-success" style="border: 0;width: 120px;"
                                    onclick="toSave()">
                                     <i class="icon-legal"></i>
                                     确认结算
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 150px;"
+                                   onclick="toSave(2)">
+                                    <i class="icon-legal"></i>
+                                    确认结算并退卡
+                                </a>
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toPrint()">
+                                    <i class="icon-print"></i>
+                                    打印预览
                                 </a>
                                 <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
                                     <i class="icon-undo"></i>
@@ -361,6 +370,7 @@
 <!-- /.main-container -->
 
 <script type="text/javascript">
+    var IcObject = new IcFactory(1).createIcObject();
     jQuery(function ($) {
         initTrader();
         initGrain();
@@ -369,9 +379,20 @@
         initSettlemothod();
         initTrucktype();
         comm_initStorage();
+        initPrinttemp();
         //加载单据进度tooltip
         $("#timeLine").popover({html: true, trigger: 'hover'});
     });
+
+    //结算单
+    function initPrinttemp() {
+        $("#printtempid").bootstrapSelect({
+            url: '/graindepot-inout/tempfile/list',
+            type: 'GET',
+            valueField: 'tempid',
+            textField: 'tempname'
+        })
+    }
 
     function initTrader() {
         $("#traderid").bootstrapSelect({
@@ -453,16 +474,20 @@
     //查单据 1：前一单 2：刷卡查单  3：后一单
     function toFindSettlementDetail(flag) {
         var billcode;
-        if (flag==2){
-            billcode = d8ReadCard(1);
-            if (!billcode) {
-                $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+        if (flag == 2) {
+            billcode = IcObject.readCard(1);
+            if (billcode == "ERROR") {
+                return
+            } else {
+                if (!billcode) {
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                }
             }
-        }else {
-            billcode=$("#billcode").val();
+        } else {
+            billcode = $("#billcode").val();
         }
         //根据billcode获取billid
-        $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:billcode})
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
             .then(function (result) {
                 doFindSettlementInout(result.data, flag);
             });
@@ -475,7 +500,7 @@
                 if (result.success) {
                     var inout = result.data;
                     setSettlementInout(inout);
-                }else {
+                } else {
                     $.bootstrapBox.alert.init({message: result.message})
                 }
             }, function () {
@@ -566,16 +591,20 @@
             })
     }
 
-    function toSave() {
+    //flag=2 退卡操作
+    function toSave(flag) {
         $("#validation-form").bootstrapValidator('validate');//提交验证
         if ($("#validation-form").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
             var param = turnArrayToJson($('form').serializeArray());
-            $.get("/graindepot-inout/inout/billid/byBillcode",{billcode:param.billcode})
+            $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
                 .then(function (result) {
-                    param.billid=result.data;
+                    param.billid = result.data;
                     $.post("/graindepot-inout/settlement/editSettlement", param, function (result) {
                         if (result.success) {
                             $("#billstate").html("已保存");
+                        }
+                        if (flag==2){
+                            toBackIC()
                         }
                         $.bootstrapBox.alert.init({message: result.message})
                     });
@@ -583,6 +612,29 @@
 
 
         }
+    }
+
+    function toBackIC() {
+        var billcode = IcObject.readCard(1);
+        if (billcode=="ERROR"){
+            return
+        } else {
+            if (!billcode) {
+                $.bootstrapBox.alert.init({message: "ic卡未绑定单据,无需退卡"})
+            } else {
+                var result = IcObject.writeCard([{position: 1, data: ''}]);
+                if (result){
+                    $.post("/graindepot-inout/exception/setInoutBackIC",{
+                        billcode:billcode
+                    }).then(function () {
+                        $.bootstrapBox.alert.init({message: "退卡成功"});
+                    })
+                } else {
+                    $.bootstrapBox.alert.init({message:'清卡失败'})
+                }
+            }
+        }
+
     }
 
     //输入框变化修改结算重量和结算金额
@@ -608,6 +660,40 @@
             width: $(window).width() * 1,
             height: $(window).height() * 0.8
         })
+    }
+
+    //预览打印
+    function toPrint() {
+        //根据tempid查数据
+        var tempid = $("#printtempid").bootstrapSelect("getValue");
+        var billcode = $("#billcode").val();
+        if (!billcode) {
+            $.bootstrapBox.alert.init({message: "暂无单据"});
+            return
+        }
+        if (!tempid) {
+            $.bootstrapBox.alert.init({message: "结算单模板不能为空"});
+            return
+        }
+        //通过billcode获取billid
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
+            .then(function (result) {
+                var billid = result.data;
+                $.get("/graindepot-inout/tempfile/one/" + tempid)
+                    .then(function (result) {
+                        $.bootstrapBox.dialog.init({
+                            title: "打印预览",
+                            url: "http://localhost:8080/ureport/preview?_u=file:"
+                                + result.data.temppath+"&billid="+billid,
+                            width: $(window).width() * 0.8,
+                            height: $(window).height() * 0.8
+                        });
+
+                    })
+            });
+
+
+
     }
 </script>
 </body>

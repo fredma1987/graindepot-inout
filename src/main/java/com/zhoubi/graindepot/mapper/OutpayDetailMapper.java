@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.OutpayDetail;import com.zhoubi.graindepot.base.BaseMapper;public interface OutpayDetailMapper extends BaseMapper<OutpayDetail> {}
