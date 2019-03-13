@@ -3,5 +3,5 @@ spring:
         name: graindepot-inout
 
 server:
-    port: 8003 #
+    port: 8803 #
     #context-path: /graindepot-inout
