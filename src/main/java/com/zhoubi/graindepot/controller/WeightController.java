@@ -118,7 +118,7 @@ public class WeightController extends BaseController {
         //根据登记流水号对应的billid存在于l_inout_insp表中
         Double waterdeduweight = null, impudeduweight = null, bulkdensitydeduweight = null, yrkdeduweight = null, ukdeduweight = null, otmsdeduweight = null, zjmldeduweight = null, cmldeduweight = null, gwcmdeduweight = null, hhldeduweight = null, wdeduweightx = null, ideduweightx = null, odeduweightx = null;
         Double netweight = inout.getNetweight();
-        if (type!=null&&type == 2) {
+        if (netweight!=null) {
             //计算各种增扣量
             InoutInsp inoutInsp = inspectBiz.selectById(inout.getBillid());
             waterdeduweight = multiply(netweight, inoutInsp.getWaterdedurate(),3);

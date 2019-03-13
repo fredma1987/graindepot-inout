@@ -2,8 +2,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
 </head>
-<script th:src="@{/graindepot-inout/js/d8.js}"></script>
-<script th:src="@{/graindepot-inout/js/jlcard.js}"></script>
 <script th:src="@{/graindepot-inout/js/IC.js}"></script>
 <body>
 <div th:replace="navbar::navbar"></div>
@@ -30,6 +28,19 @@
         </div>
         <div class="col-sm-8">
             <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">读卡器型号:</span>
+                    <select id="type" class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">块序号:</span>
+                    <input id="num" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-4">
                 <button class="btn btn-sm btn-success" onclick="readCard()">
                     <i class="icon-search align-top bigger-125"></i>
                     读取IC卡数据
@@ -37,10 +48,6 @@
                 <button class="btn btn-sm btn-success" onclick="test()">
                     <i class="icon-search align-top bigger-125"></i>
                     test
-                </button>
-                <button class="btn btn-sm btn-success" onclick="test2()">
-                    <i class="icon-search align-top bigger-125"></i>
-                    test2
                 </button>
             </div>
         </div>
@@ -174,29 +181,44 @@
     //var urlPrefix = "";
     var theTable;
     $(document).ready(function () {
-
+        initType();
     });
 
+    function initType() {
+        var data=[{value: 1, text: "精伦"},{value: 2, text: "d8"}];
+        $("#type").bootstrapSelect({
+            data:data,
+            type: 'GET',
+            valueField: 'value',
+            textField: 'text'
+        });
+    }
+
     function readCard() {
-       // var result=d8ReadCardAll();
-        var JingLun=new IcFactory(1).createIcObject();
-        var result=JingLun.readCardAll();
-        //var result=jlReadIcCardAll();
-        debugger;
+        var type=$("#type").bootstrapSelect("getValue");
+        if (!type){
+            $.bootstrapBox.alert.init({message:"请选择读卡器型号"})
+            return
+        }
+        var IC=new IcFactory(type).createIcObject();
+        var result=IC.readCardAll();
         result.forEach(function (value) {
             if (value.index!='0_0'){
                 $("#"+value.index).html(value.data)
             }
         });
-        $("#0_0").val(jlReadIcCardNum())
+        $("#0_0").val(IC.readCardNum())
     }
     function test() {
-        var a=jlReadIcCard(8)
+        var type=$("#type").bootstrapSelect("getValue");
+        if (!type){
+            $.bootstrapBox.alert.init({message:"请选择读卡器型号"})
+            return
+        }
+        var IC=new IcFactory(type).createIcObject();
+        var num=$("#num").val();
+        var a=IC.readCard(num)
         alert(a)
-        console.log(a)
-    }
-    function test2() {
-        var a=jlWriteIcCard([ {position: 8, data: "123456"}])
         console.log(a)
     }
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head(${title})">
+</head>
+<link th:rel="stylesheet" type="text/css" th:href="@{/assets/css/comm/infoCheck.css}"/>
+<body>
+<!-- 信息查看页面 -->
+<!-- infoCheck-three 一行显示三列 -->
+<!-- infoCheck-two 一行显示二列 -->
+<!-- infoCheck-one 一行只显示较宽一列 -->
+<div class="infoCheckDiv">
+    <div class="infoCheckBack">
+        <!-- 一行显示三列 -->
+        <table class="infoCheck-three" border="" cellspacing="" cellpadding="">
+            <tr>
+                <td class="infoCheck-name">企业</td>
+                <td class="infoCheck-content" th:text="${item.companyname}">企业</td>
+                <td class="infoCheck-name">库点</td>
+                <td class="infoCheck-content" th:text="${item.graindepotname}">库点</td>
+                <td class="infoCheck-name">仓房</td>
+                <td class="infoCheck-content" th:text="${item.storagename}">企业</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">集团</td>
+                <td class="infoCheck-content" th:text="${item.groupname}">集团</td>
+                <td class="infoCheck-name">单据日期</td>
+                <td class="infoCheck-content" th:text="${item.billdatestr}">单据日期</td>
+                <td class="infoCheck-name">单据号</td>
+                <td class="infoCheck-content" th:text="${item.billcode}">单据号（YYYY-MM-DD-xxxx）</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">单据类型(0：期初库存单 1：正常业务单据 2：补单)</td>
+                <td class="infoCheck-content" th:text="${item.billtype}">单据类型(0：期初库存单 1：正常业务单据 2：补单)</td>
+                <td class="infoCheck-name">单据状态（0：编辑，1：已审核，-1：已作废）</td>
+                <td class="infoCheck-content" th:text="${item.billstatestr}">单据状态（0：编辑，1：已审核，-1：已作废）</td>
+                <td class="infoCheck-name">逻辑删除标志(1:逻辑删除)</td>
+                <td class="infoCheck-content" th:text="${item.delflagstr}">逻辑删除标志(1:逻辑删除)</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+    });
+
+
+</script>

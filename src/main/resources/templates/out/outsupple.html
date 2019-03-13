@@ -808,6 +808,7 @@
             } else {
                 if (!billcode) {
                     $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                    return
                 }
             }
         } else {
@@ -945,7 +946,7 @@
     function toInoutList() {
         $.bootstrapBox.dialog.init({
             title: "出库单据列表",
-            url: "/graindepot-inout/inout/toInout?inoutflag=-1&type=5",
+            url: "/graindepot-inout/inout/toDialogInout?inoutflag=-1&type=5",
             width: $(window).width() * 1,
             height: $(window).height() * 0.8
         })

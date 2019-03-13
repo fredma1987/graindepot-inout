@@ -65,13 +65,13 @@ public class ExceptionController extends BaseController {
 
     @PostMapping("setInoutStop")
     @ResponseBody
-    public JsonResult setInoutStop(Integer billid,String stopreason){
+    public JsonResult setInoutStop(Integer billid,String stopreason,Integer stopflag){
         Map param=new HashMap();
         param.put("Where_billid",billid);
-        param.put("stopflag",1);
+        param.put("stopflag",stopflag);
         param.put("stopreason",stopreason);
         inoutBiz.updateMap(param);
-        return new JsonResult("终止成功",true);
+        return new JsonResult("修改成功",true);
     }
 
     @PostMapping("setInoutBackIC")

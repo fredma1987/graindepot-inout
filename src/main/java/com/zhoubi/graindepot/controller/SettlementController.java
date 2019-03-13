@@ -96,6 +96,23 @@ public class SettlementController extends BaseController{
     @PostMapping("editSettlement")
     @ResponseBody
     public JsonResult editSettlement(Inout inout) {
+        //判断当前单据有无质检和称重完毕
+        Integer billid=inout.getBillid();
+        Inout item = inoutBiz.selectById(billid);
+        Integer inspectstate=item.getInspectstate();//有无检验
+        Integer gwstate=item.getGwstate();//有无称毛重
+        Integer tarestate=item.getTarestate();//有无称毛重
+        if (inspectstate==null||inspectstate==0) {
+          return   new JsonResult("单据未完成检验无法结算", false);
+        }
+        if (gwstate==null||gwstate==0) {
+            return  new JsonResult("单据未完成称毛重无法结算", false);
+        }
+        if (tarestate==null||tarestate==0) {
+            return  new JsonResult("单据未完成称皮重无法结算", false);
+        }
+
+
         BaseUser user=getCurrentUser();
         Map param=new HashMap();
         param.put("Where_billid",inout.getBillid());
@@ -122,13 +139,20 @@ public class SettlementController extends BaseController{
         param.put("traderid",traderid);
         param.put("storageid",storageid);
         List<Prerece> list = prereceBiz.selectList(param);
-        //TODO 获取唯一一条预收款数据的具体条件是什么？
         if (list!=null&&list.size()>0) {
             return new JsonResult(list.get(0),true);
         }else {
             return new JsonResult(new Prerece(),true);
         }
 
+    }
+    @GetMapping("prerece/leftAmount")
+    @ResponseBody
+    public JsonResult leftAmount(Integer traderid) {
+        Map param=new HashMap();
+        param.put("traderid",traderid);
+        Double leftAmount = prereceBiz.getLeftAmount(param);
+        return new JsonResult(leftAmount,true);
     }
 
     @PostMapping("editOutSettlement")
@@ -183,5 +207,21 @@ public class SettlementController extends BaseController{
 
     }
 
+    @PostMapping("/setBackicflag")
+    @ResponseBody
+    public JsonResult setBackicflag(Integer billid,Integer backicflag,String backreason) {
+        Map param = new HashMap();
+        if (billid==null||backicflag==null) {
+            return new JsonResult("更新退卡字段失败",false);
+        }else {
+            param.put("Where_billid",billid);
+            param.put("backicflag",backicflag);
+            param.put("backreason",backreason);
+            param.put("backictime",new Date());
+            inoutBiz.updateMap(param);
+            return new JsonResult("更新退卡字段成功", true);
+        }
+
+    }
 
 }

@@ -4,7 +4,6 @@ import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Inout;
-import com.zhoubi.graindepot.bean.Tempfile;
 import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.InoutBiz;
 import com.zhoubi.graindepot.biz.TempfileBiz;
@@ -26,9 +25,9 @@ public class InoutController extends BaseController {
     @Autowired
     private TempfileBiz tempfileBiz;
 
-    //出入库列表
-    @RequestMapping(value = "/toInout", method = RequestMethod.GET)
-    public String toInout(Model model, HttpServletRequest request
+    //出入库dialog列表
+    @RequestMapping(value = "/toDialogInout", method = RequestMethod.GET)
+    public String toDialogInout(Model model, HttpServletRequest request
             , HttpServletResponse response, Integer inoutflag,Integer type) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
@@ -37,13 +36,29 @@ public class InoutController extends BaseController {
         model.addAttribute("inoutflag", inoutflag);
         model.addAttribute("type", type);//1:从登记页跳转 2:从检验 3:称毛重或者称皮重 4:结算
         model.addAttribute("title", "出入库列表");
+        return "inout/dialogList";
+    }
+
+    //出入库列表
+    @RequestMapping(value = "/toInout", method = RequestMethod.GET)
+    public String toInout(Model model,Integer inoutflag) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
+        model.addAttribute("inoutflag", inoutflag);
+        model.addAttribute("title", "出入库列表");
         return "inout/list";
     }
-    //出入库列表
-    @RequestMapping(value = "/toInoutTimeLine", method = RequestMethod.GET)
-    public String toInoutTimeLine(Model model, HttpServletRequest request
-            , HttpServletResponse response, Integer inoutflag,Integer type) {
-        return "inout/timeLine";
+
+    @GetMapping("/detail/{id}")
+    public String toDetail(Model model, @PathVariable int id) {
+        String title = "单据详情";
+        Inout item = inoutBiz.selectDetailById(id);
+        model.addAttribute("title", title);
+        model.addAttribute("item", item);
+        String path = "/inout/detail";
+        return path;
     }
 
     //查询出所有的出入库单据(显示正常单据 和 补单)

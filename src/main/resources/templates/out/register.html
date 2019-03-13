@@ -10,9 +10,11 @@
 <script th:src="@{/assets/js/bootstrap3-typeahead.js}"></script>
 <script th:src="@{../js/huashi.js}"></script>
 <script th:src="@{../js/d8.js}"></script>
+<script th:src="@{../js/jlcard.js}"></script>
 <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
 <script th:src="@{/graindepot-video/js/hik3.js}"></script>
 <script th:src="@{/graindepot-inout/js/IC.js}"></script>
+<script th:src="@{/graindepot-inout/js/ID.js}"></script>
 <script th:inline="javascript">
     var ip = [[${video.ip}]],
         httpport = [[${video.httpport}]],
@@ -29,7 +31,7 @@
     $(function () {
         // 检查插件是否已经安装过
         if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
-            alert("您还未安装过插件，点击下载视频播放控件!");
+            //("您还未安装过插件，点击下载视频播放控件!");
             return;
         }
         var height = $("#divPlugin").height();
@@ -59,9 +61,9 @@
         clickStartRealPlay(ip, channel, bZeroChannel, iStreamType, 0);
     }
 </script>
+<div th:replace="navbar::navbar"></div>
 <object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
 </object>
-<div th:replace="navbar::navbar"></div>
 <div class="main-container" id="main-container">
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="margin-left:0px;width:100%">
@@ -218,8 +220,8 @@
                                                 </label>
                                             </div>
 
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
-                                                   for="traderid">
+                                            <label style="width: 12%" id="trader"
+                                                   class="col-sm-1 control-label no-padding-right" for="traderid">
                                                 售粮单位:
                                             </label>
                                             <div class="col-sm-4">
@@ -230,20 +232,22 @@
 
                                         <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
-                                            <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12%" id="manname"
+                                                   class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanname">
                                                 *售粮人:
                                             </label>
                                             <div class="col-sm-2">
-                                                <input type="text" data-bv-notempty id="sellmanname" name="sellmanname"
+                                                <input type="text" id="sellmanname" name="sellmanname"
                                                        placeholder="" class="form-control"/>
                                             </div>
-                                            <label style="width: 12% " class="col-sm-1 control-label no-padding-right"
+                                            <label style="width: 12% " id="idcard"
+                                                   class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanidcard">
-                                                *身份证号:
+                                                身份证号:
                                             </label>
                                             <div class="col-sm-3">
-                                                <input type="text" data-bv-notempty id="sellmanidcard"
+                                                <input type="text" id="sellmanidcard"
                                                        name="sellmanidcard"
                                                        placeholder="" class="form-control"/>
                                             </div>
@@ -323,7 +327,7 @@
                                                        placeholder="" class="form-control"/>
                                             </div>
 
-                                            <a class="btn btn-primary col-sm-2"
+                                            <a class="btn btn-primary col-sm-2" onclick="readCarrierCert()"
                                                style="margin-left:5px;border:0">
                                                 <i class="icon-credit-card"></i>
                                                 承运人身份证
@@ -346,7 +350,7 @@
                                             </div>
                                             <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
                                                    for="grainid">
-                                                粮食品种:
+                                                *粮食品种:
                                             </label>
                                             <div class="col-sm-2">
                                                 <select id="grainid" name="grainid" class="form-control">
@@ -442,7 +446,7 @@
                                         </div>
                                         <div class="form-group">
                                             <!--<div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 入库原由：</label>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 出库原由：</label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="inresontype" name="inresontype" class="form-control">
                                                     </select>
@@ -462,13 +466,13 @@
                                 <!-- /span -->
                             </div>
                             <div class="row" style="float: right;padding-right: 12px">
-                                <object id="CertCtl" type="application/cert-reader" width="0"
+                                <!--<object id="CertCtl" type="application/cert-reader" width="0"
                                         height="0">
                                     <p style="color:#FF0000;">控件不可用，可能未正确安装控件及驱动，或者控件未启用。<a
                                             onclick="download_Huashi()"
                                             style="text-decoration: underline;color:blue;cursor:pointer;">下载</a>
                                     </p>
-                                </object>
+                                </object>-->
                                 <a class="btn btn-success" style="border: 0;width: 120px;"
                                    onclick="toFindInoutDetail(1)">
                                     <i class="icon-arrow-left icon-on-left"></i>
@@ -487,15 +491,28 @@
                                     <i class="icon-credit-card"></i>
                                     刷卡查单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toInoutList()">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toInoutList()">
                                     <i class="icon-tint"></i>
                                     流水号查单
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toSave(2)">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toSave(2)" id="canSaveWrite">
                                     <i class="icon-save"></i>
                                     保存写卡
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;" onclick="toSave()">
+                                <a class="btn btn-success" style="border: 0;width: 120px;"
+                                   onclick="toSave()" id="canSave">
+                                    <i class="icon-save"></i>
+                                    保存
+                                </a>
+                                <a class="btn btn-default" style="display: none;border: 0;width: 120px;"
+                                   id="notSaveWrite">
+                                    <i class="icon-save"></i>
+                                    保存写卡
+                                </a>
+                                <a class="btn btn-default" style="display: none;border: 0;width: 120px;"
+                                   id="notSave">
                                     <i class="icon-save"></i>
                                     保存
                                 </a>
@@ -527,7 +544,9 @@
     var urlPrefix = "/graindepot-inout";
     var g_userAddress = [[${userAddress}]];
     var IcObject = new IcFactory(1).createIcObject();
+    var IdObject = new IdFactory(1).createIdObject();
     $(function ($) {
+        //隐藏按钮
         initOnetomany();
         initSettlemothod();
         initPacktype();
@@ -538,6 +557,8 @@
         initTrader();
         initFprovince();
         comm_initGrainattr();
+        //结算单模板
+
         //initPlanfileInput();
         //初始化计划安排
         //initPlanfileInplan();
@@ -545,8 +566,19 @@
         //window.setInterval("RefreshTrucknum()",3000);
         //默认选择个人
         $("#customtype1").attr("checked", "checked");
+        initPrinttemp();
         sellmannameAutoComplete();
     });
+
+    //结算单
+    function initPrinttemp() {
+        $("#printtempid").bootstrapSelect({
+            url: '/graindepot-inout/tempfile/list',
+            type: 'GET',
+            valueField: 'tempid',
+            textField: 'tempname'
+        })
+    }
 
     function chooseTruckNum() {
         var trucknumText = $("#active_trucknum option:selected").text();
@@ -557,75 +589,93 @@
 
     //flag=2 表示保存并写卡
     function toSave(flag) {
-        $("#validation-form").bootstrapValidator('validate');//提交验证
-        if ($("#validation-form").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码
-            var param = turnArrayToJson($('form').serializeArray());
-            $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
-                .then(function (result) {
-                    param.billid = result.data;
-                    param.sellmansex = getSexByText($("#gender").text());
-                    $.post("/graindepot-inout/register/editOut", param, function (result) {
-                        if (result.success) {
-                            $("#billcode").val(result.data.billcode);
-                            if (flag == 2) {
-                               //判断当前的卡能否进行绑定（粮库下无未退卡的单据跟其绑定）
-                                var iccardnum = IcObject.readCardNum();
-                                if (iccardnum == "ERROR") {
-                                    $("#billstate").html("已保存写卡失败");
-                                    return
-                                }
-                                var canWriteCard = dataJson("GET"
-                                    , "/graindepot-inout/register/canWriteCard", {iccardnum: iccardnum});
-                                if (!canWriteCard.success) {
-                                    $.bootstrapBox.alert.init({message: "单据保存成功," + canWriteCard.message});
-                                    return
-                                }
-                                var writeSuccess = writeCard(result.data);
-                                if (writeSuccess) {
-                                    //去更新绑卡字段
-                                    $.post("/graindepot-inout/register/inout/updateByMap", {
-                                        Where_billid: result.data.billid,
-                                        regstate: 1,
-                                        iccardnum: iccardnum
-                                    }).then(function () {
-                                        $("#billstate").html("已保存已写卡");
-                                    }, function () {
-                                        $("#billstate").html("已保存写卡失败");
-                                    });
-                                } else {
-                                    $("#billstate").html("已保存写卡失败");
-                                }
-                            } else {
-                                $("#billstate").html("已保存未写卡");
+        //判断必填项
+        if (!checkRequire())return;
+        var param = turnArrayToJson($('form').serializeArray());
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
+            .then(function (result) {
+                param.billid = result.data;
+                param.sellmansex = getSexByText($("#gender").text());
+                $.post("/graindepot-inout/register/editOut", param, function (result) {
+                    if (result.success) {
+                        //将保存成功的单据保存到cache中，便于新增或者取消时显示上次数据
+                        setCookie("latestIn", JSON.stringify(result.data), 1);
+                        $("#billcode").val(result.data.billcode);
+                        if (flag == 2) {
+                            //判断当前的卡能否进行绑定（粮库下无未退卡的单据跟其绑定）
+                            var iccardnum = IcObject.readCardNum();
+                            if (iccardnum == "ERROR") {
+                                $("#billstate").html("已保存写卡失败");
+                                return
                             }
-                            $.bootstrapBox.alert.init({message: result.message})
+                            var canWriteCard = dataJson("GET"
+                                , "/graindepot-inout/register/canWriteCard", {iccardnum: iccardnum});
+                            if (!canWriteCard.success) {
+                                $.bootstrapBox.alert.init({message: "单据保存成功," + canWriteCard.message});
+                                return
+                            }
+                            //可以写卡后继续操作
+                            var writeSuccess = writeCard(result.data);
+                            if (writeSuccess) {
+                                //去更新绑卡字段和ic卡号
+                                $.post("/graindepot-inout/register/inout/updateByMap", {
+                                    Where_billid: result.data.billid,
+                                    regstate: 1,
+                                    iccardnum: iccardnum
+                                }).then(function () {
+                                    $("#billstate").html("已保存已写卡");
+                                });
+                            } else {
+                                $("#billstate").html("已保存写卡失败");
+                            }
                         } else {
-                            $.bootstrapBox.alert.init({message: "保存失败"})
+                            $("#billstate").html("已保存未写卡");
                         }
-                    });
-
+                        $.bootstrapBox.alert.init({message: result.message})
+                    } else {
+                        $.bootstrapBox.alert.init({message: "保存失败"})
+                    }
                 });
 
+            });
+        //保存大户信息
+        var individual = {
+            name: param.sellmanname,
+            idcard: param.sellmanidcard,
+            address: param.sellmanaddress,
+            gender: param.sellmansex,
+            phone: param.sellmanphone,
+            trucktype: param.trucktype,
+            trucknum: param.trucknum,
+            nation: $("#nation").html(),
+            bornday: $("#bornday").html(),
+            certorg: $("#certorg").html(),
+            effdate: $("#effdate").html(),
+            expdate: $("#expdate").html()
+        };
+        $.post("/graindepot-inout/register/addIndividual", individual)
+    }
 
-            //保存大户信息
-            var individual = {
-                name: param.sellmanname,
-                idcard: param.sellmanidcard,
-                address: param.sellmanaddress,
-                sex: param.sellmansex,
-                phone: param.sellmanphone,
-                trucktype: param.trucktype,
-                trucknum: param.trucknum,
-                nation: $("#nation").html(),
-                bornday: $("#bornday").html(),
-                certorg: $("#certorg").html(),
-                effdate: $("#effdate").html(),
-                expdate: $("#expdate").html()
-            };
-            $.post("/graindepot-inout/register/addIndividual", individual)
-
-
+    function checkRequire() {
+        var customtype = $("input[name='customtype']:checked").val();
+        if (customtype == 1) {
+            if (!$("#sellmanname").val()) {
+                $.bootstrapBox.alert.init({message: "售粮人不能为空"});
+                return false
+            }
         }
+        if (customtype == 2) {
+            if (!$("#traderid").bootstrapSelect("getValue")) {
+                $.bootstrapBox.alert.init({message: "售粮单位不能为空"});
+                return false
+            }
+        }
+        if (!$("#grainid").bootstrapSelect("getValue")){
+            $.bootstrapBox.alert.init({message:"粮食品种不能为空"});
+            return false
+        }
+        return true
+
     }
 
     function getSexByText(text) {
@@ -663,12 +713,7 @@
                 $("#sellmanidcard").val(item.idcard);
                 $("#sellmanphone").val(item.phone);
                 $("#sellmanaddress").val(item.address);
-                $("#nation").html(item.nation);
-                $("#bornday").html(item.bornday);
-                $("#certorg").html(item.certorg);
-                $("#effdate").html(item.effdate);
-                $("#expdate").html(item.expdate);
-
+                setIndividualOtherInfo(item);
             },
             delay: 500//延迟时间
         });
@@ -837,10 +882,9 @@
         $("#sellmanaddress").val("");
         if (type == 1) {
             //身份证变为必填
-            $("#idcard").html("*身份证号:");
             $("#manname").html("*售粮人:");
             $("#trader").html("售粮单位:");
-            $("#validation-form").bootstrapValidator("addField", "sellmanidcard", {
+            /*$("#validation-form").bootstrapValidator("addField", "sellmanidcard", {
                 validators: {
                     notEmpty: {}
                 }
@@ -852,21 +896,20 @@
                 }
             });
             //售粮单位不是必填项
-            $("#validation-form").bootstrapValidator('removeField', 'traderid');
+            $("#validation-form").bootstrapValidator('removeField', 'traderid');*/
         } else {
-            $("#idcard").html("身份证号:");
             $("#manname").html("售粮人:");
             $("#trader").html("*售粮单位:");
-            //让身份证栏不是必填项
-            $("#validation-form").bootstrapValidator('removeField', 'sellmanidcard');
-            //清空售粮人不是必填项
-            $("#validation-form").bootstrapValidator('removeField', 'sellmanname');
-            //售粮单位变为必填
-            $("#validation-form").bootstrapValidator("addField", "traderid", {
-                validators: {
-                    notEmpty: {}
-                }
-            });
+            /* //让身份证栏不是必填项
+             $("#validation-form").bootstrapValidator('removeField', 'sellmanidcard');
+             //清空售粮人不是必填项
+             $("#validation-form").bootstrapValidator('removeField', 'sellmanname');
+             //售粮单位变为必填
+             $("#validation-form").bootstrapValidator("addField", "traderid", {
+                 validators: {
+                     notEmpty: {}
+                 }
+             });*/
 
         }
     }
@@ -881,11 +924,17 @@
         $("#billstate").html("未保存");
         $("#customtype1").attr("checked", "checked");
         $("#customtype2").attr("checked", false);
+        //设置保存按钮显示
+        $("#canSave").show();
+        $("#canSaveWrite").show();
+        $("#notSave").hide();
+        $("#notSaveWrite").hide();
         //触发change事件
         $("select").trigger("change");
+        setDefaultInfo();
     }
 
-    //根据查出的入库信息初始化页面显示
+    //根据查出的出库信息初始化页面显示
     function setInout(inout) {
         $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
         $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
@@ -926,18 +975,34 @@
         } else if (inout.regstate == -1) {
             $("#billstate").html("已保存已退港");
         }
+        if (inout.stopflag == 1) {
+            $("#billstate").html("已终止");
+            $("#canSave").hide();
+            $("#canSaveWrite").hide();
+            $("#notSave").show();
+            $("#notSaveWrite").show();
+        } else {
+            $("#canSave").show();
+            $("#canSaveWrite").show();
+            $("#notSave").hide();
+            $("#notSaveWrite").hide();
+        }
+        //清除证件其他信息
+        clearIndividualOtherInfo();
     }
 
     //type 1:前一单 2:刷卡查单  3:后一单
     function toFindInoutDetail(flag) {
         var billcode;
         if (flag == 2) {
+            //billcode = d8ReadCard(1);
             billcode = IcObject.readCard(1);
             if (billcode == "ERROR") {
                 return
             } else {
                 if (!billcode) {
                     $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                    return
                 }
             }
         } else {
@@ -969,7 +1034,7 @@
     function toInoutList() {
         $.bootstrapBox.dialog.init({
             title: "出库单据列表",
-            url: urlPrefix + "/inout/toInout?inoutflag=-1&type=1",
+            url: urlPrefix + "/inout/toDialogInout?inoutflag=-1&type=1",
             width: $(window).width() * 1,
             height: $(window).height() * 0.8
         })
@@ -984,23 +1049,88 @@
         ];
         if (inout.sellmanidcard && inout.sellmanidcard.length > 16) {
             data.push({position: 5, data: inout.sellmanidcard.substr(0, 16)});
-            data.push({position: 6, data: inout.sellmanidcard.substr(16) + "|"})
+            data.push({position: 6, data: inout.sellmanidcard.substr(16)})
         } else {
             data.push({position: 5, data: inout.sellmanidcard});
         }
-        //var rd = document.getElementById("rd");
+        //  var rd = document.getElementById("rd");
+        // return d8WriteCard(data, rd);
         return IcObject.writeCard(data);
     }
 
     //取消按钮
     function reset() {
-        toAdd();
+        //根据billcode获取billid
+        var billcode = $("#billcode").val();
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
+            .then(function (result) {
+                doFindInout(result.data, 2);
+            });
+        //toAdd();
         /*$(".form-group").find("input").each(function () {
             $(this).val(undefined)
         });
         $(".form-group").find("select").each(function () {
             $(this).bootstrapSelect("reload")
         })*/
+    }
+
+    //填充证件其他信息
+    function setIndividualOtherInfo(individual) {
+        $("#gender").html(individual.genderstr);
+        $("#nation").html(individual.nation);
+        $("#bornday").html(individual.bornday);
+        $("#certorg").html(individual.certorg);
+        $("#effdate").html(individual.effdate);
+        $("#expdate").html(individual.expdate);
+    }
+
+    //清除证件其他信
+    function clearIndividualOtherInfo(individual) {
+        $("#gender").html("");
+        $("#nation").html("");
+        $("#bornday").html("");
+        $("#certorg").html("");
+        $("#effdate").html("");
+        $("#expdate").html("");
+    }
+
+    //点击新增或者取消时填充上条记录的信息到表中
+    function setDefaultInfo() {
+        var inoutStr = getCookie("latestIn");
+        var inout = JSON.parse(inoutStr);
+        $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
+        $("#storageid").bootstrapSelect("setValue", inout.storageid);
+        $("#grainid").bootstrapSelect("setValue", inout.grainid);
+        $("#inplanid").bootstrapSelect("setValue", inout.inplanid);
+        $("#contractid").bootstrapSelect("setValue", inout.contractid);
+        $("#grainattrid").bootstrapSelect("setValue", inout.grainattrid);
+        $("#producingyear").val(inout.producingyear);
+        $("#soucearea").val(inout.soucearea);
+    }
+
+    function readCert() {
+        var info = IdObject.readIdCard();
+        if (info) {
+            $("#sellmanname").val(info.name);
+            $("#sellmanaddress").val(info.address);
+            $("#sellmanidcard").val(info.idnumber);
+            $("#gender").text(info.sex);
+            $("#nation").text(info.nation);
+            $("#bornday").text(info.birthday);
+            $("#certorg").text(info.agency);
+            $("#effdate").text(info.valid.split("-")[0]);
+            $("#expdate").text(info.valid.split("-")[1]);
+            $("#photostr").attr("src", "data:image/jpeg;base64," + info.picBase64);
+        }
+    }
+
+    function readCarrierCert() {
+        var info = IdObject.readIdCard();
+        if (info) {
+            $("#carriername").val(info.name);
+            $("#carrieridcard").val(info.idnumber);
+        }
     }
 
 </script>

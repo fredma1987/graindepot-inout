@@ -1,42 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script th:inline="javascript">
-
-    </script>
 </head>
 <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
 <script th:src="@{/graindepot-inout/js/IC.js}"></script>
 <body>
 <object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
 </object>
-<div>
-    <script th:src="@{../js/huashi.js}"></script>
-    <script th:src="@{../js/d8.js}"></script>
-    <div th:replace="navbar::navbar"></div>
+<div class="main-container" id="main-container" style="margin-top: -29px;">
     <div class="main-container-inner">
-        <!--<div class="well">
-            <a href="#" id="timeLine"  rel="popover"
-               data-content=""
-               data-original-title="单据进度">
-                单据进度
-            </a>
-        </div>-->
-        <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
+        <div class="main-content" id="main-content" style="margin-left:0px;width:100%">
             <div class="page-content" style="padding:10px 30px 0px">
-                <div class="page-header">
-                    <h1>
-                        扦样检验
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-
-                        </small>
-                    </h1>
-                </div>
-                <!-- /.page-header -->
+                <!-- /.row -->
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
@@ -244,21 +219,21 @@
                     </div>
                     <!-- /.col -->
                 </div>
-                <!-- /.row -->
             </div>
             <!-- /.page-content -->
         </div>
         <!-- /.main-content -->
     </div>
     <!-- /.main-container-inner -->
-
 </div>
+
 <!-- /.main-container -->
 
 <script th:inline="javascript">
     var g_grainInspectItem = [];//当前质检信息标准数据
     var g_grainRank = {};//当前粮食品种等级划分标准
     var g_userAddress = [[${userAddress}]];
+    var g_billcode = [[${billcode}]];
     var IcObject = new IcFactory(1).createIcObject();
     $(function () {
         initStorage();
@@ -275,6 +250,13 @@
         $('.form_date').bootstrapDate('setValue', new Date());
         //加载单据进度tooltip
         $("#timeLine").popover({html: true, trigger: 'hover'});
+        if (g_billcode){
+            //根据billcode获取billid
+            $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: g_billcode})
+                .then(function (result) {
+                    doFindInoutInsp(result.data, 2);
+                });
+        }
 
     });
 
@@ -629,7 +611,8 @@
             if (result.success) {
                 $("#billstate").html("已保存");
             }
-            $.bootstrapBox.alert.init({message: result.message})
+           // $.bootstrapBox.alert.init({message: result.message});
+            parent.changeTab(2,param.billcode);
         });
     }
 

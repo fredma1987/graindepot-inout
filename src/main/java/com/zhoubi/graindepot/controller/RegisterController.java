@@ -48,7 +48,8 @@ public class RegisterController extends BaseController {
 
     //入库登记
     @RequestMapping(value = "/toInRegister", method = RequestMethod.GET)
-    public String toInRegister(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String toInRegister(Model model, HttpServletRequest request
+            , HttpServletResponse response) {
         BaseUser user = getCurrentUser();
         UserAddress ua = getUserAddress();
         Video video = videoService.selectRegiterVideo(user.getGraindepotid());

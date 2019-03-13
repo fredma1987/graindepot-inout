@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="head::head(${title})">
+</head>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.full.min.css}" />
+<script th:src="@{/assets/js/jquery-ui-1.10.3.full.min.js}"></script>
+<script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
+<body>
+<div th:replace="navbar::navbar"></div>
+<div class="main-container" id="main-container">
+    <div class="col-sm-12">
+        <div id="tabs">
+            <ul>
+                <li>
+                    <a href="#tabs-1">出库登记</a>
+                </li>
+                <li>
+                    <a href="#tabs-3">出库检斤</a>
+                </li>
+            </ul>
+
+            <div id="tabs-1" style="height: 660px;">
+                <iframe id="outRegister" width=100% height=100% frameborder='no'  noresize border=0 marginWidth=10 marginHeight=10
+                        src="/graindepot-inout/quickinout/out/toOutRegister"></iframe>
+            </div>
+            <div id="tabs-2" style="height: 660px">
+                <iframe id="outWeight" width=100% height=100% frameborder='no'  noresize border=0 marginWidth=10 marginHeight=10
+                        src="/graindepot-inout/quickinout/out/toOutWeight"></iframe>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+<script th:inline="javascript">
+    var urlPrefix = "/graindepot-inout";
+    var theTable;
+    var g_inoutflag = [[${inoutflag}]];
+    var g_type = [[${type}]];//1:从登记页跳转 2:从检验 3:称毛重或者称皮重 4:结算 5:补单
+    $(document).ready(function () {
+        $( "#tabs" ).tabs();
+    });
+
+    function changeTab(index,billcode) {
+        if (index==1){
+            var o=$("#outWeight").attr("src");
+            var n=o+"?billcode="+billcode;
+            $("#outWeight").attr("src",n);
+        }
+        $( "#tabs" ).tabs({
+            active: index
+        });
+    }
+
+
+
+
+</script>

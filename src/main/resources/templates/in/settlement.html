@@ -335,12 +335,22 @@
                                     流水号查单
                                 </a>
                                 <a class="btn btn-success" style="border: 0;width: 120px;"
-                                   onclick="toSave()">
+                                   onclick="toSave()" id="canSave">
                                     <i class="icon-legal"></i>
                                     确认结算
                                 </a>
                                 <a class="btn btn-success" style="border: 0;width: 150px;"
-                                   onclick="toSave(2)">
+                                   onclick="toSave(2)" id="canSaveBack">
+                                    <i class="icon-legal"></i>
+                                    确认结算并退卡
+                                </a>
+                                <a class="btn btn-default" style="display: none;border: 0;width: 120px;"
+                                   id="notSave">
+                                    <i class="icon-legal"></i>
+                                    确认结算
+                                </a>
+                                <a class="btn btn-default" style="display: none;border: 0;width: 150px;"
+                                   id="notSaveBack">
                                     <i class="icon-legal"></i>
                                     确认结算并退卡
                                 </a>
@@ -349,7 +359,8 @@
                                     <i class="icon-print"></i>
                                     打印预览
                                 </a>
-                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px">
+                                <a class="btn btn-success" style="border: 0;width: 120px;padding-left:10px"
+                                   onclick="reset()">
                                     <i class="icon-undo"></i>
                                     取消
                                 </a>
@@ -480,7 +491,8 @@
                 return
             } else {
                 if (!billcode) {
-                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"});
+                    return
                 }
             }
         } else {
@@ -542,6 +554,20 @@
             $("#amount").val(($("#paidweight").val() * $("#price").val()).toFixed(3));
             $("#billstate").html("未保存");
         }
+        //设置确认结算  确认结算并退卡按钮的显示
+        if (inout.stopflag == 1) {
+            $("#canSave").hide();
+            $("#canSaveBack").hide();
+            $("#notSave").show();
+            $("#notSaveBack").show();
+        } else {
+            $("#canSave").show();
+            $("#canSaveBack").show();
+            $("#notSave").hide();
+            $("#notSaveBack").hide();
+        }
+
+
         //根据billid查询当前质检信息
         $.post("/graindepot-inout/inspect/selectById", {billid: inout.billid})
             .then(function (result) {
@@ -553,6 +579,7 @@
             });
 
         $("#timeLine").attr("data-content", getInoutTooltipHtml(inout));
+        $("input").trigger("change")
     }
 
     //根据粮食品种动态生成质检标准
@@ -602,9 +629,16 @@
                     $.post("/graindepot-inout/settlement/editSettlement", param, function (result) {
                         if (result.success) {
                             $("#billstate").html("已保存");
-                        }
-                        if (flag==2){
-                            toBackIC()
+                            //单据保存成功之后退卡
+                            if (flag == 2) {
+                                if (toBackIC()) {
+                                    $.post("/graindepot-inout/settlement/setBackicflag", {
+                                        billid: param.billid,
+                                        backicflag: 1,
+                                        backreason: "结算完成,正常退卡"
+                                    })
+                                }
+                            }
                         }
                         $.bootstrapBox.alert.init({message: result.message})
                     });
@@ -616,21 +650,25 @@
 
     function toBackIC() {
         var billcode = IcObject.readCard(1);
-        if (billcode=="ERROR"){
-            return
+        if (billcode == "ERROR") {
+            return false
         } else {
             if (!billcode) {
                 $.bootstrapBox.alert.init({message: "ic卡未绑定单据,无需退卡"})
+                return false
             } else {
+                var theBillcode = $("#billcode").val();
+                if (theBillcode != billcode) {
+                    $.bootstrapBox.alert.init({message: "卡的登记流水号和当前单据不一致，无法退卡"});
+                    return false
+                }
                 var result = IcObject.writeCard([{position: 1, data: ''}]);
-                if (result){
-                    $.post("/graindepot-inout/exception/setInoutBackIC",{
-                        billcode:billcode
-                    }).then(function () {
-                        $.bootstrapBox.alert.init({message: "退卡成功"});
-                    })
+                if (result == "ERROR") {
+                    $.bootstrapBox.alert.init({message: '清卡失败'});
+                    return false
                 } else {
-                    $.bootstrapBox.alert.init({message:'清卡失败'})
+                    $.bootstrapBox.alert.init({message: "退卡成功"});
+                    return true
                 }
             }
         }
@@ -656,7 +694,7 @@
     function toInoutList() {
         $.bootstrapBox.dialog.init({
             title: "入库单据列表",
-            url: "/graindepot-inout/inout/toInout?inoutflag=1&type=4",
+            url: "/graindepot-inout/inout/toDialogInout?inoutflag=1&type=4",
             width: $(window).width() * 1,
             height: $(window).height() * 0.8
         })
@@ -684,16 +722,22 @@
                         $.bootstrapBox.dialog.init({
                             title: "打印预览",
                             url: "http://localhost:8080/ureport/preview?_u=file:"
-                                + result.data.temppath+"&billid="+billid,
+                                + result.data.temppath + "&billid=" + billid,
                             width: $(window).width() * 0.8,
                             height: $(window).height() * 0.8
                         });
 
                     })
             });
+    }
 
-
-
+    function reset() {
+        var billcode = $("#billcode").val();
+        //根据billcode获取billid
+        $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
+            .then(function (result) {
+                doFindSettlementInout(result.data, 2);
+            });
     }
 </script>
 </body>

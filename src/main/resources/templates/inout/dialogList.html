@@ -2,18 +2,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
 </head>
-<link rel="stylesheet" th:href="@{/assets/css/jquery-ui-1.10.3.full.min.css}" />
-<script th:src="@{/assets/js/jquery-ui-1.10.3.full.min.js}"></script>
-<script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
 <body>
-<div th:replace="navbar::navbar"></div>
 <div class="main-container" id="main-container">
-    <div class="breadcrumbs" id="breadcrumbs">
+    <!--<div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
-            <li>
-                <i class="icon-home home-icon"></i>
-                首页
-            </li>
             <li th:if="${inoutflag==1}">
                 <i class="icon-table home-icon"></i>
                 入库单据列表
@@ -23,7 +15,7 @@
                 出库单据列表
             </li>
         </ul>
-    </div>
+    </div>-->
     <div style="margin-top: 4px;margin-bottom: 4px">
         <div class="col-sm-10">
 
@@ -137,31 +129,6 @@
         </table>
 
     </div>
-    <div class="col-sm-12">
-        <div id="tabs">
-            <ul>
-                <li>
-                    <a href="/graindepot-inout/page/iccard">入库登记</a>
-                </li>
-
-                <li>
-                    <a href="#tabs-2"></a>
-                </li>
-
-                <li>
-                    <a href="#tabs-3">Aenean lacinia</a>
-                </li>
-            </ul>
-
-            <div id="tabs-2">
-                <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla..</p>
-            </div>
-
-            <div id="tabs-3">
-                <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Praesent eu risus hendrerit ligula tempus pretium.</p>
-            </div>
-        </div>
-    </div>
 
 
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
@@ -184,7 +151,7 @@
             billtype:g_type==5?2:1
         };
         query(param);
-        $( "#tabs" ).tabs();
+
     });
 
 
@@ -294,10 +261,10 @@
                     data: "billid",
                     render: function (data, type, row) {
                         return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
-                            '<a class="green" href="javascript:toDetail(' + data + ')"' +
-                            ' title="详情" ' +
+                            '<a class="green" href="javascript:toChoose(' + data + ')"' +
+                            ' title="选择" ' +
                             '>' +
-                            '<i class="icon-eye-open bigger-130"></i>' +
+                            '<i class="icon-hand-up bigger-130"></i>' +
                             '</a>' +
                             '</div>';
 
@@ -453,15 +420,21 @@
 
     }
 
-    //查看详情
-    function toDetail(billid) {
-        $.bootstrapBox.dialog.init({
-            title: "预收款详情",
-            url: "/graindepot-inout/inout/detail/" + billid,
-            width: '1200px',
-            height: '550px'
-        })
+    function toChoose(billid) {
+        if (g_type==1){
+            parent.doFindInout(billid,2)
+        } else if(g_type==2){
+            parent.doFindInoutInsp(billid,2)
+        }else if(g_type==3){
+            parent.doFindWeightInout(billid,2,1)
+        }else if (g_type == 4) {
+            parent.doFindSettlementInout(billid,2)
+        }else if (g_type == 5) {
+            parent.doFindInoutInsupple(billid,2)
+        }
+        parent.$.bootstrapBox.dialog.close();
     }
+
 
 
 

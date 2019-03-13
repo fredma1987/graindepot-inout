@@ -319,20 +319,24 @@
                 {
                     data: "billid",
                     render: function (data, type, row) {
-                        var htmlStr = '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
-                            '<a class="red" href="javascript:toStop(' + data + ')"' +
-                            ' title="终止" ' +
-                            '>' +
-                            '终止' +
-                            '</a>';
-                        /* //如果已绑卡未退卡则显示退卡按钮
-                         if (row.regstate == 1 && !row.backicflag) {
-                             htmlStr += '<a class="red" href="javascript:toBackIC(' + data + ')"' +
-                                 ' title="退卡" ' +
+                        var htmlStr ="";
+                        if (!row.stopflag){
+                            htmlStr+='<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
+                                '<a class="red" href="javascript:toStop(' + data + ')"' +
+                                ' title="终止" ' +
+                                '>' +
+                                '终止' +
+                                '</a>'
+                        }
+                         //如果已终止显示恢复按钮
+                         if (row.stopflag == 1) {
+                             htmlStr += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
+                                 '<a class="red" href="javascript:toRestoreStop(' + data + ')"' +
+                                 ' title="恢复" ' +
                                  '>' +
-                                 '退卡' +
+                                 '恢复' +
                                  '</a>'
-                         }*/
+                         }
                         htmlStr += '</div>';
 
                         return htmlStr;
@@ -410,9 +414,31 @@
                     //更新终止标志位 和 终止原有
                     $.post("/graindepot-inout/exception/setInoutStop", {
                         billid: billid,
-                        stopreason: result
+                        stopreason: result,
+                        stopflag:1
                     }).then(function (result) {
                         $.bootstrapBox.alert.init({message: result.message})
+                        $("#myTable").bootstrapTable("reload", true)
+                    })
+                }
+
+            }
+
+        })
+    }
+
+    function toRestoreStop(billid) {
+        $.bootstrapBox.confirm.init({
+            message: '确认恢复单据?',
+            callback: function (result) {
+                if (result) {
+                    //更新终止标志位 和 终止原有
+                    $.post("/graindepot-inout/exception/setInoutStop", {
+                        billid: billid,
+                        stopreason: result,
+                        stopflag:0
+                    }).then(function (result) {
+                        $.bootstrapBox.alert.init({message: result.message});
                         $("#myTable").bootstrapTable("reload", true)
                     })
                 }

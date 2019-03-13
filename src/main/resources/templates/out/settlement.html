@@ -117,7 +117,7 @@
                                             </div>
 
                                         </div>
-
+                                        <hr style="margin-bottom:5px;margin-top:5px"/>
                                         <div class="form-group">
                                             <div class="col-sm-3">
                                                 <a class="btn btn-sm btn-primary" onclick="toAdd()">
@@ -129,10 +129,10 @@
                                                     本次不结算
                                                 </a>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-2">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">批量修改结算单价:</span>
-                                                    <input id="price" name="price" type="text">
+                                                    <input id="price" name="price" type="text" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
@@ -347,7 +347,6 @@
             onSelect: function (storageid, row) {
                 if (storageid) {
                     query();
-                    setPrerece();
                 }
 
             }
@@ -395,22 +394,21 @@
 
     //设置预付款
     function setPrerece() {
-        var storageid = $("#storageid").bootstrapSelect("getValue");
         var traderid = $("#traderid").bootstrapSelect("getValue");
-        if (!storageid || !traderid) {
+        if (!traderid) {
             return
         }
-        $.get("/graindepot-inout/settlement/prerece/one/byMap", {storageid: storageid, traderid: traderid})
-            .then(function (result) {
-                var preamt = result.data.amount;
-                preamt = preamt ? preamt : 0;
+        $.get("/graindepot-inout/settlement/prerece/leftAmount", {traderid: traderid})
+                .then(function (result) {
+                var leftPreamt = result.data;
+                leftPreamt = leftPreamt ? leftPreamt : 0;
                 var usepreamt = $("#usepreamt").val();
                 usepreamt = usepreamt ? usepreamt : 0;
-                var o = preamt - usepreamt;
+                var o = leftPreamt - usepreamt;
                 if (o >= 0) {
-                    $("#preamt").val(preamt - usepreamt);
+                    $("#preamt").val(leftPreamt - usepreamt);
                 } else {
-                    $("#usepreamt").val(preamt);
+                    $("#usepreamt").val(leftPreamt);
                     $("#preamt").val(0);
                 }
 

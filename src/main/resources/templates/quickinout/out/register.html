@@ -8,9 +8,6 @@
 </head>
 <body>
 <script th:src="@{/assets/js/bootstrap3-typeahead.js}"></script>
-<script th:src="@{../js/huashi.js}"></script>
-<script th:src="@{../js/d8.js}"></script>
-<script th:src="@{../js/jlcard.js}"></script>
 <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
 <script th:src="@{/graindepot-video/js/hik3.js}"></script>
 <script th:src="@{/graindepot-inout/js/IC.js}"></script>
@@ -61,28 +58,15 @@
         clickStartRealPlay(ip, channel, bZeroChannel, iStreamType, 0);
     }
 </script>
-<div th:replace="navbar::navbar"></div>
 <object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
 </object>
-<div class="main-container" id="main-container">
+<div class="main-container" id="main-container" style="margin-top: -29px;">
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="margin-left:0px;width:100%">
             <div class="page-content" style="padding:10px 30px 0px">
-                <div class="page-header">
-                    <h1>
-                        入库登记
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-
-                        </small>
-                    </h1>
-                </div>
-                <!-- /.page-header -->
-
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-
                         <form class="form-horizontal" id="validation-form" role="form">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
@@ -116,7 +100,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style="width: 100%;height:50%;text-align: center;">
+                                        <!--<div style="width: 100%;height:50%;text-align: center;">
 
                                             <div style="float:left;width: 70%;height:100%;background-color: black;text-align: center;">
                                                 <div id="divPlugin" style="width:100%;height:230px"></div>
@@ -149,7 +133,7 @@
                                                     车牌识别
                                                 </button>
                                             </div>
-                                        </div>
+                                        </div>-->
 
                                     </div>
                                     <div style="width: 60%;height:100%;padding-left:10px;float: left">
@@ -446,7 +430,7 @@
                                         </div>
                                         <div class="form-group">
                                             <!--<div style="float: left;padding-left: 10px">
-                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 入库原由：</label>
+                                                <label class="col-sm-4 control-label no-padding-right" style="width:70px;padding-left:0px"> 出库原由：</label>
                                                 <div class="col-sm-4" style="width:150px;padding-left:0px">
                                                     <select id="inresontype" name="inresontype" class="form-control">
                                                     </select>
@@ -590,13 +574,13 @@
     //flag=2 表示保存并写卡
     function toSave(flag) {
         //判断必填项
-        if (!checkRequire()) return;
+        if (!checkRequire())return;
         var param = turnArrayToJson($('form').serializeArray());
         $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: param.billcode})
             .then(function (result) {
                 param.billid = result.data;
                 param.sellmansex = getSexByText($("#gender").text());
-                $.post("/graindepot-inout/register/editIn", param, function (result) {
+                $.post("/graindepot-inout/register/editOut", param, function (result) {
                     if (result.success) {
                         //将保存成功的单据保存到cache中，便于新增或者取消时显示上次数据
                         setCookie("latestIn", JSON.stringify(result.data), 1);
@@ -631,7 +615,8 @@
                         } else {
                             $("#billstate").html("已保存未写卡");
                         }
-                        $.bootstrapBox.alert.init({message: result.message})
+                        //$.bootstrapBox.alert.init({message: result.message})
+                        parent.changeTab(1,param.billcode)
                     } else {
                         $.bootstrapBox.alert.init({message: "保存失败"})
                     }
@@ -670,8 +655,8 @@
                 return false
             }
         }
-        if (!$("#grainid").bootstrapSelect("getValue")) {
-            $.bootstrapBox.alert.init({message: "粮食品种不能为空"});
+        if (!$("#grainid").bootstrapSelect("getValue")){
+            $.bootstrapBox.alert.init({message:"粮食品种不能为空"});
             return false
         }
         return true
@@ -934,7 +919,7 @@
         setDefaultInfo();
     }
 
-    //根据查出的入库信息初始化页面显示
+    //根据查出的出库信息初始化页面显示
     function setInout(inout) {
         $("#printtempid").bootstrapSelect("setValue", inout.printtempid);
         $("#onetomany").bootstrapSelect("setValue", inout.onetomany);
@@ -1017,7 +1002,7 @@
     }
 
     function doFindInout(billid, flag) {
-        $.get("/graindepot-inout/inout/findOneIn", {billid: billid, flag: flag})
+        $.get("/graindepot-inout/inout/findOneOut", {billid: billid, flag: flag})
             .then(function (result) {
                 if (result.success) {
                     var inout = result.data;
@@ -1033,8 +1018,8 @@
     //流水号查单
     function toInoutList() {
         $.bootstrapBox.dialog.init({
-            title: "入库单据列表",
-            url: urlPrefix + "/inout/toDialogInout?inoutflag=1&type=1",
+            title: "出库单据列表",
+            url: urlPrefix + "/inout/toDialogInout?inoutflag=-1&type=1",
             width: $(window).width() * 1,
             height: $(window).height() * 0.8
         })

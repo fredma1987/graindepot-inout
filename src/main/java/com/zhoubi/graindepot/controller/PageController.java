@@ -108,4 +108,5 @@ public class PageController extends BaseController {
         String path = "/tempfile/detail";
         return path;
     }
+
 }
