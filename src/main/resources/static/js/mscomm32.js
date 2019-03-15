@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by Administrator on 2019/2/12/012.
  */
 var MSComm1;
@@ -86,10 +86,18 @@ function Receive()
     if(hex.indexOf("%02")>-1){
         var data=hex.split("%");
         var qty="";
-        for(var i=3;i<data.length;i++){
-            qty+=String.fromCharCode(parseInt(data[i],16));
+        if(data.length==9){
+          for(var i=3;i<data.length;i++){
+              qty+=String.fromCharCode(parseInt(data[i],16));
+          }
+          if(hex.indexOf("%2B")>-1){
+            document.getElementById("weight").value = parseInt(qty);
+          }else{
+            qty="-"+qty;
+            document.getElementById("weight").value = parseInt(qty);
+          }
         }
-        document.getElementById("weight").value = parseInt(qty);
+        
     }
 }
 

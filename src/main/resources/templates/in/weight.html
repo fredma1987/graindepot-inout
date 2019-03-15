@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="head::head(${title})">
     <meta charset="UTF-8"/>
@@ -30,8 +30,12 @@
                     Receive();
                     break;
                 } //接收事件
-               // default:
-                //    alert("Event Raised!" + MSComm1.CommEvent);
+                case 1004:{
+                    alert("地磅不稳定，请刷新页面重试……");
+                }
+                default:
+                    //alert("Event Raised!" + MSComm1.CommEvent);
+                    alert("地磅不稳定，请刷新页面重试……");
             }
         }
     </SCRIPT>
@@ -186,7 +190,7 @@
                                                 <PARAM NAME="RThreshold" VALUE="1"/>
                                             </OBJECT>
                                             <input type="button" id="OperateButton"
-                                                   style="width:80px;height:30px;font-size:13px" name="OperateButton"
+                                                   style="width:80px;height:30px;font-size:13px;display:none" name="OperateButton"
                                                    value="打开串口" onClick="OperatePort()">
 
                                         </div>
