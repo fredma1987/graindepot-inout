@@ -30,8 +30,8 @@
                     Receive();
                     break;
                 } //接收事件
-                default:
-                    alert("Event Raised!" + MSComm1.CommEvent);
+               // default:
+                //    alert("Event Raised!" + MSComm1.CommEvent);
             }
         }
     </SCRIPT>
@@ -167,7 +167,7 @@
                                             <OBJECT id="MSComm1" CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014"
                                                     codebase="MSCOMM32.OCX" type="application/x-oleobject"
                                                     style="width:0px;height:0px">
-                                                <PARAM NAME="CommPort" VALUE="2"/>
+                                                <PARAM NAME="CommPort" VALUE="1"/>
                                                 <PARAM NAME="DataBits" VALUE="8"/>
                                                 <PARAM NAME="StopBits" VALUE="1"/>
                                                 <PARAM NAME="BaudRate" VALUE="9600"/>
@@ -481,6 +481,7 @@
         //加载单据进度tooltip
         $("#timeLine").popover({html: true, trigger: 'hover'});
         // query(param);
+        OperatePort();
 
 
     });
@@ -613,7 +614,7 @@
             $("#notSave").hide();
         }
         //设置目前阶段是称毛重还是称皮重
-        setGrossOrTare(inout)
+        setGrossOrTare(inout);
         //查询保管员增加扣率
         if (flag == 2 && from != 1) {
             //TODO 从ic卡中读取数据
@@ -694,7 +695,7 @@
                 return
             } else {
                 if (!billcode) {
-                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"})
+                    $.bootstrapBox.alert.init({message: "ic卡内无流水号数据"});
                     return
                 }
             }
