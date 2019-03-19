@@ -12,11 +12,15 @@
 <body>
 <object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
 </object>
+<object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
 <div>
     <script th:src="@{/graindepot-inout/js/inoutComm.js}"></script>
     <script th:src="@{../js/huashi.js}"></script>
     <script th:src="@{../js/d8.js}"></script>
     <script th:src="@{/graindepot-inout/js/IC.js}"></script>
+    <script th:src="@{/lodop/LodopFuncs.js}"></script>
     <div th:replace="navbar::navbar"></div>
     <div class="main-container-inner">
         <div class="main-content" id="main-content" style="float: left;margin-left:0px;width:100%">
@@ -398,10 +402,10 @@
     //结算单
     function initPrinttemp() {
         $("#printtempid").bootstrapSelect({
-            url: '/graindepot-inout/tempfile/list',
+            url: '/graindepot-inout/lodop/list/1005',
             type: 'GET',
-            valueField: 'tempid',
-            textField: 'tempname'
+            valueField: 'lodopid',
+            textField: 'lodopname'
         })
     }
 
@@ -703,31 +707,26 @@
     //预览打印
     function toPrint() {
         //根据tempid查数据
-        var tempid = $("#printtempid").bootstrapSelect("getValue");
+        var lodopid = $("#printtempid").bootstrapSelect("getValue");
         var billcode = $("#billcode").val();
         if (!billcode) {
             $.bootstrapBox.alert.init({message: "暂无单据"});
             return
         }
-        if (!tempid) {
+        if (!lodopid) {
             $.bootstrapBox.alert.init({message: "结算单模板不能为空"});
             return
         }
-        //通过billcode获取billid
+
+        //根据billcode获取billid
         $.get("/graindepot-inout/inout/billid/byBillcode", {billcode: billcode})
             .then(function (result) {
                 var billid = result.data;
-                $.get("/graindepot-inout/tempfile/one/" + tempid)
-                    .then(function (result) {
-                        $.bootstrapBox.dialog.init({
-                            title: "打印预览",
-                            url: "http://localhost:8080/ureport/preview?_u=file:"
-                                + result.data.temppath + "&billid=" + billid,
-                            width: $(window).width() * 0.8,
-                            height: $(window).height() * 0.8
-                        });
-
-                    })
+                //获取动态模板代码
+                $.get("/graindepot-inout/lodop/one/" + lodopid)
+                    .then(function (lodopResult) {
+                        preview(billid, lodopResult.data.contentstr);
+                    });
             });
     }
 
@@ -738,6 +737,12 @@
             .then(function (result) {
                 doFindSettlementInout(result.data, 2);
             });
+    }
+
+    function preview(billid, jscode) {
+        var Lodop = getLodop();
+        eval(jscode);
+        Lodop.PREVIEW();
     }
 </script>
 </body>

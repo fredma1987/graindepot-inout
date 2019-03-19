@@ -1,1 +1,1 @@
-package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Tempfile;import com.zhoubi.graindepot.base.BaseMapper;public interface TempfileMapper extends BaseMapper<Tempfile> {}
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Tempfile;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.bean.UreportFileEntity;import java.util.List;import java.util.Map;public interface TempfileMapper extends BaseMapper<Tempfile> {    List<UreportFileEntity> getUreportFileList(Map param);}

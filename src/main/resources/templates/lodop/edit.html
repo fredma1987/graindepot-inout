@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head::head(${title})">
+</head>
+
+
+<link th:href="@{/assets/css/select/bootstrap-select.min.css}" rel="stylesheet" media="screen">
+<script th:src="@{/assets/js/select/bootstrap-select.js}"></script>
+<script th:src="@{/assets/js/select/defaults-zh_CN.js}"></script>
+<link th:href="@{/assets/js/uploadify/uploadify.css}" rel="stylesheet" type="text/css">
+<script th:src="@{/assets/js/uploadify/jquery.uploadify.js}"></script>
+
+
+<body style="overflow-x: hidden">
+<form class="form-horizontal" role="form" id="validation-form" method="get">
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="lodopname"> 套打模板名称: </label>
+
+        <div class="col-sm-4">
+            <input size="16" type="text" name="lodopname" id="lodopname"
+                   th:value="${item.lodopname}" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="lodoptype"> 模板类型: </label>
+
+        <div class="col-sm-4">
+            <select id="lodoptype" name="lodoptype" class="form-control" th:value="${item.lodoptype}">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="provinceid"> 省: </label>
+
+        <div class="col-sm-4">
+            <select id="provinceid" name="provinceid" class="form-control">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="cityid"> 市: </label>
+
+        <div class="col-sm-4">
+            <select id="cityid" name="cityid" class="form-control">
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="countyid"> 县: </label>
+
+        <div class="col-sm-4">
+            <select id="countyid" name="countyid" class="form-control">
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="groupid"> 集团: </label>
+
+        <div class="col-sm-4">
+            <select id="groupid" name="groupid" class="form-control" th:value="${item.groupid}">
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="companyid"> 公司: </label>
+
+        <div class="col-sm-4">
+            <select id="companyid" name="companyid" class="form-control" th:value="${item.companyid}">
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="graindepotid"> 粮库: </label>
+
+        <div class="col-sm-4">
+            <select id="graindepotid" name="graindepotid" class="form-control" th:value="${item.graindepotid}">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="isgeneral"> 通用模板: </label>
+
+        <div class="col-sm-4">
+            <select id="isgeneral" name="isgeneral" class="form-control" th:value="${item.isgeneral}">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label no-padding-right" for="contentstr"> js代码: </label>
+
+        <div class="col-sm-7">
+            <textarea class="form-control" rows="10" name="contentstr" id="contentstr"
+                      th:text="${item.contentstr}"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 center">
+            <button class="btn btn-info" type="submit">
+                <i class="icon-ok bigger-110"></i>
+                保存
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="button" onclick="toBack()">
+                <i class="icon-arrow-left bigger-110"></i>
+                返回
+            </button>
+        </div>
+    </div>
+
+</form>
+
+</body>
+</html>
+<script th:inline="javascript">
+    var urlPrefix = "/graindepot-inout";
+    var g_id = [[${id}]];
+    var g_item = [[${item}]];
+    $(function () {
+        //初始化form验证
+        initForm();
+        //初始化下拉框
+        comm_initProvince();
+        //  comm_initCity();
+        //comm_initCounty();
+        //  comm_initGroup();
+        //  comm_initCompany();
+        //  comm_initGraindepot();
+        initLodoptype();
+        initIsgeneral();
+    });
+
+
+    function initLodoptype() {
+        var data = [{value: '1001', text: "入库登记单"}
+            , {value: '1002', text: "入库扦样码单"}, {value: '1003', text: "入库检验单"}
+            , {value: '1004', text: "入库检斤单"}, {value: '1005', text: "入库结算单"}
+            , {value: '2001', text: "出库登记单"}, {value: '2002', text: "出库检斤单"}
+            , {value: '2003', text: "出库结算单"}];
+        $("#lodoptype").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            defaultValue: g_item.lodoptype
+
+        });
+    }
+
+    function initIsgeneral() {
+        var data = [{value: 0, text: "否"}, {value: 1, text: "是"}];
+        $("#isgeneral").bootstrapSelect({
+            data: data,
+            valueField: 'value',
+            textField: 'text',
+            all: false,
+            defaultValue: g_item.isgeneral ? g_item.isgeneral : 0
+
+        });
+    }
+
+
+    function toBack() {
+        parent.$.bootstrapBox.dialog.close();
+    }
+
+    function initForm() {
+        $('#validation-form').bootstrapValidator(/*{
+            fields: {
+                inspectitemid: {
+                    validators: {
+                        remote: {
+                            url: urlPrefix + '/lodop/checkRepeat',
+                            message: '检验项目已存在',//提示消息
+                            //delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                            type: 'POST',//请求方式
+                            data: function (validator) {
+                                return {
+                                    grainid: $("#grainid").bootstrapSelect("getValue"),
+                                    inspectitemid: $("#inspectitemid").bootstrapSelect("getValue"),
+                                    keyid: g_id
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/)
+            .on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+                var param = turnArrayToJson($('form').serializeArray());
+                if (g_id) {
+                    param.lodopid = g_id
+                }
+                $.post(urlPrefix + "/lodop/edit", param, function (result) {
+                    parent.toSave(result)
+                })
+            });
+    }
+
+</script>

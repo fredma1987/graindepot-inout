@@ -1,0 +1,2 @@
+package com.zhoubi.graindepot.biz;import com.zhoubi.graindepot.bean.Lodop;import com.zhoubi.graindepot.mapper.LodopMapper;import com.zhoubi.graindepot.base.BaseMapper;import com.zhoubi.graindepot.base.BaseService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;@Servicepublic class LodopBiz extends BaseService<Lodop>  {	@Autowired	private LodopMapper LodopMapper;	@Override
+	protected BaseMapper<Lodop> getMapper() {		return LodopMapper;	}}

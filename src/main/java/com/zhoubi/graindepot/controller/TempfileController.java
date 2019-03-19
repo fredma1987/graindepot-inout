@@ -4,6 +4,7 @@ import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Tempfile;
+import com.zhoubi.graindepot.bean.UreportFileEntity;
 import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.TempfileBiz;
 import com.zhoubi.graindepot.biz.InspectItemBiz;
@@ -23,8 +24,6 @@ import java.util.Map;
 public class TempfileController extends BaseController {
     @Autowired
     private TempfileBiz tempfileBiz;
-    @Autowired
-    private InspectItemBiz inspectItemBiz;
 
     @GetMapping("toTempfile")
     public  String toTempfile(Model model) {
@@ -37,7 +36,7 @@ public class TempfileController extends BaseController {
 
     @GetMapping("toEdit")
     public String toEdit(Model model, Integer id) {
-        String title = "粮食品种收购价格";
+        String title = "报表";
         model.addAttribute("title", title);
         model.addAttribute("id", id);
         Tempfile item = new Tempfile();
@@ -138,4 +137,15 @@ public class TempfileController extends BaseController {
         Tempfile result = tempfileBiz.selectById(tempid);
         return new JsonResult(result,true);
     }
+
+    //获取报表列表
+    @GetMapping("ureportfile/list")
+    @ResponseBody
+    public List<UreportFileEntity> ureportfile_list(){
+        Map param=new HashMap();
+        List<UreportFileEntity> result = tempfileBiz.getUreportFileList(param);
+        return result;
+    }
+
+
 }

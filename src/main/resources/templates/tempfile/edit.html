@@ -14,7 +14,7 @@
 
     <div class="form-group">
         <label class="col-sm-4 control-label no-padding-right" for="tempcode">
-            打印模板编号:
+            报表编号:
         </label>
         <div class="col-sm-4">
             <select id="tempcode" name="tempcode" class="form-control"
@@ -24,7 +24,7 @@
     </div>
     <div class="form-group">
         <label class="col-sm-4 control-label no-padding-right" for="tempname">
-            打印模板名称:
+            报表名称:
         </label>
         <div class="col-sm-4">
             <input type="text" name="tempname" id="tempname" class="form-control"
@@ -33,13 +33,13 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-4 control-label no-padding-right" for="temppath">
-            模板路径:
+        <label class="col-sm-4 control-label no-padding-right" for="ureportid">
+            报表路径:
         </label>
         <div class="col-sm-4">
-            <input type="text" name="temppath" id="temppath" class="form-control"
-                   th:value="${item.temppath}"
-                   placeholder="模板路径"/>
+            <select id="ureportid" name="ureportid" class="form-control"
+                    th:value="${item.ureportid}">
+            </select>
         </div>
     </div>
 
@@ -70,10 +70,11 @@
         initForm();
         //初始化下拉框
         initTempcode();
+        initUreport();
     });
 
     function initTempcode() {
-        var data = [{value: 1001, text: "入库登记单"}, {value: 1002, text: "入库扦样码单"}
+        var data = [{value: 1001, text: "入库作业当天汇总表"}, {value: 1002, text: "入库扦样码单"}
             , {value: 1003, text: "入库检验单"} , {value: 1004, text: "入库检斤单"}
             ,{value: 1005, text: "入库结算单"}, {value: 2001, text: "出库检斤单"}
             ,{value: 2002, text: "出库检斤单"}, {value: 2003, text: "出库结算单"}];
@@ -85,13 +86,13 @@
         });
     }
 
-    function initGrain() {
-        $("#grainid").bootstrapSelect({
-            url: '/graindepot-base/selector/grainList',
+    function initUreport() {
+        $("#ureportid").bootstrapSelect({
+            url: '/graindepot-inout/tempfile/ureportfile/list',
             type: 'GET',
-            valueField: 'grainid',
-            textField: 'grainname',
-            defaultValue: g_item.grainid
+            valueField: 'ureportid',
+            textField: 'ureportname',
+            defaultValue: g_item.ureportid
         });
     }
 
@@ -105,6 +106,7 @@
             // Prevent form submission
             e.preventDefault();
             var param = turnArrayToJson($('form').serializeArray());
+            param.temppath=$("#ureportid").bootstrapSelect("getText");
             console.log(param);
             if (g_id) {
                 param.keyid = g_id

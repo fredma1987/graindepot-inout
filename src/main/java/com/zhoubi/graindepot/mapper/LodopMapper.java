@@ -1,0 +1,1 @@
+package com.zhoubi.graindepot.mapper;import com.zhoubi.graindepot.bean.Lodop;import com.zhoubi.graindepot.base.BaseMapper;public interface LodopMapper extends BaseMapper<Lodop> {}

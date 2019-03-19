@@ -4,100 +4,26 @@
 </head>
 <body>
 <div th:replace="navbar::navbar"></div>
-<div class="main-container" id="main-container">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <i class="icon-home home-icon"></i>
-                首页
-            </li>
-            <li>
-                <i class="icon-table home-icon"></i>
-                报表模板列表
-            </li>
-        </ul>
-    </div>
-    <div style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-4">
-            <button class="btn btn-sm btn-primary" onclick="toAdd()">
-                <i class="icon-plus align-top bigger-125"></i>
-                添加报表模板
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="doDel()">
-                <i class="icon-trash align-top bigger-125"></i>
-                删除报表模板
-            </button>
-            <button class="btn btn-sm btn-success" onclick="toDesign()">
-                <i class="icon-dashboard align-top bigger-125"></i>
-                设计报表模板
-            </button>
-        </div>
-        <div class="col-sm-8">
-
-            <div class="col-sm-4">
-                <div class="input-group">
-                    <span class="input-group-addon">库点:</span>
-                    <select id="graindepotid" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <button class="btn btn-sm btn-success" onclick="searchTable()">
-                    <i class="icon-search align-top bigger-125"></i>
-                    查询
-                </button>
-                <button class="btn btn-sm btn-warning" onclick="rest()">
-                    <i class="icon-undo align-top bigger-125"></i>
-                    重置
-                </button>
-            </div>
-
-        </div>
+<iframe id="report" width=100% height=100% frameborder='no'
+        style="height: 600px"
+        noresize border=0 marginWidth=10 marginHeight=10
+        src=""></iframe>
 
 
-    </div>
-
-
-    <div class="table-responsive" style="width:100%">
-
-        <table id="myTable" style="width:100%" class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr>
-                <th class="center" style="width: 2%"></th>
-                <th class="center" style="width: 2%">
-                    <label>
-                        <input id="CK" type="checkbox" class="ace"/>
-                        <span class="lbl"></span>
-                    </label>
-                </th>
-                <th style="width: 5%">报表模板</th>
-                <th style="width: 5%">模板文件名</th>
-                <th style="width: 5%">集团名称</th>
-                <th style="width: 5%">库点名称</th>
-                <th style="width: 5%">操作</th>
-            </tr>
-            </thead>
-        </table>
-
-    </div>
-
-
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
-    </a>
-</div>
 </body>
 </html>
 
 
-<script type="text/javascript">
+<script th:inline="javascript">
     var urlPrefix = "/graindepot-inout";
     var theTable;
-
+    var g_userAddress = [[${userAddress}]];
+    var g_billdate=[[${billdate}]];
     $(document).ready(function () {
-        comm_initGrain();
-        query();
-
+        //TODO 入库每日汇总表从数据库取模板，暂时用的是通用模板
+        $("#report").attr("src","/graindepot-report/ureport/preview?" +
+            "_u=mysql:day-in.ureport.xml&billdate="+g_billdate+
+        "&graindepotid="+g_userAddress.graindepotid)
     });
 
 

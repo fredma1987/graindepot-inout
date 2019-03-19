@@ -13,32 +13,28 @@
             </li>
             <li>
                 <i class="icon-table home-icon"></i>
-                报表模板列表
+                套打模板
             </li>
         </ul>
     </div>
     <div style="margin-top: 4px;margin-bottom: 4px">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <button class="btn btn-sm btn-primary" onclick="toAdd()">
                 <i class="icon-plus align-top bigger-125"></i>
-                添加报表模板
+                添加套打模板
             </button>
             <button class="btn btn-sm btn-danger" onclick="doDel()">
                 <i class="icon-trash align-top bigger-125"></i>
-                删除报表模板
-            </button>
-            <button class="btn btn-sm btn-success" onclick="toDesign()">
-                <i class="icon-dashboard align-top bigger-125"></i>
-                设计报表模板
+                删除套打模板
             </button>
         </div>
         <div class="col-sm-8">
 
             <div class="col-sm-4">
                 <div class="input-group">
-                    <span class="input-group-addon">库点:</span>
-                    <select id="graindepotid" class="form-control">
-                    </select>
+                    <span class="input-group-addon">粮库名称:</span>
+                    <input size="16" type="text" name="graindepotname" id="graindepotname"
+                            class="form-control">
                 </div>
             </div>
             <div class="col-sm-4">
@@ -70,10 +66,11 @@
                         <span class="lbl"></span>
                     </label>
                 </th>
-                <th style="width: 5%">报表模板</th>
-                <th style="width: 5%">模板文件名</th>
-                <th style="width: 5%">集团名称</th>
-                <th style="width: 5%">库点名称</th>
+                <th style="width: 10%">套打模板名称</th>
+                <th style="width: 5%">集团</th>
+                <th style="width: 5%">企业</th>
+                <th style="width: 5%">粮库</th>
+                <th style="width: 5%">模板类型</th>
                 <th style="width: 5%">操作</th>
             </tr>
             </thead>
@@ -95,9 +92,7 @@
     var theTable;
 
     $(document).ready(function () {
-        comm_initGrain();
         query();
-
     });
 
 
@@ -105,29 +100,25 @@
         theTable = $('#myTable').bootstrapTable({
             //数据来源（包括处理分页，排序，过滤） ，即url，action，接口，等等
             ajax: {
-                url: urlPrefix + "/tempfile/list/page",
+                url: urlPrefix + "/lodop/list/page",
                 data: param,
                 type: "GET"
             },
             //sScrollY: 510,//表格高度
             columns: [
-                {data: "tempname"},
-                {data: "temppath"},
+                {data: "lodopname"},
                 {data: "groupname"},
+                {data: "companyname"},
                 {data: "graindepotname"},
+                {data: "lodoptypestr"},
                 {
-                    data: "tempid",
+                    data: "lodopid",
                     render: function (data, type, row) {
                         return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
                             '<a class="green" href="javascript:toEdit(' + data + ')"' +
                             ' title="编辑" ' +
                             '>' +
                             '<i class="icon-pencil bigger-130"></i>' +
-                            '</a>' +
-                            '<a class="blue" href="javascript:toShow(\'' + row.temppath + '\')"' +
-                            ' title="预览" ' +
-                            '>' +
-                            '<i class="icon-eye-open bigger-130"></i>' +
                             '</a>' +
                             '</div>';
 
@@ -144,7 +135,7 @@
 
     function getParam() {
         var param = {};
-        param.grainid = $("#grainid").val();
+        param.graindepotname = $("#graindepotname").val();
         return param
     }
 
@@ -170,10 +161,11 @@
             message: "确认删除？",
             callback: function (result) {
                 if (result) {
+                    //删除用户
                     var ids = checkedList.map(function (curr) {
-                        return curr.tempid
+                        return curr.keyid
                     });
-                    $.post(urlPrefix + "/tempfile/del", {ids: ids.join(",")}, function (result) {
+                    $.post(urlPrefix + "/lodop/del", {ids: ids.join(",")}, function (result) {
                         $.bootstrapBox.alert.init({
                             message: result.message
                         });
@@ -189,30 +181,22 @@
 
     function toAdd() {
         $.bootstrapBox.dialog.init({
-            title: "新增打印模板",
-            url: urlPrefix + "/tempfile/toEdit",
+            title: "新增增扣标准",
+            url: urlPrefix + "/lodop/toEdit",
             width: $(window).width() * 0.6,
-            height: $(window).height() * 0.5
+            height: $(window).height() * 0.8
         })
     }
 
     function toEdit(id) {
         $.bootstrapBox.dialog.init({
-            title: "修改打印模板",
-            url: urlPrefix + "/tempfile/toEdit?id=" + id,
+            title: "修改增扣标准",
+            url: urlPrefix + "/lodop/toEdit?id=" + id,
             width: $(window).width() * 0.6,
-            height: $(window).height() * 0.5
+            height: $(window).height() * 0.8
         })
     }
 
-    function toShow(path) {
-        //window.open("/ureport/"+path);
-        window.open("/graindepot-report/ureport/designer?_u=mysql:"+path);
-    }
-
-    function toDesign() {
-        window.open("/graindepot-report/ureport/designer");
-    }
 
     function toSave(result) {
         $.bootstrapBox.dialog.close();

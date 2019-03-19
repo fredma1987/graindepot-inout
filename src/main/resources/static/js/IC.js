@@ -3,7 +3,7 @@ function IcFactory(type) {
     this.type=type;
     this.createIcObject=function () {
         var factory;
-        switch (this.type) {
+        switch (this.type+"") {
             case "1":
                 factory = new JingLun();
                 break;

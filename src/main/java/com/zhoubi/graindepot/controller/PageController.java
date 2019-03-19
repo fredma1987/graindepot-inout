@@ -2,15 +2,20 @@ package com.zhoubi.graindepot.controller;
 
 import com.zhoubi.graindepot.bean.Prerece;
 import com.zhoubi.graindepot.bean.Tempfile;
+import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.bean.Video;
 import com.zhoubi.graindepot.biz.PrereceBiz;
 import com.zhoubi.graindepot.biz.TempfileBiz;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2019/2/16/016.
@@ -109,4 +114,16 @@ public class PageController extends BaseController {
         return path;
     }
 
+    //----------------------------------入库日报表---------------------------------------------
+    @GetMapping("/dayin")
+    public String dayin(Model model) {
+        String title = "入库日报表";
+        UserAddress ua=getUserAddress();
+        model.addAttribute("title", title);
+        model.addAttribute("userAddress", ua);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        model.addAttribute("billdate", sdf.format(new Date()));
+        String path = "/report/dayin";
+        return path;
+    }
 }

@@ -475,10 +475,10 @@
     //结算单
     function initPrinttemp() {
         $("#printtempid").bootstrapSelect({
-            url: '/graindepot-inout/tempfile/list',
+            url: '/graindepot-inout/lodop/list/1005',
             type: 'GET',
-            valueField: 'tempid',
-            textField: 'tempname'
+            valueField: 'lodopid',
+            textField: 'lodopname'
         })
     }
 

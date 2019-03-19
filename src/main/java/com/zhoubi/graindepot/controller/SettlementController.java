@@ -117,6 +117,7 @@ public class SettlementController extends BaseController{
         Map param=new HashMap();
         param.put("Where_billid",inout.getBillid());
         param.put("extradedu",inout.getExtradedu());
+        param.put("printtempid",inout.getPrinttempid());
         param.put("paidweight",inout.getPaidweight());
         param.put("price3",inout.getPrice());
         param.put("amount",inout.getAmount());
@@ -222,6 +223,23 @@ public class SettlementController extends BaseController{
             return new JsonResult("更新退卡字段成功", true);
         }
 
+    }
+
+
+    //结算页面获取单据详细信息
+    @GetMapping("billdetail/{billid}")
+    @ResponseBody
+    public JsonResult billdetail_byBillid(@PathVariable(name="billid") Integer billid) {
+        Inout inout = new Inout();
+        if (billid!=null) {
+            Map map = new HashMap();
+            map.put("billid", billid);
+            inout = inoutBiz.getSettlementDetail(map);
+            if (inout==null) {
+                inout = new Inout();
+            }
+        }
+        return new JsonResult(inout, true);
     }
 
 }
