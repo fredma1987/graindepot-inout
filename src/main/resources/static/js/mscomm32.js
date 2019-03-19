@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by Administrator on 2019/2/12/012.
  */
 var MSComm1;
@@ -38,7 +38,7 @@ function ConfigPort()
     {
         try{
             //默认串口2
-            MSComm1.CommPort="2";
+            MSComm1.CommPort="1";
             //默认波特率
             var BaudRate="9600";
             //默认校验位
@@ -82,7 +82,23 @@ function Send()
 
 function Receive()
 {
-    document.getElementById("weight").value = MSComm1.Input;
+    var hex=str2hex(MSComm1.Input);
+    if(hex.indexOf("%02")>-1){
+        var data=hex.split("%");
+        var qty="";
+        if(data.length==9){
+          for(var i=3;i<data.length;i++){
+              qty+=String.fromCharCode(parseInt(data[i],16));
+          }
+          if(hex.indexOf("%2B")>-1){
+            document.getElementById("weight").value = parseInt(qty);
+          }else{
+            qty="-"+qty;
+            document.getElementById("weight").value = parseInt(qty);
+          }
+        }
+        
+    }
 }
 
 function ClearReceived()
