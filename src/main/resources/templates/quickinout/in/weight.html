@@ -7,6 +7,8 @@
 <object classid="clsid:5EB842AE-5C49-4FD8-8CE9-77D4AF9FD4FF" id="IdrControl1" width="10" height="0" codebase="idr.cab">
 </object>
 <div>
+    <script th:src="@{/graindepot-inout/js/huashi.js}"></script>
+    <script th:src="@{/graindepot-inout/js/d8.js}"></script>
     <script th:src="@{/graindepot-inout/js/mscomm32.js}"></script>
     <script th:src="@{/graindepot-video/js/webVideoCtrl.js}"></script>
     <script th:src="@{/graindepot-video/js/hik3.js}"></script>
@@ -23,8 +25,12 @@
                     Receive();
                     break;
                 } //接收事件
+                case 1004:{
+                    alert("地磅不稳定，请刷新页面重试……");
+                }
                 default:
-                    alert("Event Raised!" + MSComm1.CommEvent);
+                    //alert("Event Raised!" + MSComm1.CommEvent);
+                    alert("地磅不稳定，请刷新页面重试……");
             }
         }
     </SCRIPT>
@@ -43,7 +49,7 @@
         $(function () {
             // 检查插件是否已经安装过
             if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
-                //alert("您还未安装过插件，点击下载视频播放控件!");
+             //   alert("您还未安装过插件，点击下载视频播放控件!");
                 return;
             }
             var height = $("#divPlugin").height();
@@ -124,7 +130,7 @@
 
                             <form class="form-horizontal" id="validation-form" role="form">
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-4" style="border:1px solid #CCC;padding:3px;width:100%">
+                                    <div class="col-xs-12 col-sm-8" style="border:1px solid #CCC;padding:3px;width:100%">
                                         <div style="width: 40%;height:100%;float: left">
                                             <div id="divPlugin" style="width:100%;height:492px"></div>
                                             <div style="width:100%;height:20px;text-align: right;padding-right:10px">

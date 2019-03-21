@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -124,6 +125,40 @@ public class PageController extends BaseController {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         model.addAttribute("billdate", sdf.format(new Date()));
         String path = "/report/dayin";
+        return path;
+    }
+    //----------------------------------入库日范围报表---------------------------------------------
+    @GetMapping("/dayrangein")
+    public String dayrangein(Model model) {
+        String title = "入库日范围报表";
+        UserAddress ua=getUserAddress();
+        model.addAttribute("title", title);
+        model.addAttribute("userAddress", ua);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstdayOfmonth = calendar.getTime();
+        model.addAttribute("billdateEnd", sdf.format(new Date()));
+        model.addAttribute("billdateStart", sdf.format(firstdayOfmonth));
+        String path = "/report/dayrangein";
+        return path;
+    }
+    //----------------------------------出库日范围报表---------------------------------------------
+    @GetMapping("/dayrangeout")
+    public String dayrangeout(Model model) {
+        String title = "出库日范围报表";
+        UserAddress ua=getUserAddress();
+        model.addAttribute("title", title);
+        model.addAttribute("userAddress", ua);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstdayOfmonth = calendar.getTime();
+        model.addAttribute("billdateEnd", sdf.format(new Date()));
+        model.addAttribute("billdateStart", sdf.format(firstdayOfmonth));
+        String path = "/report/dayrangeout";
         return path;
     }
 }
