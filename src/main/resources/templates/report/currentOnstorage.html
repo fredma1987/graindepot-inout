@@ -23,10 +23,8 @@
     $(document).ready(function () {
         //TODO 入库每日汇总表从数据库取模板，暂时用的是通用模板
         $("#report").attr("src","/graindepot-report/ureport/preview?" +
-            "_u=mysql:day-range-in.ureport.xml&billdateStart="+g_billdateStart+
-        "&billdateEnd="+g_billdateEnd+"&graindepotid="+g_userAddress.graindepotid)
+            "_u=mysql:current-onstorage.ureport.xml"+
+        "&graindepotid="+g_userAddress.graindepotid)
     });
-
-
 
 </script>

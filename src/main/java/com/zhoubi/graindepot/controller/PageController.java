@@ -161,4 +161,21 @@ public class PageController extends BaseController {
         String path = "/report/dayrangeout";
         return path;
     }
+    //----------------------------------实时库存---------------------------------------------
+    @GetMapping("/currentOnstorage")
+    public String currentOnstorage(Model model) {
+        String title = "实时库存报表";
+        UserAddress ua=getUserAddress();
+        model.addAttribute("title", title);
+        model.addAttribute("userAddress", ua);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstdayOfmonth = calendar.getTime();
+        model.addAttribute("billdateEnd", sdf.format(new Date()));
+        model.addAttribute("billdateStart", sdf.format(firstdayOfmonth));
+        String path = "/report/currentOnstorage";
+        return path;
+    }
 }

@@ -218,6 +218,9 @@ public class RegisterController extends BaseController {
             //新增
             item.setCreateuserid(user.getUserid());
             item.setCreatetime(new Date());
+            item.setGraindepotid(ua.getGraindepotid());
+            item.setGroupid(ua.getGroupid());
+            item.setCompanyid(ua.getCompanyid());
             individualBiz.insert(item);
             return new JsonResult("添加成功", true);
         } else {
