@@ -55,6 +55,15 @@ public class SettlementController extends BaseController{
         model.addAttribute("title", "收购结算");
         return "in/settlement";
     }
+    @RequestMapping(value="/toInBatchSettlement",method = RequestMethod.GET)
+    public String toInBatchSettlement(Model model, HttpServletRequest request, HttpServletResponse response){
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        model.addAttribute("user", user);
+        model.addAttribute("userAddress", ua);
+        model.addAttribute("title", "收购统一结算");
+        return "in/batchsettlement";
+    }
     @RequestMapping(value="/toOutSettlement",method = RequestMethod.GET)
     public String toOutSettlement(Model model, HttpServletRequest request, HttpServletResponse response){
         BaseUser user = getCurrentUser();
@@ -67,17 +76,18 @@ public class SettlementController extends BaseController{
     @PostMapping("settmentPageList")
     @ResponseBody
     public PagerModel settmentPageList(int start, int length
-            ,Integer traderid,Integer storageid,Integer contractid) {
+            ,Integer traderid,Integer graindepotid,Integer storageid,Integer inoutflag,Integer contractid) {
         BaseUser currentUser = getCurrentUser();
         PagerModel<Inout> e=new PagerModel();
-        if (traderid==null||storageid==null||contractid==null) {
+        /*if (traderid==null||storageid==null||contractid==null) {
             return e;
-        }
+        }*/
 
         e.putWhere("notbilltype", 0);
         e.putWhere("notpaidstate", 1);
         e.putWhere("traderid", traderid);
         e.putWhere("storageid", storageid);
+        e.putWhere("inoutflag", inoutflag);
         e.putWhere("contractid", contractid);
         //称皮称毛已完成
         e.putWhere("gwstate",1);
@@ -85,7 +95,7 @@ public class SettlementController extends BaseController{
         e.addOrder("billcode desc");
         e.setStart(start);
         e.setLength(length);
-        if(currentUser.getGraindepotid()!=0) {
+        if(graindepotid==null&&currentUser.getGraindepotid()!=0) {
             e.putWhere("graindepotid", currentUser.getGraindepotid());
         }
         PagerModel<Inout> result=inoutBiz.selectListByPage(e);

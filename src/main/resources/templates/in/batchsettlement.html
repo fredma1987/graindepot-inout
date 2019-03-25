@@ -20,7 +20,7 @@
             <div class="page-content" style="padding:10px 30px 0px">
                 <div class="page-header">
                     <h1>
-                        销售结算
+                        收购统一结算
                         <small>
                             <i class="icon-double-angle-right"></i>
 
@@ -40,16 +40,16 @@
                                     <div style="width: 100%;height:100%;padding-left:20px;float: left">
                                         <div class="form-group">
                                             <label class="col-sm-1 control-label no-padding-right"
-                                                   for="traderid"> 购粮单位：</label>
+                                                   for="traderid"> 售粮单位：</label>
                                             <div class="col-sm-3">
                                                 <select id="traderid" name="traderid" class="form-control">
                                                 </select>
                                             </div>
-                                            <label class="col-sm-1 control-label no-padding-right" for="storageid">
-                                                仓房号：
+                                            <label class="col-sm-1 control-label no-padding-right" for="graindepotid">
+                                                粮库：
                                             </label>
                                             <div class="col-sm-2">
-                                                <select id="storageid" name="storageid" class="form-control">
+                                                <select id="graindepotid" name="graindepotid" class="form-control">
                                                 </select>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
@@ -59,6 +59,11 @@
                                                 <select id="contractid" name="contractid" class="form-control">
                                                 </select>
                                             </div>
+                                                <a class="btn btn-primary col-sm-2"
+                                                   style="margin-left:5px;border:0" onclick="readCert()">
+                                                    <i class="icon-credit-card"></i>
+                                                    售粮人身份证
+                                                </a>
 
                                         </div>
                                         <div class="form-group">
@@ -76,7 +81,7 @@
                                                        placeholder=""/>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
-                                                   for="accid"> 收款账户：</label>
+                                                   for="accid"> 付款账户：</label>
                                             <div class="col-sm-2">
                                                 <select id="accid" name="accid" class="form-control">
                                                 </select>
@@ -90,20 +95,20 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-1 control-label no-padding-right"
-                                                   for="accamt"> 收款金额：</label>
+                                                   for="accamt"> 付款金额：</label>
                                             <div class="col-sm-2">
                                                 <input type="text" id="accamt" readonly name="accamt"
                                                        class="form-control"
                                                        placeholder=""/>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
-                                                   for="usepreamt"> 使用预收款：</label>
+                                                   for="usepreamt"> 使用预付款：</label>
                                             <div class="col-sm-2">
                                                 <input type="text" id="usepreamt" name="usepreamt" class="form-control"
                                                        placeholder="" onchange="setPrerece()"/>
                                             </div>
                                             <label class="col-sm-1 control-label no-padding-right"
-                                                   for="preamt"> 预收款余额：</label>
+                                                   for="preamt"> 预付款余额：</label>
                                             <div class="col-sm-2">
                                                 <input type="text" id="preamt" name="preamt" readonly
                                                        class="form-control"
@@ -161,8 +166,8 @@
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </th>
-                                                    <th style="width: 200px">出库日期</th>
-                                                    <th style="width: 200px">出库流水号</th>
+                                                    <th style="width: 200px">入库日期</th>
+                                                    <th style="width: 200px">入库流水号</th>
                                                     <th style="width: 100px">车船号</th>
                                                     <th style="width: 100px">仓房号</th>
                                                     <th style="width: 100px">粮食性质</th>
@@ -231,12 +236,24 @@
     var g_checkedList = [];
     jQuery(function ($) {
         initTrader();
-        initStorage();
+        initGraindepot();
         initSettle();
         comm_initAccount(param);
         query();
     });
+    function initGraindepot() {
+        $("#graindepotid").bootstrapSelect({
+            url: '/graindepot-base/selector/graindepotList',
+            type: 'GET',
+            valueField: 'graindepotid',
+            textField: 'graindepotname',
+            onSelect: function (graindepotid, row) {
+                query(param);
+            }
+        }
+        );
 
+    }
     function initSettle() {
         $("#settleid").bootstrapSelect({
             url: '/graindepot-base/selector/settleList',
@@ -329,7 +346,7 @@
             type: 'GET',
             valueField: 'contractid',
             textField: 'contractno',
-            param: {traderid: traderid,buysellflag:-1},
+            param: {traderid: traderid,buysellflag:1},
             onSelect: function (contractid, row) {
                 if (contractid) {
                     query(param);
@@ -355,15 +372,14 @@
 
     function query() {
         var traderid = $("#traderid").bootstrapSelect("getValue");
-        var storageid = $("#storageid").bootstrapSelect("getValue");
+        var graindepotid = $("#graindepotid").bootstrapSelect("getValue");
         var contractid = $("#contractid").bootstrapSelect("getValue");
         var param = {
             traderid: traderid,
-            storageid: storageid,
+            graindepotid: graindepotid,
             contractid: contractid,
-            inoutflag:-1
+            inoutflag:1
         };
-
         if (theTable != undefined) {
             theTable.destroy();
         }
@@ -375,8 +391,8 @@
                 type: "POST"
             },
             columns: [
-                {title: "出库日期", data: "billdatestr"},
-                {title: "出库流水号", data: "billcode"},
+                {title: "入库日期", data: "billdatestr"},
+                {title: "入库流水号", data: "billcode"},
                 {title: "车牌号", data: "trucknum"},
                 {title: "仓房号", data: "storagename"},
                 {title: "粮食性质", data: "grainattrname"},

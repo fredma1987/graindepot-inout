@@ -11,6 +11,7 @@
 	<groupId>graindepot-inout</groupId>
 	<artifactId>graindepot-inout</artifactId>
 	<version>1.0.0</version>
+	<packaging>war</packaging>
 	<name>graindepot-inout</name>
 	<description>出入库微服务</description>
 	<properties>
