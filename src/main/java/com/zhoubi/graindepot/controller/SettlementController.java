@@ -170,9 +170,10 @@ public class SettlementController extends BaseController{
     @ResponseBody
     public JsonResult editOutSettlement(Outpay outpay) {
         BaseUser user=getCurrentUser();
+        UserAddress ua=getUserAddress();
         synchronized (user.getGraindepotid()+""){
             outpay.setBilldate(new Date());
-            String maxBillcode = prereceBiz.getMaxBillcode(user.getGraindepotid());
+            String maxBillcode = prereceBiz.getMaxBillcode(ua.getGraindepotid());
             if (StringUtils.isNotEmpty(maxBillcode)) {
                 //能找到当天最大的单据号
                 String[] maxBillcodes = maxBillcode.split("-");

@@ -51,9 +51,10 @@ public class OnstorageController extends BaseController {
     @ResponseBody
     public JsonResult editInitonstrage(Inout inout) {
         BaseUser user = getCurrentUser();
+        UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
             inout.setBilldate(new Date());
-            int graindepotid = user.getGraindepotid();
+            int graindepotid = ua.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
                 if (StringUtils.isNotEmpty(maxBillcode)) {

@@ -5,9 +5,11 @@ import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
 import com.zhoubi.graindepot.bean.BaseUser;
 import com.zhoubi.graindepot.bean.Prerece;
+import com.zhoubi.graindepot.bean.UserAddress;
 import com.zhoubi.graindepot.biz.PrereceBiz;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
@@ -41,12 +43,13 @@ public class PrereceController extends BaseController{
     @PostMapping("prerece/edit")
     public JsonResult prereceEdit(Prerece prerece) throws Exception {
         BaseUser user=getCurrentUser();
+        UserAddress ua=getUserAddress();
         if(prerece.getKeyid()==null||prerece.getKeyid()==0){
             prerece.setGroupid(user.getGroupid());
             prerece.setCompanyid(user.getCompanyid());
             prerece.setGraindepotid(user.getGraindepotid());
             prerece.setBilldate(new Date());
-            String maxBillcode = prereceBiz.getMaxBillcode(user.getGraindepotid());
+            String maxBillcode = prereceBiz.getMaxBillcode(ua.getGraindepotid());
             if (StringUtils.isNotEmpty(maxBillcode)) {
                 //能找到当天最大的单据号
                 String[] maxBillcodes = maxBillcode.split("-");

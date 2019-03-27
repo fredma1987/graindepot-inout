@@ -102,7 +102,7 @@ public class RegisterController extends BaseController {
         BaseUser user = getCurrentUser();
         UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            int graindepotid = user.getGraindepotid();
+            int graindepotid = ua.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
                 if (StringUtils.isNotEmpty(maxBillcode)) {
@@ -147,7 +147,7 @@ public class RegisterController extends BaseController {
         BaseUser user = getCurrentUser();
         UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            int graindepotid = user.getGraindepotid();
+            int graindepotid = ua.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
                 if (StringUtils.isNotEmpty(maxBillcode)) {
@@ -286,7 +286,7 @@ public class RegisterController extends BaseController {
         BaseUser user = getCurrentUser();
         UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            int graindepotid = user.getGraindepotid();
+            int graindepotid = ua.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
                 if (StringUtils.isNotEmpty(maxBillcode)) {
@@ -419,7 +419,7 @@ public class RegisterController extends BaseController {
         BaseUser user = getCurrentUser();
         UserAddress ua=getUserAddress();
         if (inout.getBillid() == null) {
-            int graindepotid = user.getGraindepotid();
+            int graindepotid = ua.getGraindepotid();
             synchronized (graindepotid + "") {
                 String maxBillcode = inoutBiz.getMaxBillcode(graindepotid);
                 if (StringUtils.isNotEmpty(maxBillcode)) {
