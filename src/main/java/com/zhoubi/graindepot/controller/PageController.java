@@ -178,4 +178,17 @@ public class PageController extends BaseController {
         String path = "/report/currentOnstorage";
         return path;
     }
+
+    //----------------------------------药剂出入库报表---------------------------------------------
+    @GetMapping("/drugInOut")
+    public String drugInOut(Model model) {
+        String title = "药剂出入库报表";
+        UserAddress ua=getUserAddress();
+        model.addAttribute("title", title);
+        model.addAttribute("userAddress", ua);
+//        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//        model.addAttribute("billdate", sdf.format(new Date()));
+        String path = "/report/drugInOut";
+        return path;
+    }
 }
