@@ -2,10 +2,9 @@ package com.zhoubi.graindepot.controller;
 
 import com.zhoubi.graindepot.base.JsonResult;
 import com.zhoubi.graindepot.base.PagerModel;
-import com.zhoubi.graindepot.bean.BaseUser;
-import com.zhoubi.graindepot.bean.Inout;
-import com.zhoubi.graindepot.bean.UserAddress;
+import com.zhoubi.graindepot.bean.*;
 import com.zhoubi.graindepot.biz.InoutBiz;
+import com.zhoubi.graindepot.biz.MixedBiz;
 import com.zhoubi.graindepot.biz.TempfileBiz;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,8 @@ public class InoutController extends BaseController {
     private InoutBiz inoutBiz;
     @Autowired
     private TempfileBiz tempfileBiz;
+    @Autowired
+    private MixedBiz mixedBiz;
 
     //出入库dialog列表
     @RequestMapping(value = "/toDialogInout", method = RequestMethod.GET)
@@ -201,5 +202,41 @@ public class InoutController extends BaseController {
         }
 
     }
+
+
+    //身份证是否列入黑名单
+    @RequestMapping(value = "/blanklist/idcard/isExist", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult blanklist_idcard_isExist(Model model,String idcard) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        Map map=new HashMap();
+        map.put("graindepotid",ua.getGraindepotid());
+        map.put("idcard",idcard);
+        List<Blanklist> blanklists = mixedBiz.blanklistIsIdCardExist(map);
+        if (blanklists.size()>0) {
+            return new JsonResult(blanklists.get(0),"已存在",true);
+        }else {
+            return new JsonResult("不存在",false);
+        }
+    }
+
+    //单位是否列入黑名单
+    @RequestMapping(value = "/blanklist/trader/isExist", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult blanklist_trader_isExist(Model model,String tradername) {
+        BaseUser user = getCurrentUser();
+        UserAddress ua = getUserAddress();
+        Map map=new HashMap();
+        map.put("graindepotid",ua.getGraindepotid());
+        map.put("tradername",tradername);
+        List<Blanklist> blanklists = mixedBiz.blanklistIsTraderExist(map);
+        if (blanklists.size()>0) {
+            return new JsonResult(blanklists.get(0),"已存在",true);
+        }else {
+            return new JsonResult("不存在",false);
+        }
+    }
+
 
 }

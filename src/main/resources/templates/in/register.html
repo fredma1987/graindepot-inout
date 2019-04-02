@@ -225,8 +225,15 @@
                                                 售粮单位:
                                             </label>
                                             <div class="col-sm-4">
-                                                <select id="traderid" name="traderid" class="form-control">
+                                                <select id="traderid" name="traderid" class="form-control"
+                                                 style="width: 80%">
                                                 </select>
+                                                <a class="red col-sm-2" style="display: none"
+                                                   id="problemTrader" rel="popover"
+                                                   data-content="无"
+                                                   data-original-title="黑名单告警">
+                                                    <i class="icon-exclamation-sign icon-on-right"></i>
+                                                </a>
                                             </div>
                                         </div>
 
@@ -247,9 +254,15 @@
                                                 身份证号:
                                             </label>
                                             <div class="col-sm-3">
-                                                <input type="text" id="sellmanidcard"
-                                                       name="sellmanidcard"
-                                                       placeholder="" class="form-control"/>
+                                                <input type="text" id="sellmanidcard" style="width: 80%"
+                                                       name="sellmanidcard" onchange="checkIsBlack(1)"
+                                                       placeholder="" class="col-sm-10 form-control"/>
+                                                <a class="red col-sm-2" style="display: none"
+                                                   id="problemIndividual" rel="popover"
+                                                   data-content="无"
+                                                   data-original-title="黑名单告警">
+                                                    <i class="icon-exclamation-sign icon-on-right"></i>
+                                                </a>
                                             </div>
                                             <label style="width: 12%" class="col-sm-1 control-label no-padding-right"
                                                    for="sellmanphone">
@@ -815,6 +828,7 @@
                 if (row) {
                     $("#sellmanphone").val(row.telnumber);
                     $("#sellmanaddress").val(row.traderaddress);
+                    checkIsBlack(2)
                 }
             }
         })
@@ -880,6 +894,7 @@
         $("#sellmanname").val("");
         $("#sellmanphone").val("");
         $("#sellmanaddress").val("");
+        $("#sellmanidcard").change();
         if (type == 1) {
             //身份证变为必填
             $("#manname").html("*售粮人:");
@@ -1131,6 +1146,54 @@
             $("#carriername").val(info.name);
             $("#carrieridcard").val(info.idnumber);
         }
+    }
+
+    //判断是否属于黑名单
+    function checkIsBlack(type) {
+        if (type==1) {
+            //验证身份证
+            var idcard=$("#sellmanidcard").val();
+            if(!idcard){
+                $("#problemIndividual").css("display","none");
+                return
+            }
+            //查询是否在黑名单列
+            $.get("/graindepot-inout/inout/blanklist/idcard/isExist",{idcard:idcard})
+                .then(function (result) {
+                    if (result.success){
+                        $("#problemIndividual").css("display","inline");
+                        //加载单据进度tooltip
+                        $("#problemIndividual").popover({html: true, trigger: 'hover'});
+                        var html="<div style='width: 100px;'>列入黑名单原因:"+(result.data.reason?result.data.reason:"暂未填写列入原因"+"</div>")
+                        $("#problemIndividual").attr("data-content", html);
+                    }else {
+                        $("#problemIndividual").css("display","none");
+                    }
+                })
+        }else {
+            //验证单位名称是否列入黑名单
+            var tradername=$("#traderid").bootstrapSelect("getText");
+            if(!tradername){
+                $("#problemTrader").css("display","none");
+                return
+            }
+            //查询是否在黑名单列
+            $.get("/graindepot-inout/inout/blanklist/trader/isExist",{tradername:tradername})
+                .then(function (result) {
+                    debugger
+                    if (result.success){
+                        $("#problemTrader").css("display","inline");
+                        //加载单据进度tooltip
+                        $("#problemTrader").popover({html: true, trigger: 'hover'});
+                        var html="<div style='width: 100px;'>列入黑名单原因:"+(result.data.reason?result.data.reason:"暂未填写列入原因"+"</div>")
+                        $("#problemTrader").attr("data-content", html);
+                    }else {
+                        $("#problemTrader").css("display","none");
+                    }
+                })
+        }
+
+
     }
 
 </script>

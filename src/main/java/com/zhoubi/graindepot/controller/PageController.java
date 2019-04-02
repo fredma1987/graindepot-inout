@@ -178,4 +178,14 @@ public class PageController extends BaseController {
         String path = "/report/currentOnstorage";
         return path;
     }
+
+
+    //套打设计
+    @GetMapping("/lodop")
+    public String lodop(Model model) {
+        String title = "套打设计";
+        model.addAttribute("title", title);
+        String path = "/lodop/list";
+        return path;
+    }
 }
