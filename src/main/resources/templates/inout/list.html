@@ -29,26 +29,33 @@
 
             <div class="col-sm-3">
                 <div class="input-group">
-                    <span class="input-group-addon">单据日期:</span>
-                    <input size="16" type="text" name="billdate" id="billdate"
+                    <span class="input-group-addon">单据开始日期:</span>
+                    <input size="16" type="text" name="billdatebeginstr" id="billdatebeginstr"
                            readonly class="form_date form-control">
                 </div>
             </div>
             <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-addon">单据结束日期:</span>
+                    <input size="16" type="text" name="billdateendstr" id="billdateendstr"
+                           readonly class="form_date form-control">
+                </div>
+            </div>
+            <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon">单据流水号:</span>
                     <input type="text" id="billcode" name="billcode"
                            class="form-control" placeholder=""/>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon">售粮人:</span>
                     <input type="text" id="sellmanname" name="sellmanname"
                            class="form-control" placeholder=""/>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <button class="btn btn-sm btn-success" onclick="searchTable()">
                     <i class="icon-search align-top bigger-125"></i>
                     查询
@@ -87,7 +94,7 @@
                 <th style="width: 5%">扦样情况</th>
                 <th style="width: 5%">检验情况</th>
                 <th style="width: 5%">称毛重情况</th>
-                <th style="width: 5%">值仓情况</th>
+                <!--<th style="width: 5%">值仓情况</th>-->
                 <th style="width: 5%">称皮重情况</th>
                 <th style="width: 5%">结算情况</th>
                 <th style="width: 5%">是否已退卡</th>
@@ -153,7 +160,8 @@
         $(".form_date").bootstrapDate();
         $(".form_date").bootstrapDate("setValue", new Date());
         var param={
-            billdate:$("#billdate").bootstrapDate("getValue"),
+            billdatebeginstr:$("#billdatebeginstr").bootstrapDate("getValue"),
+            billdateendstr:$("#billdateendstr").bootstrapDate("getValue"),
             inoutflag:g_inoutflag,
             billtype:g_type==5?2:1
         };
@@ -211,7 +219,7 @@
 
                     }
                 },
-                {
+                /*{
                     data: "valuebinstate",
                     render: function (data, type, row) {
                         if (data == 1) {
@@ -224,7 +232,7 @@
                         }
 
                     }
-                },
+                },*/
                 {
                     data: "tarestate",
                     render: function (data, type, row) {
@@ -346,13 +354,12 @@
                     data: "billid",
                     render: function (data, type, row) {
                         return '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">' +
-                            '<a class="green" href="javascript:toChoose(' + data + ')"' +
-                            ' title="选择" ' +
+                            '<a class="green" href="javascript:toDetail(' + data + ')"' +
+                            ' title="详情" ' +
                             '>' +
-                            '<i class="icon-hand-up bigger-130"></i>' +
+                            '<i class="icon-eye-open bigger-130"></i>' +
                             '</a>' +
                             '</div>';
-
                     }
                 }]
         }
@@ -405,7 +412,8 @@
 
     function getParam() {
         var param = {
-            billdate:$("#billdate").bootstrapDate("getValue"),
+            billdatebeginstr:$("#billdatebeginstr").bootstrapDate("getValue"),
+            billdateendstr:$("#billdateendstr").bootstrapDate("getValue"),
             inoutflag:g_inoutflag,
             billtype:g_type==5?2:1,
             billcode:$("#billcode").val(),
@@ -429,10 +437,10 @@
     //查看详情
     function toDetail(billid) {
         $.bootstrapBox.dialog.init({
-            title: "预收款详情",
+            title: "出入库详情",
             url: "/graindepot-inout/inout/detail/" + billid,
-            width: '1200px',
-            height: '550px'
+            width: $(window).width() ,
+            height: $(window).height() * 0.8
         })
     }
 

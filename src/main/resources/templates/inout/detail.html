@@ -10,36 +10,256 @@
 <!-- infoCheck-one 一行只显示较宽一列 -->
 <div class="infoCheckDiv">
     <div class="infoCheckBack">
-        <!-- 一行显示三列 -->
         <table class="infoCheck-three" border="" cellspacing="" cellpadding="">
-            <tr>
-                <td class="infoCheck-name">企业</td>
-                <td class="infoCheck-content" th:text="${item.companyname}">企业</td>
-                <td class="infoCheck-name">库点</td>
-                <td class="infoCheck-content" th:text="${item.graindepotname}">库点</td>
-                <td class="infoCheck-name">仓房</td>
-                <td class="infoCheck-content" th:text="${item.storagename}">企业</td>
-            </tr>
             <tr>
                 <td class="infoCheck-name">集团</td>
                 <td class="infoCheck-content" th:text="${item.groupname}">集团</td>
+                <td class="infoCheck-name">企业</td>
+                <td class="infoCheck-content" th:text="${item.companyname}">企业</td>
+                <td class="infoCheck-name">粮库</td>
+                <td class="infoCheck-content" th:text="${item.graindepotname}">粮库</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">仓房</td>
+                <td class="infoCheck-content" th:text="${item.storagename}">仓房</td>
                 <td class="infoCheck-name">单据日期</td>
                 <td class="infoCheck-content" th:text="${item.billdatestr}">单据日期</td>
                 <td class="infoCheck-name">单据号</td>
                 <td class="infoCheck-content" th:text="${item.billcode}">单据号（YYYY-MM-DD-xxxx）</td>
             </tr>
             <tr>
-                <td class="infoCheck-name">单据类型(0：期初库存单 1：正常业务单据 2：补单)</td>
-                <td class="infoCheck-content" th:text="${item.billtype}">单据类型(0：期初库存单 1：正常业务单据 2：补单)</td>
-                <td class="infoCheck-name">单据状态（0：编辑，1：已审核，-1：已作废）</td>
-                <td class="infoCheck-content" th:text="${item.billstatestr}">单据状态（0：编辑，1：已审核，-1：已作废）</td>
-                <td class="infoCheck-name">逻辑删除标志(1:逻辑删除)</td>
-                <td class="infoCheck-content" th:text="${item.delflagstr}">逻辑删除标志(1:逻辑删除)</td>
+                <td class="infoCheck-name">单据类型</td>
+                <td class="infoCheck-content" th:text="${item.billtypestr}">单据类型(0：期初库存单 1：正常业务单据 2：补单)</td>
+                <td class="infoCheck-name">出入库标志</td>
+                <td class="infoCheck-content" th:text="${item.inoutflagstr}">出入库标志（1：入库，-1：出库）</td>
+                <td class="infoCheck-name">一单多车标识</td>
+                <td class="infoCheck-content" th:text="${item.onetomanystr}">一单多车标识（1：一单一车 2：一单多车）</td>
             </tr>
+            <tr>
+                <td class="infoCheck-name">计划文号</td>
+                <td class="infoCheck-content" th:text="${item.planno}">计划文件主键</td>
+                <td class="infoCheck-name">入库计划安排名称</td>
+                <td class="infoCheck-content" th:text="${item.inplanname}">入库计划安排主键</td>
+                <td class="infoCheck-name">出库计划安排名称</td>
+                <td class="infoCheck-content" th:text="${item.outplanname}">出库计划安排主键</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">合同号</td>
+                <td class="infoCheck-content" th:text="${item.contractno}">合同主键</td>
+                <td class="infoCheck-name">入库原由</td>
+                <td class="infoCheck-content" th:text="${item.inresontypestr}">入库原由（1：轮入 2：其他收入）</td>
+                <td class="infoCheck-name">出库原由</td>
+                <td class="infoCheck-content" th:text="${item.outresontypestr}">出库原由</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">客户性质</td>
+                <td class="infoCheck-content" th:text="${item.customtypestr}">客户性质（1：个人 2：单位）</td>
+                <td class="infoCheck-name">往来单位</td>
+                <td class="infoCheck-content" th:text="${item.tradername}">往来单位主键</td>
+                <td class="infoCheck-name">售粮人</td>
+                <td class="infoCheck-content" th:text="${item.sellmanname}">售粮人</td>
+            </tr>
+            <!--<tr>
+                <td class="infoCheck-name">售粮人微信号</td>
+                <td class="infoCheck-content" th:text="${item.sellmanwechat}">售粮人微信号</td>
+                <td class="infoCheck-name">售粮人支付宝账号</td>
+                <td class="infoCheck-content" th:text="${item.sellmanalipay}">售粮人支付宝账号</td>
+            </tr>-->
+            <tr>
+                <td class="infoCheck-name">售粮人身份证</td>
+                <td class="infoCheck-content" th:text="${item.sellmanidcard}">售粮人身份证</td>
+                <td class="infoCheck-name">联系地址</td>
+                <td class="infoCheck-content" th:text="${item.sellmanaddress}">联系地址</td>
+                <td class="infoCheck-name">性别</td>
+                <td class="infoCheck-content" th:text="${item.sellmansexstr}">性别：1：男 2：女 3：未指定</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">售粮人联系电话</td>
+                <td class="infoCheck-content" th:text="${item.sellmanphone}">售粮人联系电话</td>
+                <td class="infoCheck-name">IC卡号</td>
+                <td class="infoCheck-content" th:text="${item.iccardnum}">IC卡号</td>
+                <td class="infoCheck-name">承运单位</td>
+                <td class="infoCheck-content" th:text="${item.carriercorp}">承运单位</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">承运人</td>
+                <td class="infoCheck-content" th:text="${item.carriername}">承运人</td>
+                <td class="infoCheck-name">承运人微信号</td>
+                <td class="infoCheck-content" th:text="${item.carrierwechat}">承运人微信号</td>
+                <td class="infoCheck-name">承运人支付宝账号</td>
+                <td class="infoCheck-content" th:text="${item.carrieralipay}">承运人支付宝账号</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">承运人身份证</td>
+                <td class="infoCheck-content" th:text="${item.carrieridcard}">承运人身份证</td>
+                <td class="infoCheck-name">承运人性别</td>
+                <td class="infoCheck-content" th:text="${item.carriersexstr}">承运人性别</td>
+                <td class="infoCheck-name">承运人联系电话</td>
+                <td class="infoCheck-content" th:text="${item.carrierphone}">承运人联系电话</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">运输类型</td>
+                <td class="infoCheck-content" th:text="${item.trucktypestr}">运输类型：1：车辆 2：船舶 3：火车 99：其他</td>
+                <td class="infoCheck-name">车船号</td>
+                <td class="infoCheck-content" th:text="${item.trucknum}">车船号</td>
+                <td class="infoCheck-name">粮食品种</td>
+                <td class="infoCheck-content" th:text="${item.grainname}">粮食品种</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">粮食性质</td>
+                <td class="infoCheck-content" th:text="${item.grainattrname}">粮食性质</td>
+                <td class="infoCheck-name">收获年度</td>
+                <td class="infoCheck-content" th:text="${item.producingyear}">收获年度</td>
+                <td class="infoCheck-name">粮食等级</td>
+                <td class="infoCheck-content" th:text="${item.gradestr}">粮食等级（1：一等 2：二等 3：三等 4：四等 5：五等 6：等外 99：未定等）</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">毛重</td>
+                <td class="infoCheck-content" th:text="${item.grossweight}">毛重</td>
+                <td class="infoCheck-name">皮重</td>
+                <td class="infoCheck-content" th:text="${item.tareweight}">皮重</td>
+                <td class="infoCheck-name">净重</td>
+                <td class="infoCheck-content" th:text="${item.netweight}">净重=毛重-皮重</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">合计扣量</td>
+                <td class="infoCheck-content" th:text="${item.totalincdedu}">合计扣量（正数：扣量 ，负数：增量）</td>
+                <td class="infoCheck-name">增加扣量</td>
+                <td class="infoCheck-content" th:text="${item.extradedu}">增加扣量（在入仓时保管员根据质量情况做的额外扣量或者粮库和卖粮人协商的增加扣量）</td>
+                <td class="infoCheck-name">结算重量</td>
+                <td class="infoCheck-content" th:text="${item.paidweight}">结算重量=毛重-皮重-合计扣量-增加扣量</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">单价（元/公斤）</td>
+                <td class="infoCheck-content" th:text="${item.price}">单价（元/公斤）</td>
+                <td class="infoCheck-name">质检环节单价</td>
+                <td class="infoCheck-content" th:text="${item.price1}">保存质检环节确定的单价</td>
+                <td class="infoCheck-name">入库环节单价</td>
+                <td class="infoCheck-content" th:text="${item.price2}">保存确认入库环节由保管员确定的单价</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">结算环节单价</td>
+                <td class="infoCheck-content" th:text="${item.price3}">保存结算环节由结算员确定的单价</td>
+                <td class="infoCheck-name">结算金额</td>
+                <td class="infoCheck-content" th:text="${item.amount}">结算金额=结算重量*单价</td>
+                <td class="infoCheck-name">已结算重量</td>
+                <td class="infoCheck-content" th:text="${item.paidqty}">已结算重量</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">已结算金额</td>
+                <td class="infoCheck-content" th:text="${item.paidamount}">已结算金额</td>
+                <td class="infoCheck-name">包装方式</td>
+                <td class="infoCheck-content" th:text="${item.packtypestr}">包装方式（1：散装，2：包装）</td>
+                <td class="infoCheck-name">总包数</td>
+                <td class="infoCheck-content" th:text="${item.packcount}">总包数</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">自报数量（KG）</td>
+                <td class="infoCheck-content" th:text="${item.selfreport}">自报数量（KG）</td>
+                <td class="infoCheck-name">登记人员</td>
+                <td class="infoCheck-content" th:text="${item.regopname}">登记人员</td>
+                <td class="infoCheck-name">登记时间</td>
+                <td class="infoCheck-content" th:text="${item.regtimestr}">登记时间</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">绑卡状态</td>
+                <td class="infoCheck-content" th:text="${item.regstatestr}">绑卡状态(RegState=1：绑卡状态，0：未绑卡 ，-1：已退港)</td>
+                <td class="infoCheck-name">扦样人</td>
+                <td class="infoCheck-content" th:text="${item.samplingoptname}">扦样人</td>
+                <td class="infoCheck-name">扦样时间</td>
+                <td class="infoCheck-content" th:text="${item.samplingtimestr}">扦样时间</td>
 
+            </tr>
+            <tr>
+                <td class="infoCheck-name">扦样状态</td>
+                <td class="infoCheck-content" th:text="${item.samplingstatestr}">扦样状态（1：已扦样 0：未扦样）</td>
+                <td class="infoCheck-name">检验人员</td>
+                <td class="infoCheck-content" th:text="${item.inspectoptname}">检验人员</td>
+                <td class="infoCheck-name">检验时间</td>
+                <td class="infoCheck-content" th:text="${item.inspecttimestr}">检验时间</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">检验状态</td>
+                <td class="infoCheck-content" th:text="${item.inspectstatestr}">检验状态（1：已检验 0：未检验）</td>
+                <td class="infoCheck-name">称毛重操作员</td>
+                <td class="infoCheck-content" th:text="${item.gwopname}">称毛重操作员</td>
+                <td class="infoCheck-name">称毛重时间</td>
+                <td class="infoCheck-content" th:text="${item.gwtimestr}">称毛重时间</td>
+
+            </tr>
+            <tr>
+                <td class="infoCheck-name">称毛重状态</td>
+                <td class="infoCheck-content" th:text="${item.gwstatestr}">称毛重状态（1：已称毛重 0：未称毛重）</td>
+                <td class="infoCheck-name">值仓操作人</td>
+                <td class="infoCheck-content" th:text="${item.valuebinoptname}">值仓操作人</td>
+                <td class="infoCheck-name">值仓开始时间</td>
+                <td class="infoCheck-content" th:text="${item.valuebinstarttimestr}">值仓开始时间</td>
+
+            </tr>
+            <tr>
+                <td class="infoCheck-name">值仓结束时间</td>
+                <td class="infoCheck-content" th:text="${item.valuebinendtimestr}">值仓结束时间</td>
+                <td class="infoCheck-name">值仓状态</td>
+                <td class="infoCheck-content" th:text="${item.valuebinstatestr}">值仓状态（1：值仓完成 0：未值仓 2：值仓中）</td>
+                <td class="infoCheck-name">称皮重操作员</td>
+                <td class="infoCheck-content" th:text="${item.tareoptname}">称皮重操作员</td>
+
+            </tr>
+            <tr>
+                <td class="infoCheck-name">称皮重时间</td>
+                <td class="infoCheck-content" th:text="${item.taretimestr}">称皮重时间</td>
+                <td class="infoCheck-name">称皮重状态</td>
+                <td class="infoCheck-content" th:text="${item.tarestatestr}">称皮重状态（1：已称皮重 0：未称皮重）</td>
+                <td class="infoCheck-name">结算操作员</td>
+                <td class="infoCheck-content" th:text="${item.paidoptname}">结算操作员</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">结算时间</td>
+                <td class="infoCheck-content" th:text="${item.paidtimestr}">结算时间</td>
+                <td class="infoCheck-name">结算日期</td>
+                <td class="infoCheck-content" th:text="${item.paiddatestr}">结算日期</td>
+                <td class="infoCheck-name">结算状态</td>
+                <td class="infoCheck-content" th:text="${item.paidstatestr}">结算状态（1：已结算 2：结算部分 0：未结算）</td>
+
+            </tr>
+            <tr>
+                <td class="infoCheck-name">往来结算状态</td>
+                <td class="infoCheck-content" th:text="${item.traderflagstr}">往来结算状态（1：已结算 0：未结算）</td>
+                <td class="infoCheck-name">结算方式</td>
+                <td class="infoCheck-content" th:text="${item.settlemothodstr}">结算方式(:1：现金结算，2：银行卡结算，3：微信结算，4：支付宝结算)
+                </td>
+                <td class="infoCheck-name">银行卡号</td>
+                <td class="infoCheck-content" th:text="${item.bankcardnum}">银行卡号</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">退卡标识</td>
+                <td class="infoCheck-content" th:text="${item.backicflagstr}">退卡标识(1：已退卡 0：未退卡)</td>
+                <td class="infoCheck-name">退卡原由</td>
+                <td class="infoCheck-content" th:text="${item.backreason}">退卡原由</td>
+                <td class="infoCheck-name">退卡时间</td>
+                <td class="infoCheck-content" th:text="${item.backictimestr}">退卡时间</td>
+            </tr>
+            <tr>
+                <td class="infoCheck-name">中止标识</td>
+                <td class="infoCheck-content" th:text="${item.stopflagstr}">中止标识（1：已中止）</td>
+                <td class="infoCheck-name">中止原由</td>
+                <td class="infoCheck-content" th:text="${item.stopreason}">中止原由</td>
+                <td class="infoCheck-name">原产地</td>
+                <td class="infoCheck-content" th:text="${item.soucearea}">原产地</td>
+
+            </tr>
+            <tr>
+                <td class="infoCheck-name">调入(往)省份</td>
+                <td class="infoCheck-content" th:text="${item.fprovincename}">调入(往)省份</td>
+                <td class="infoCheck-name">调入(往)市（州）</td>
+                <td class="infoCheck-content" th:text="${item.fcityname}">调入(往)市（州）</td>
+                <td class="infoCheck-name">备注</td>
+                <td class="infoCheck-content" th:text="${item.remark}">备注</td>
+            </tr>
         </table>
     </div>
 </div>
+
 </body>
 </html>
 

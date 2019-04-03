@@ -66,7 +66,8 @@ public class InoutController extends BaseController {
     @GetMapping("list/page")
     @ResponseBody
     public PagerModel<Inout> inout_list(int start, int length, Integer inoutflag
-            , String billdate, String billcode, String sellmanname,Integer billtype) {
+            , String billdate, String billcode, String sellmanname,Integer billtype
+            ,String billdatebeginstr,String billdateendstr) {
         UserAddress ua = getUserAddress();
         PagerModel<Inout> e = new PagerModel();
         e.addOrder("billdate desc,billcode desc");
@@ -74,7 +75,15 @@ public class InoutController extends BaseController {
         e.setLength(length);
         e.putWhere("graindepotid", ua.getGraindepotid());
         e.putWhere("inoutflag", inoutflag);
-        e.putWhere("billdate", billdate);
+        if (StringUtils.isNotEmpty(billdate)) {
+            e.putWhere("billdate", billdate);
+        }
+        if (StringUtils.isNotEmpty(billdatebeginstr)) {
+            e.putWhere("billdatebeginstr", billdatebeginstr);
+        }
+        if (StringUtils.isNotEmpty(billdateendstr)) {
+            e.putWhere("billdateendstr", billdateendstr);
+        }
         e.putWhere("billtype", billtype);
         if (StringUtils.isNotEmpty(sellmanname)) {
             e.putWhere("sellmanname", "%" + sellmanname + "%");
